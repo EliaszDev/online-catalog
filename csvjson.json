@@ -17,6 +17,22 @@
       }
     },
     {
+      "SKU": "ZS-02",
+      "Model": "V-65",
+      "Kategoria": "zegarki-smartwatch",
+      "Kolor": "BLACK",
+      "Ilosc": 7,
+      "Cena": 60,
+      "Zdjecia": "v65-black.jpg, v65-silver-metal.jpg, v65-black-metal.jpg, v65-orange.jpg, v65-measures.jpg",
+      "Opis": {
+        "pl": "Stylowy smartwatch z funkcją rozmów Bluetooth i ekranem AMOLED. Łączy elegancję z nowoczesną technologią monitoringu zdrowia i powiadomień.",
+        "en": "Stylish smartwatch with Bluetooth call function and AMOLED screen. It combines elegance with modern health monitoring and notification technology.",
+        "ru": "Стильные умные часы с функцией вызова Bluetooth и AMOLED-экраном. Он сочетает в себе элегантность с современными технологиями мониторинга и уведомления о состоянии здоровья.",
+        "kk": "Bluetooth қоңырау функциясы және AMOLED экраны бар стильді ақылды сағаттар. Ол талғампаздықты заманауи денсаулықты бақылау және хабарландыру технологиясымен біріктіреді.",
+        "uz": "Bluetooth qo&#39;ng&#39;iroqlari va AMOLED ekranli zamonaviy aqlli soat. U nafislikni zamonaviy sog&#39;liqni saqlash monitoringi va bildirishnoma texnologiyalari bilan birlashtiradi."
+      }
+    },
+    {
       "SKU": "ZS-04",
       "Model": "V-75",
       "Kategoria": "zegarki-smartwatch",
@@ -159,22 +175,6 @@
         "uz": "Professional health tracker with a minimalist design. Monitors ECG, stress, and energy levels throughout the day."
       },
       "Cena": null
-    },
-    {
-      "SKU": "ZS-02",
-      "Model": "V-65",
-      "Kategoria": "zegarki-smartwatch",
-      "Kolor": "BLACK",
-      "Ilosc": 7,
-      "Cena": 60,
-      "Zdjecia": "v65-black.jpg, v65-silver-metal.jpg, v65-black-metal.jpg, v65-orange.jpg, v65-measures.jpg",
-      "Opis": {
-        "pl": "Stylowy smartwatch z funkcją rozmów Bluetooth i ekranem AMOLED. Łączy elegancję z nowoczesną technologią monitoringu zdrowia i powiadomień.",
-        "en": "Stylish smartwatch with Bluetooth call function and AMOLED screen. It combines elegance with modern health monitoring and notification technology.",
-        "ru": "Стильные умные часы с функцией вызова Bluetooth и AMOLED-экраном. Он сочетает в себе элегантность с современными технологиями мониторинга и уведомления о состоянии здоровья.",
-        "kk": "Bluetooth қоңырау функциясы және AMOLED экраны бар стильді ақылды сағаттар. Ол талғампаздықты заманауи денсаулықты бақылау және хабарландыру технологиясымен біріктіреді.",
-        "uz": "Bluetooth qo&#39;ng&#39;iroqlari va AMOLED ekranli zamonaviy aqlli soat. U nafislikni zamonaviy sog&#39;liqni saqlash monitoringi va bildirishnoma texnologiyalari bilan birlashtiradi."
-      }
     }
   ]
 }
