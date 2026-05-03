@@ -279,6 +279,15 @@
         .preview-item .actions button:hover { background: rgba(59,130,246,0.2); color: #60a5fa; }
         .preview-item .actions button.delete { background: rgba(239,68,68,0.12); color: #ef4444; }
         .preview-item .actions button.delete:hover { background: rgba(239,68,68,0.25); color: #f87171; }
+        .preview-item.dragging {
+            opacity: 0.5;
+            border-color: #3b82f6 !important;
+            transform: scale(0.98);
+        }
+        .preview-item.drag-over {
+            border-color: #10b981 !important;
+            background: rgba(16,185,129,0.1);
+        }
 
         /* Bottom Nav */
         .bottom-nav {
@@ -470,6 +479,16 @@
                 <button onclick="refreshFromGitHub()" style="background:rgba(59,130,246,0.15);border:1px solid rgba(59,130,246,0.3);color:#60a5fa;border-radius:8px;padding:6px 12px;font-size:0.75rem;font-weight:600;cursor:pointer;">
                     <i class="fas fa-sync-alt"></i> Odśwież z GitHub
                 </button>
+            </div>
+            <div style="margin-bottom:12px;">
+                <select id="listFilterKategoria" onchange="renderPreview()" style="width:100%;padding:10px 14px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:10px;color:#fff;font-size:0.9rem;">
+                    <option value="">Wszystkie kategorie</option>
+                    <option value="zegarki-smartwatch">⌚ Zegarki Smartwatch</option>
+                    <option value="sluchawki">🎧 Słuchawki</option>
+                    <option value="powerbanki">🔋 Powerbanki</option>
+                    <option value="akcesoria">📱 Akcesoria</option>
+                    <option value="inne">📦 Inne</option>
+                </select>
             </div>
             <div class="preview-list" id="productPreview"></div>
         </div>
@@ -891,30 +910,93 @@
         // === PREVIEW ===
         function renderPreview() {
             const container = document.getElementById('productPreview');
-            document.getElementById('countBadge').textContent = products.length;
+            const filterKat = document.getElementById('listFilterKategoria').value;
 
-            if(!products.length) {
+            let displayProducts = products;
+            if(filterKat) {
+                displayProducts = products.filter(p => p.Kategoria === filterKat);
+            }
+
+            document.getElementById('countBadge').textContent = displayProducts.length + (filterKat ? ' / ' + products.length : '');
+
+            if(!displayProducts.length) {
                 container.innerHTML = '<p style="text-align:center;color:#475569;padding:20px;">Brak produktów. Dodaj pierwszy!</p>';
                 return;
             }
 
-            container.innerHTML = products.map((p, i) => {
+            container.innerHTML = displayProducts.map((p, i) => {
+                const realIndex = products.indexOf(p);
                 const photos = p.Zdjecia ? p.Zdjecia.split(',').filter(Boolean) : [];
                 const img = photos.length ? `images/watches/${photos[0]}` : '';
                 return `
-                    <div class="preview-item">
+                    <div class="preview-item" draggable="true" data-index="${realIndex}">
                         <img src="${img}" onerror="this.style.display='none'" alt="">
                         <div class="info">
                             <div class="name">${p.Model}</div>
-                            <div class="meta">${p.SKU} • ${p.Ilosc} szt. • ${p.Kategoria}</div>
+                            <div class="meta">${p.SKU} • ${p.Ilosc} szt. • ${p.Kategoria}${p.Cena ? ' • €' + p.Cena : ''}</div>
                         </div>
                         <div class="actions">
-                            <button onclick="editProduct(${i})" title="Edytuj"><i class="fas fa-pen"></i></button>
-                            <button class="delete" onclick="deleteProduct(${i})" title="Usuń"><i class="fas fa-trash"></i></button>
+                            <button onclick="event.stopPropagation();editProduct(${realIndex})" title="Edytuj"><i class="fas fa-pen"></i></button>
+                            <button class="delete" onclick="event.stopPropagation();deleteProduct(${realIndex})" title="Usuń"><i class="fas fa-trash"></i></button>
                         </div>
                     </div>
                 `;
             }).join('');
+
+            // Attach drag events
+            container.querySelectorAll('.preview-item[draggable="true"]').forEach(item => {
+                item.addEventListener('dragstart', handleListDragStart);
+                item.addEventListener('dragend', handleListDragEnd);
+                item.addEventListener('dragover', handleListDragOver);
+                item.addEventListener('dragenter', handleListDragEnter);
+                item.addEventListener('dragleave', handleListDragLeave);
+                item.addEventListener('drop', handleListDrop);
+            });
+        }
+
+        let listDragSrcIndex = null;
+
+        function handleListDragStart(e) {
+            listDragSrcIndex = parseInt(this.dataset.index);
+            this.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/plain', listDragSrcIndex);
+        }
+
+        function handleListDragEnd(e) {
+            this.classList.remove('dragging');
+            document.querySelectorAll('.preview-item').forEach(s => s.classList.remove('drag-over'));
+        }
+
+        function handleListDragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+        }
+
+        function handleListDragEnter(e) {
+            e.preventDefault();
+            const idx = parseInt(this.dataset.index);
+            if(!isNaN(idx) && idx !== listDragSrcIndex) {
+                this.classList.add('drag-over');
+            }
+        }
+
+        function handleListDragLeave(e) {
+            this.classList.remove('drag-over');
+        }
+
+        function handleListDrop(e) {
+            e.preventDefault();
+            this.classList.remove('drag-over');
+            const dropTargetIndex = parseInt(this.dataset.index);
+            if(isNaN(dropTargetIndex) || listDragSrcIndex === null || listDragSrcIndex === dropTargetIndex) return;
+
+            const item = products.splice(listDragSrcIndex, 1)[0];
+            products.splice(dropTargetIndex, 0, item);
+
+            listDragSrcIndex = null;
+            renderPreview();
+            showToast('Kolejność zmieniona', 'success');
         }
 
         function deleteProduct(index) {

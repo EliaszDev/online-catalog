@@ -301,7 +301,7 @@
         function formatPrice(price) {
             if (price === null || price === undefined || price === '') return '';
             return new Intl.NumberFormat(currentLang === 'pl' ? 'pl-PL' : currentLang === 'ru' ? 'ru-RU' : 'en-US', 
-                { style: 'currency', currency: 'PLN' }).format(price);
+                { style: 'currency', currency: 'EUR' }).format(price);
         }
 
         function render() {
