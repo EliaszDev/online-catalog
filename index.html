@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PREMIUM WATCHES — Katalog</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        body { background-color: #0b0f19; color: #e2e8f0; font-family: 'Inter', sans-serif; }
+        .glass { background: rgba(255,255,255,0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.08); }
+        .glass:hover { border-color: rgba(59,130,246,0.4); }
+        #modal { transition: opacity 0.3s ease; }
+        body.modal-active { overflow: hidden; }
+        .carousel-container { position: relative; width: 100%; overflow: hidden; border-radius: 1.5rem; background: rgba(255,255,255,0.03); }
+        #modal-main-img { transition: transform 0.3s ease, opacity 0.2s ease; cursor: zoom-in; }
+        #modal-main-img:active { transform: scale(1.5); cursor: zoom-out; }
+        .nav-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.5); color: white; padding: 0.75rem 1rem; border-radius: 50%; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); transition: all 0.2s; z-index: 10; font-size: 1.2rem; }
+        .nav-btn:hover { background: rgba(59, 130, 246, 0.8); }
+        .prev { left: 12px; } .next { right: 12px; }
+        .thumb { border: 2px solid rgba(255,255,255,0.1); }
+        .thumb-active { border-color: #3b82f6 !important; opacity: 1 !important; }
+        #lightbox { transition: opacity 0.3s ease; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0b0f19; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade-up { animation: fadeUp 0.5s ease forwards; }
+        .cat-active { background: rgba(59,130,246,0.2); border-color: rgba(59,130,246,0.5); color: #60a5fa; }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <div id="lightbox" class="fixed inset-0 bg-black/95 z-[200] hidden flex-col items-center justify-center p-4 cursor-pointer" onclick="closeLightbox()">
+        <img id="lightbox-img" src="" class="max-w-full max-h-[90vh] object-contain shadow-2xl">
+        <div class="mt-4 text-white/50 text-sm font-light tracking-widest uppercase" id="lightboxHint">Kliknij, aby zamknąć</div>
+    </div>
+
+    <header class="max-w-7xl mx-auto px-6 pt-8 pb-6">
+        <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-8">
+            <div>
+                <h1 class="text-4xl lg:text-5xl font-extrabold bg-gradient-to-r from-blue-400 via-cyan-400 to-emerald-400 bg-clip-text text-transparent tracking-tight">PREMIUM WATCHES</h1>
+                <p class="text-slate-500 mt-2 text-sm tracking-wide" data-i18n="subtitle">Katalog Produktów & System Magazynowy</p>
+            </div>
+            <div class="flex flex-wrap items-center gap-3">
+                <div class="relative">
+                    <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-sm"></i>
+                    <input type="text" id="searchInput" data-i18n-placeholder="searchPlaceholder" placeholder="Szukaj modelu lub SKU..." 
+                           class="glass rounded-xl pl-9 pr-4 py-2.5 text-sm text-white placeholder-slate-500 outline-none focus:border-blue-500/50 w-64 transition-all" oninput="handleSearch()">
+                </div>
+                <div class="flex gap-1 bg-white/5 p-1 rounded-xl border border-white/10">
+                    <button onclick="setLang('pl')" class="lang-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition hover:bg-white/10" data-lang="pl">PL</button>
+                    <button onclick="setLang('en')" class="lang-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition hover:bg-white/10" data-lang="en">EN</button>
+                    <button onclick="setLang('ru')" class="lang-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition hover:bg-white/10" data-lang="ru">RU</button>
+                    <button onclick="setLang('kk')" class="lang-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition hover:bg-white/10" data-lang="kk">KK</button>
+                    <button onclick="setLang('ne')" class="lang-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition hover:bg-white/10" data-lang="ne">NE</button>
+                </div>
+                <a href="admin/" class="glass px-4 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white hover:border-blue-500/30 transition flex items-center gap-2">
+                    <i class="fas fa-lock"></i> <span data-i18n="admin">Panel CMS</span>
+                </a>
+            </div>
+        </div>
+        <div id="categoryFilters" class="flex flex-wrap gap-2 mb-2">
+            <button onclick="filterCategory('all')" class="cat-btn cat-active px-4 py-2 rounded-xl text-xs font-semibold border border-white/10 transition hover:bg-white/5" data-cat="all" data-i18n="allProducts">Wszystkie Produkty</button>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-6 pb-20">
+        <div id="katalog" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
+        <div id="noResults" class="hidden text-center py-20 text-slate-500">
+            <i class="fas fa-search text-4xl mb-4 opacity-30"></i>
+            <p class="text-lg" data-i18n="noResults">Nie znaleziono produktów</p>
+        </div>
+    </main>
+
+    <div id="modal" class="opacity-0 pointer-events-none fixed inset-0 flex items-center justify-center p-4 z-[100]">
+        <div class="absolute inset-0 bg-black/90 backdrop-blur-md" onclick="closeModal()"></div>
+        <div class="glass w-full max-w-5xl rounded-[2rem] relative overflow-hidden max-h-[95vh] overflow-y-auto shadow-2xl shadow-blue-900/20">
+            <button onclick="closeModal()" class="absolute top-5 right-5 z-[110] text-slate-400 hover:text-white text-2xl w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/10 transition"><i class="fas fa-times"></i></button>
+            <div id="modal-content" class="p-6 md:p-10"></div>
+        </div>
+    </div>
+
+    <script>
+        const i18n = {
+            pl: {
+                subtitle: "Katalog Produktów & System Magazynowy",
+                searchPlaceholder: "Szukaj modelu lub SKU...",
+                admin: "Panel CMS",
+                allProducts: "Wszystkie Produkty",
+                noResults: "Nie znaleziono produktów",
+                viewDetails: "ZOBACZ SZCZEGÓŁY",
+                inStock: "Dostępny: {n} szt.",
+                outOfStock: "Brak na stanie",
+                sku: "SKU",
+                category: "Kategoria",
+                description: "Opis",
+                availability: "Dostępność",
+                pcs: "szt.",
+                color: "Kolor",
+                price: "Cena",
+                clickToClose: "Kliknij, aby zamknąć",
+                clickToEnlarge: "Kliknij, aby powiększyć"
+            },
+            en: {
+                subtitle: "Product Catalog & Inventory System",
+                searchPlaceholder: "Search model or SKU...",
+                admin: "CMS Panel",
+                allProducts: "All Products",
+                noResults: "No products found",
+                viewDetails: "VIEW DETAILS",
+                inStock: "In stock: {n} pcs",
+                outOfStock: "Out of stock",
+                sku: "SKU",
+                category: "Category",
+                description: "Description",
+                availability: "Availability",
+                pcs: "pcs",
+                color: "Color",
+                price: "Price",
+                clickToClose: "Click to close",
+                clickToEnlarge: "Click to enlarge"
+            },
+            ru: {
+                subtitle: "Каталог Продуктов & Система Учета",
+                searchPlaceholder: "Поиск модели или артикула...",
+                admin: "Панель CMS",
+                allProducts: "Все Продукты",
+                noResults: "Товары не найдены",
+                viewDetails: "ПОДРОБНЕЕ",
+                inStock: "В наличии: {n} шт.",
+                outOfStock: "Нет в наличии",
+                sku: "Артикул",
+                category: "Категория",
+                description: "Описание",
+                availability: "Наличие",
+                pcs: "шт.",
+                color: "Цвет",
+                price: "Цена",
+                clickToClose: "Нажмите, чтобы закрыть",
+                clickToEnlarge: "Нажмите, чтобы увеличить"
+            },
+            kk: {
+                subtitle: "Өнім Каталогы & Қойма Жүйесі",
+                searchPlaceholder: "Модель немесе SKU іздеу...",
+                admin: "CMS Панелі",
+                allProducts: "Барлық Өнімдер",
+                noResults: "Өнімдер табылмады",
+                viewDetails: "ТОЛЫҒЫРАҚ",
+                inStock: "Қоймада: {n} дана",
+                outOfStock: "Қоймада жоқ",
+                sku: "SKU",
+                category: "Санат",
+                description: "Сипаттама",
+                availability: "Қолжетімділік",
+                pcs: "дана",
+                color: "Түс",
+                price: "Бағасы",
+                clickToClose: "Жабу үшін басыңыз",
+                clickToEnlarge: "Үлкейту үшін басыңыз"
+            },
+            ne: {
+                subtitle: "उत्पादन सूची & इन्भेन्ट्री प्रणाली",
+                searchPlaceholder: "मोडेल वा SKU खोज्नुहोस्...",
+                admin: "CMS प्यानल",
+                allProducts: "सबै उत्पादनहरू",
+                noResults: "कुनै उत्पादन भेटिएन",
+                viewDetails: "विवरण हेर्नुहोस्",
+                inStock: "स्टकमा: {n} pcs",
+                outOfStock: "स्टकमा छैन",
+                sku: "SKU",
+                category: "कोटि",
+                description: "विवरण",
+                availability: "उपलब्धता",
+                pcs: "pcs",
+                color: "रङ",
+                price: "मूल्य",
+                clickToClose: "बन्द गर्न क्लिक गर्नुहोस्",
+                clickToEnlarge: "ठूलो बनाउन क्लिक गर्नुहोस्"
+            }
+        };
+
+        let currentLang = 'pl';
+        let products = [];
+        let filteredProducts = [];
+        let currentImgIndex = 0;
+        let currentPhotos = [];
+        let categories = new Set();
+
+        function t(key, vars = {}) {
+            let str = i18n[currentLang] && i18n[currentLang][key] ? i18n[currentLang][key] : (i18n.en[key] || key);
+            for (let k in vars) str = str.replace('{' + k + '}', vars[k]);
+            return str;
+        }
+
+        async function loadData() {
+            try {
+                const res = await fetch('csvjson.json');
+                const data = await res.json();
+                // Support both old flat array and new wrapped format
+                products = Array.isArray(data) ? data : (data.products || []);
+                filteredProducts = [...products];
+                extractCategories();
+                renderCategories();
+                render();
+                updateLangUI();
+            } catch (e) { 
+                console.error("Błąd ładowania JSON:", e);
+                document.getElementById('katalog').innerHTML = '<div class="text-center py-20 text-red-400">Błąd ładowania produktów.</div>';
+            }
+        }
+
+        function extractCategories() { categories = new Set(products.map(p => p.Kategoria).filter(Boolean)); }
+
+        function renderCategories() {
+            const container = document.getElementById('categoryFilters');
+            const allBtn = container.querySelector('[data-cat="all"]');
+            container.innerHTML = '';
+            container.appendChild(allBtn);
+            categories.forEach(cat => {
+                const btn = document.createElement('button');
+                btn.className = 'cat-btn px-4 py-2 rounded-xl text-xs font-semibold border border-white/10 transition hover:bg-white/5 text-slate-400';
+                btn.dataset.cat = cat;
+                btn.textContent = cat.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                btn.onclick = () => filterCategory(cat);
+                container.appendChild(btn);
+            });
+        }
+
+        function setLang(lang) {
+            currentLang = lang;
+            updateLangUI();
+            render();
+            updateLangButtons();
+        }
+
+        function updateLangButtons() {
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                if (btn.dataset.lang === currentLang) {
+                    btn.classList.add('bg-blue-500/20', 'text-blue-400');
+                    btn.classList.remove('text-slate-400');
+                } else {
+                    btn.classList.remove('bg-blue-500/20', 'text-blue-400');
+                    btn.classList.add('text-slate-400');
+                }
+            });
+        }
+
+        function updateLangUI() {
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.dataset.i18n;
+                if (i18n[currentLang] && i18n[currentLang][key]) el.textContent = i18n[currentLang][key];
+            });
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                const key = el.dataset.i18nPlaceholder;
+                if (i18n[currentLang] && i18n[currentLang][key]) el.placeholder = i18n[currentLang][key];
+            });
+            document.getElementById('lightboxHint').textContent = t('clickToClose');
+        }
+
+        function filterCategory(cat) {
+            document.querySelectorAll('.cat-btn').forEach(btn => {
+                if (btn.dataset.cat === cat) { btn.classList.add('cat-active'); btn.classList.remove('text-slate-400'); }
+                else { btn.classList.remove('cat-active'); btn.classList.add('text-slate-400'); }
+            });
+            if (cat === 'all') filteredProducts = [...products];
+            else filteredProducts = products.filter(p => p.Kategoria === cat);
+            handleSearch(true);
+        }
+
+        function handleSearch(skipFilter = false) {
+            const query = document.getElementById('searchInput').value.toLowerCase().trim();
+            let display = skipFilter ? [...filteredProducts] : [...products];
+            if (!skipFilter) {
+                const activeCat = document.querySelector('.cat-active');
+                const cat = activeCat ? activeCat.dataset.cat : 'all';
+                if (cat !== 'all') display = display.filter(p => p.Kategoria === cat);
+            }
+            if (query) {
+                display = display.filter(p => 
+                    (p.Model && p.Model.toLowerCase().includes(query)) ||
+                    (p.SKU && p.SKU.toLowerCase().includes(query)) ||
+                    (p.Kolor && p.Kolor.toLowerCase().includes(query)) ||
+                    (p.Opis && p.Opis[currentLang] && p.Opis[currentLang].toLowerCase().includes(query))
+                );
+            }
+            filteredProducts = display;
+            render();
+        }
+
+        function getImagePath(filename, size = 'thumb') {
+            const base = filename.replace(/\.[^/.]+$/, "");
+            const ext = filename.match(/\.[^/.]+$/) ? filename.match(/\.[^/.]+$/)[0] : '.jpg';
+            return `images/watches/${base}_${size}${ext}`;
+        }
+
+        function formatPrice(price) {
+            if (price === null || price === undefined || price === '') return '';
+            return new Intl.NumberFormat(currentLang === 'pl' ? 'pl-PL' : currentLang === 'ru' ? 'ru-RU' : 'en-US', 
+                { style: 'currency', currency: 'PLN' }).format(price);
+        }
+
+        function render() {
+            const container = document.getElementById('katalog');
+            const noResults = document.getElementById('noResults');
+            container.innerHTML = '';
+            if (filteredProducts.length === 0) { noResults.classList.remove('hidden'); return; }
+            noResults.classList.add('hidden');
+
+            filteredProducts.forEach((p, idx) => {
+                const photos = (p.Zdjecia && p.Zdjecia !== 'xxx') ? p.Zdjecia.split(',').map(s => s.trim()).filter(Boolean) : [];
+                const mainImg = photos.length > 0 ? getImagePath(photos[0], 'thumb') : 'https://via.placeholder.com/400?text=Brak+Zdjecia';
+                const fallbackImg = photos.length > 0 ? `images/watches/${photos[0]}` : 'https://via.placeholder.com/400?text=Brak+Zdjecia';
+                const priceStr = p.Cena ? formatPrice(p.Cena) : '';
+                const delay = idx * 50;
+
+                container.innerHTML += `
+                    <div onclick="openModal('${p.SKU}')" 
+                         class="glass rounded-[1.5rem] p-5 cursor-pointer hover:scale-[1.02] transition-all duration-300 border-white/5 hover:border-blue-500/40 flex flex-col h-full group animate-fade-up"
+                         style="animation-delay: ${delay}ms">
+                        <div class="aspect-square bg-slate-900/50 rounded-2xl mb-5 flex items-center justify-center overflow-hidden relative">
+                            <img src="${mainImg}" onerror="this.onerror=null;this.src='${fallbackImg}'" loading="lazy" alt="${p.Model}" 
+                                 class="max-h-full max-w-full object-contain p-4 transition-transform duration-500 group-hover:scale-110">
+                            <div class="absolute inset-0 bg-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                <span class="bg-white text-black px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider shadow-lg">${t('viewDetails')}</span>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-lg font-bold text-white">${p.Model}</h3>
+                            <span class="text-slate-500 font-mono text-xs bg-white/5 px-2 py-1 rounded-md">${p.SKU}</span>
+                        </div>
+                        <p class="text-slate-500 text-sm line-clamp-2 mb-3 flex-grow">${p.Opis && p.Opis[currentLang] ? p.Opis[currentLang] : t('noResults')}</p>
+                        ${priceStr ? `<div class="text-emerald-400 font-bold text-sm mb-2">${priceStr}</div>` : ''}
+                        <div class="flex justify-between items-center text-xs font-medium uppercase tracking-wider mt-auto pt-4 border-t border-white/5">
+                            <span class="${p.Ilosc > 0 ? 'text-emerald-400' : 'text-red-400'} flex items-center gap-1.5">
+                                <i class="fas fa-circle text-[6px]"></i>
+                                ${p.Ilosc > 0 ? t('inStock', {n: p.Ilosc}) : t('outOfStock')}
+                            </span>
+                            <span class="text-slate-600">${p.Kolor || ''}</span>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function openModal(sku) {
+            const p = products.find(x => x.SKU === sku);
+            if (!p) return;
+            currentPhotos = (p.Zdjecia && p.Zdjecia !== 'xxx') ? p.Zdjecia.split(',').map(s => s.trim()).filter(Boolean) : [];
+            currentImgIndex = 0;
+            const content = document.getElementById('modal-content');
+            const mainPhoto = currentPhotos.length > 0 ? getImagePath(currentPhotos[0], 'full') : 'https://via.placeholder.com/600';
+            const mainFallback = currentPhotos.length > 0 ? `images/watches/${currentPhotos[0]}` : 'https://via.placeholder.com/600';
+            const priceStr = p.Cena ? formatPrice(p.Cena) : '';
+
+            content.innerHTML = `
+                <div class="grid lg:grid-cols-2 gap-8 lg:gap-12">
+                    <div class="space-y-5">
+                        <div class="carousel-container aspect-square flex items-center justify-center relative group">
+                            ${currentPhotos.length > 1 ? `<div class="nav-btn prev" onclick="event.stopPropagation();changeSlide(-1)"><i class="fas fa-chevron-left"></i></div>` : ''}
+                            <img src="${mainPhoto}" onerror="this.onerror=null;this.src='${mainFallback}'" id="modal-main-img" 
+                                 class="max-h-full max-w-full object-contain p-6 lg:p-10" onclick="openLightbox()" title="${t('clickToEnlarge')}">
+                            ${currentPhotos.length > 1 ? `<div class="nav-btn next" onclick="event.stopPropagation();changeSlide(1)"><i class="fas fa-chevron-right"></i></div>` : ''}
+                        </div>
+                        <div class="flex gap-3 overflow-x-auto pb-2 justify-center px-2">
+                            ${currentPhotos.map((img, idx) => {
+                                const thumbPath = getImagePath(img, 'thumb');
+                                const fallback = `images/watches/${img}`;
+                                return `<img src="${thumbPath}" onerror="this.onerror=null;this.src='${fallback}'" onclick="setSlide(${idx})" 
+                                     class="thumb h-16 w-16 object-cover rounded-xl cursor-pointer opacity-50 hover:opacity-100 transition flex-shrink-0 ${idx === 0 ? 'thumb-active' : ''}">`;
+                            }).join('')}
+                        </div>
+                    </div>
+                    <div class="flex flex-col justify-center">
+                        <div class="flex items-center gap-3 mb-3">
+                            <span class="text-blue-500 font-bold tracking-widest text-xs uppercase bg-blue-500/10 px-3 py-1 rounded-full">${p.SKU}</span>
+                            <span class="text-slate-500 text-xs uppercase tracking-wider">${p.Kategoria ? p.Kategoria.replace(/-/g, ' ') : ''}</span>
+                        </div>
+                        <h2 class="text-4xl lg:text-5xl font-bold mb-2 text-white">${p.Model}</h2>
+                        <div class="text-lg text-slate-400 mb-2 font-light">${p.Kolor || ''}</div>
+                        ${priceStr ? `<div class="text-3xl font-black text-emerald-400 mb-6">${priceStr}</div>` : '<div class="mb-6"></div>'}
+
+                        <div class="space-y-4 mb-10">
+                            <h4 class="text-slate-500 text-xs uppercase font-bold tracking-tighter">${t('description')}</h4>
+                            <div class="p-6 bg-white/5 rounded-3xl border border-white/5">
+                                <p class="text-slate-300 leading-relaxed text-base">${p.Opis && p.Opis[currentLang] ? p.Opis[currentLang] : t('noResults')}</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <div class="flex-1 bg-gradient-to-br ${p.Ilosc > 0 ? 'from-emerald-500 to-emerald-700' : 'from-red-500 to-red-700'} p-5 rounded-2xl flex justify-between items-center shadow-lg ${p.Ilosc > 0 ? 'shadow-emerald-500/20' : 'shadow-red-500/20'}">
+                                <span class="text-white/80 text-sm font-bold uppercase tracking-wider">${t('availability')}</span>
+                                <span class="text-3xl font-black text-white">${p.Ilosc} <small class="text-sm font-normal opacity-70">${t('pcs')}</small></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('modal').classList.remove('opacity-0', 'pointer-events-none');
+            document.body.classList.add('modal-active');
+        }
+
+        function changeSlide(direction) {
+            if (currentPhotos.length <= 1) return;
+            currentImgIndex = (currentImgIndex + direction + currentPhotos.length) % currentPhotos.length;
+            updateModalImage();
+        }
+        function setSlide(index) { currentImgIndex = index; updateModalImage(); }
+
+        function updateModalImage() {
+            const imgElement = document.getElementById('modal-main-img');
+            const thumbs = document.querySelectorAll('.thumb');
+            const newPath = getImagePath(currentPhotos[currentImgIndex], 'full');
+            const fallback = `images/watches/${currentPhotos[currentImgIndex]}`;
+            imgElement.style.opacity = '0.5';
+            setTimeout(() => { imgElement.src = newPath; imgElement.onerror = function() { this.onerror = null; this.src = fallback; }; imgElement.style.opacity = '1'; }, 150);
+            thumbs.forEach((t, i) => { if (i === currentImgIndex) t.classList.add('thumb-active'); else t.classList.remove('thumb-active'); });
+        }
+
+        function openLightbox() {
+            if (!currentPhotos.length) return;
+            const path = getImagePath(currentPhotos[currentImgIndex], 'full');
+            const fallback = `images/watches/${currentPhotos[currentImgIndex]}`;
+            const lb = document.getElementById('lightbox');
+            const lbImg = document.getElementById('lightbox-img');
+            lbImg.src = path; lbImg.onerror = function() { this.onerror = null; this.src = fallback; };
+            lb.classList.remove('hidden'); lb.classList.add('flex');
+            document.body.classList.add('modal-active');
+        }
+        function closeLightbox() {
+            const lb = document.getElementById('lightbox');
+            lb.classList.add('hidden'); lb.classList.remove('flex');
+            if (!document.getElementById('modal').classList.contains('pointer-events-none')) return;
+            document.body.classList.remove('modal-active');
+        }
+        function closeModal() {
+            document.getElementById('modal').classList.add('opacity-0', 'pointer-events-none');
+            document.body.classList.remove('modal-active');
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === "Escape") {
+                const lb = document.getElementById('lightbox');
+                if (!lb.classList.contains('hidden')) closeLightbox();
+                else closeModal();
+            }
+            if (document.body.classList.contains('modal-active')) {
+                if (e.key === "ArrowRight") changeSlide(1);
+                if (e.key === "ArrowLeft") changeSlide(-1);
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', loadData);
+    </script>
+</body>
+</html>
