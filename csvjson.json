@@ -6,15 +6,15 @@
       "Kategoria": "zegarki-smartwatch",
       "Kolor": "BLACK",
       "Ilosc": 2,
-      "Zdjecia": "zw-95-black.jpg, zw-95-measures.jpg, zw-95-black-metal.jpg",
+      "Cena": null,
+      "Zdjecia": "",
       "Opis": {
         "pl": "Zaawansowany smartwatch sportowy z dużym wyświetlaczem HD. Oferuje precyzyjny monitoring tętna, natlenienia krwi oraz liczne tryby sportowe. Idealny dla osób aktywnych.",
         "en": "Advanced sports smartwatch with a large HD display. Offers precise heart rate monitoring, blood oxygen levels, and numerous sports modes. Ideal for active people.",
         "ru": "Усовершенствованные спортивные смарт-часы с большим HD-дисплеем. Предлагают точный мониторинг сердечного ритма и множество спортивных режимов.",
         "kk": "Үлкен HD дисплейі бар озық спорттық смарт-сағат. Жүрек соғу жиілігін дәл бақылауды және көптеген спорттық режимдерді ұсынады.",
         "ne": "ठूलो HD डिस्प्ले भएको उन्नत स्पोर्ट्स स्मार्टवाच। यसले सटीक हृदय गति निगरानी र धेरै खेल मोडहरू प्रदान गर्दछ।"
-      },
-      "Cena": null
+      }
     },
     {
       "SKU": "ZS-02",
@@ -22,15 +22,15 @@
       "Kategoria": "zegarki-smartwatch",
       "Kolor": "BLACK",
       "Ilosc": 7,
-      "Zdjecia": "v65-black.jpg, v65-black-metal.jpg, ",
+      "Cena": 200,
+      "Zdjecia": "",
       "Opis": {
         "pl": "Stylowy smartwatch z funkcją rozmów Bluetooth i ekranem AMOLED. Łączy elegancję z nowoczesną technologią monitoringu zdrowia i powiadomień.",
         "en": "Stylish smartwatch with Bluetooth calling and AMOLED screen. Combines elegance with modern health monitoring technology and notifications.",
         "ru": "Стильные смарт-часы с функцией Bluetooth-звонков и AMOLED-экраном. Сочетают в себе элегантность и современные технологии.",
         "kk": "Bluetooth қоңыраулары және AMOLED экраны бар стильді смарт-сағат. Элегантылық пен заманауи технологияны біріктіреді.",
         "ne": "ब्लुटुथ कलिङ र AMOLED स्क्रिन भएको स्टाइलिश स्मार्टवाच। यसले सुन्दरता र आधुनिक प्रविधिलाई जोड्दछ।"
-      },
-      "Cena": null
+      }
     },
     {
       "SKU": "ZS-03",
