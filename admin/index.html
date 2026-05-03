@@ -248,26 +248,37 @@
         .toast.success { background: #064e3b; border-color: rgba(16,185,129,0.3); }
 
         /* Product List Preview */
-        .preview-list { max-height: 55vh; overflow-y: auto; }
+        .preview-list { max-height: 60vh; overflow-y: auto; padding-right: 4px; }
         .preview-item {
-            display: flex; align-items: center; gap: 12px;
-            padding: 12px; background: rgba(255,255,255,0.03);
-            border-radius: 10px; margin-bottom: 8px;
+            display: flex; align-items: center; gap: 14px;
+            padding: 14px; background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 14px; margin-bottom: 10px;
+            transition: all 0.15s;
+        }
+        .preview-item:hover {
+            background: rgba(255,255,255,0.06);
+            border-color: rgba(59,130,246,0.2);
         }
         .preview-item img {
-            width: 48px; height: 48px; border-radius: 8px;
+            width: 56px; height: 56px; border-radius: 10px;
             object-fit: cover; background: rgba(255,255,255,0.05);
+            flex-shrink: 0;
         }
         .preview-item .info { flex: 1; min-width: 0; }
-        .preview-item .name { font-weight: 600; font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .preview-item .meta { font-size: 0.75rem; color: #64748b; }
-        .preview-item .actions { display: flex; gap: 8px; }
+        .preview-item .name { font-weight: 700; font-size: 1rem; color: #e2e8f0; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .preview-item .meta { font-size: 0.8rem; color: #64748b; }
+        .preview-item .actions { display: flex; gap: 10px; }
         .preview-item .actions button {
-            width: 32px; height: 32px; border-radius: 8px;
+            width: 38px; height: 38px; border-radius: 10px;
             border: none; background: rgba(255,255,255,0.08);
-            color: #94a3b8; cursor: pointer; font-size: 0.8rem;
+            color: #94a3b8; cursor: pointer; font-size: 0.9rem;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.15s;
         }
-        .preview-item .actions button.delete { background: rgba(239,68,68,0.15); color: #ef4444; }
+        .preview-item .actions button:hover { background: rgba(59,130,246,0.2); color: #60a5fa; }
+        .preview-item .actions button.delete { background: rgba(239,68,68,0.12); color: #ef4444; }
+        .preview-item .actions button.delete:hover { background: rgba(239,68,68,0.25); color: #f87171; }
 
         /* Bottom Nav */
         .bottom-nav {
@@ -323,7 +334,7 @@
     </div>
 
     <!-- VIEW: Add Product -->
-    <div id="viewAdd" class="view active container">
+    <div id="viewAdd" class="view container">
         <div class="card">
             <div class="card-title"><i class="fas fa-tag"></i>Podstawowe Informacje</div>
 
@@ -452,7 +463,7 @@
     </div>
 
     <!-- VIEW: Product List -->
-    <div id="viewList" class="view container">
+    <div id="viewList" class="view active container">
         <div class="card">
             <div class="card-title" style="justify-content:space-between;">
                 <span><i class="fas fa-list"></i>Lista Produktów (<span id="countBadge">0</span>)</span>
@@ -935,7 +946,7 @@
             document.getElementById('pOpis_en').value = p.Opis?.en || '';
             document.getElementById('pOpis_ru').value = p.Opis?.ru || '';
             document.getElementById('pOpis_kk').value = p.Opis?.kk || '';
-            document.getElementById('pOpis_ne').value = p.Opis?.ne || '';
+            document.getElementById('pOpis_uz').value = p.Opis?.uz || '';
 
             // Restore existing photos into the upload buffer so they are preserved on save
             uploadedPhotos = [];
