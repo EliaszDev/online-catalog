@@ -197,7 +197,9 @@
 
         async function loadData() {
             try {
-                const res = await fetch('csvjson.json');
+                // Cache-bust to always get fresh data from server
+                const res = await fetch('csvjson.json?_=' + Date.now(), { cache: 'no-store' });
+                if (!res.ok) throw new Error('HTTP ' + res.status);
                 const data = await res.json();
                 // Support both old flat array and new wrapped format
                 products = Array.isArray(data) ? data : (data.products || []);
