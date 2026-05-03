@@ -7,8 +7,25 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        :root {
+            --bg-primary: #f8f9fa;
+            --bg-card: #ffffff;
+            --bg-input: #ffffff;
+            --border-light: #e9ecef;
+            --border-medium: #dee2e6;
+            --accent-blue: #2563eb;
+            --accent-blue-hover: #1d4ed8;
+            --accent-blue-light: #eff6ff;
+            --success-green: #10b981;
+            --success-green-light: #ecfdf5;
+            --danger-red: #ef4444;
+            --danger-red-light: #fef2f2;
+            --text-primary: #111827;
+            --text-secondary: #4b5563;
+            --text-tertiary: #9ca3af;
+        }
         body {
-            margin: 0; padding: 0; background: #0b0f19; color: #e2e8f0;
+            margin: 0; padding: 0; background: var(--bg-primary); color: var(--text-primary);
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             font-size: 16px; line-height: 1.5;
         }
@@ -17,66 +34,71 @@
 
         /* Login Overlay */
         .login-overlay {
-            position: fixed; inset: 0; background: #0b0f19; z-index: 2000;
+            position: fixed; inset: 0; background: var(--bg-primary); z-index: 2000;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             padding: 20px;
         }
         .login-overlay.hidden { display: none; }
         .login-box {
             width: 100%; max-width: 360px;
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 20px; padding: 32px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: 16px; padding: 32px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
         }
         .login-box h2 {
-            margin: 0 0 8px; font-size: 1.4rem; text-align: center;
+            margin: 0 0 8px; font-size: 1.4rem; text-align: center; color: var(--text-primary);
         }
         .login-box p {
-            margin: 0 0 24px; color: #64748b; font-size: 0.9rem; text-align: center;
+            margin: 0 0 24px; color: var(--text-tertiary); font-size: 0.9rem; text-align: center;
         }
         .login-box .form-group { margin-bottom: 16px; }
         .login-box input {
             width: 100%; padding: 14px 16px;
-            background: rgba(255,255,255,0.06);
-            border: 2px solid rgba(255,255,255,0.1);
-            border-radius: 12px; color: #fff;
+            background: var(--bg-input);
+            border: 1px solid var(--border-medium);
+            border-radius: 10px; color: var(--text-primary);
             font-size: 1rem; font-family: inherit;
+            outline: none;
         }
         .login-box input:focus {
-            outline: none; border-color: #3b82f6;
-            background: rgba(255,255,255,0.08);
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
         }
         .login-box .btn {
-            width: 100%; padding: 14px; border-radius: 12px;
+            width: 100%; padding: 14px; border-radius: 10px;
             border: none; font-size: 1rem; font-weight: 700;
-            cursor: pointer; background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            cursor: pointer; background: var(--accent-blue);
             color: white; margin-top: 8px;
+            transition: background 0.2s;
         }
+        .login-box .btn:hover { background: var(--accent-blue-hover); }
+        .login-box .btn:active { transform: scale(0.97); }
         .login-error {
-            color: #ef4444; font-size: 0.85rem; text-align: center;
+            color: var(--danger-red); font-size: 0.85rem; text-align: center;
             margin-top: 12px; min-height: 20px;
         }
 
         /* Header */
         .header {
-            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-            padding: 20px 16px; text-align: center;
-            border-bottom: 1px solid rgba(255,255,255,0.08);
+            background: var(--bg-card);
+            padding: 16px; text-align: center;
+            border-bottom: 1px solid var(--border-light);
             position: sticky; top: 0; z-index: 100;
-            backdrop-filter: blur(10px);
         }
-        .header h1 { margin: 0; font-size: 1.3rem; font-weight: 700; }
-        .header p { margin: 4px 0 0; font-size: 0.85rem; color: #64748b; }
+        .header h1 { margin: 0; font-size: 1.2rem; font-weight: 700; color: var(--text-primary); }
+        .header p { margin: 4px 0 0; font-size: 0.8rem; color: var(--text-tertiary); }
 
         /* Cards */
         .card {
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 16px; padding: 20px; margin-bottom: 16px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: 14px; padding: 20px; margin-bottom: 16px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
         }
         .card-title {
             font-size: 0.75rem; font-weight: 700; text-transform: uppercase;
-            letter-spacing: 0.05em; color: #60a5fa; margin-bottom: 16px;
+            letter-spacing: 0.05em; color: var(--accent-blue); margin-bottom: 16px;
             display: flex; align-items: center; gap: 8px;
         }
 
@@ -84,26 +106,27 @@
         .form-group { margin-bottom: 20px; }
         .form-group:last-child { margin-bottom: 0; }
         label {
-            display: block; font-size: 0.85rem; font-weight: 600;
-            color: #94a3b8; margin-bottom: 8px;
+            display: block; font-size: 0.875rem; font-weight: 500;
+            color: var(--text-secondary); margin-bottom: 6px;
         }
-        .required { color: #ef4444; }
+        .required { color: var(--danger-red); }
 
         input, select, textarea {
-            width: 100%; padding: 14px 16px;
-            background: rgba(255,255,255,0.06);
-            border: 2px solid rgba(255,255,255,0.1);
-            border-radius: 12px; color: #fff;
+            width: 100%; padding: 12px 14px;
+            background: var(--bg-input);
+            border: 1px solid var(--border-medium);
+            border-radius: 10px; color: var(--text-primary);
             font-size: 1rem; font-family: inherit;
-            transition: border-color 0.2s;
+            transition: border-color 0.2s, box-shadow 0.2s;
             -webkit-appearance: none; appearance: none;
+            outline: none;
         }
         input:focus, select:focus, textarea:focus {
-            outline: none; border-color: #3b82f6;
-            background: rgba(255,255,255,0.08);
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
         }
         select {
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
             background-repeat: no-repeat; background-position: right 12px center;
             padding-right: 40px;
         }
@@ -113,53 +136,54 @@
         .sku-row { display: flex; gap: 10px; }
         .sku-row input { flex: 1; }
         .btn-suggest {
-            padding: 14px 16px; background: rgba(59,130,246,0.15);
-            border: 2px solid rgba(59,130,246,0.3); color: #60a5fa;
-            border-radius: 12px; font-size: 0.85rem; font-weight: 600;
-            white-space: nowrap; cursor: pointer;
+            padding: 12px 16px; background: var(--accent-blue-light);
+            border: 1px solid rgba(59,130,246,0.2); color: var(--accent-blue);
+            border-radius: 10px; font-size: 0.85rem; font-weight: 600;
+            white-space: nowrap; cursor: pointer; transition: all 0.2s;
         }
+        .btn-suggest:hover { background: rgba(59,130,246,0.15); }
         .last-sku {
-            font-size: 0.75rem; color: #64748b; margin-top: 6px;
+            font-size: 0.75rem; color: var(--text-tertiary); margin-top: 6px;
         }
 
         /* Photo Upload */
         .photo-grid {
             display: grid; grid-template-columns: repeat(3, 1fr);
-            gap: 10px; margin-top: 10px;
+            gap: 12px; margin-top: 10px;
         }
         .photo-slot {
-            aspect-ratio: 1; background: rgba(255,255,255,0.04);
-            border: 2px dashed rgba(255,255,255,0.15);
+            aspect-ratio: 1; background: var(--bg-primary);
+            border: 2px dashed var(--border-medium);
             border-radius: 12px; display: flex;
             flex-direction: column; align-items: center; justify-content: center;
             cursor: pointer; position: relative; overflow: hidden;
             transition: all 0.2s;
         }
-        .photo-slot:active { border-color: #3b82f6; background: rgba(59,130,246,0.1); }
-        .photo-slot i { font-size: 1.5rem; color: #475569; margin-bottom: 4px; }
-        .photo-slot span { font-size: 0.7rem; color: #475569; }
+        .photo-slot:hover { border-color: var(--accent-blue); background: var(--accent-blue-light); }
+        .photo-slot i { font-size: 1.5rem; color: var(--text-tertiary); margin-bottom: 4px; }
+        .photo-slot span { font-size: 0.7rem; color: var(--text-tertiary); }
         .photo-slot img {
             position: absolute; inset: 0; width: 100%; height: 100%;
             object-fit: cover; border-radius: 10px;
         }
         .photo-slot .remove-btn {
-            position: absolute; top: 4px; right: 4px;
-            width: 24px; height: 24px; background: rgba(239,68,68,0.9);
+            position: absolute; top: 6px; right: 6px;
+            width: 24px; height: 24px; background: var(--danger-red);
             color: white; border-radius: 50%; border: none;
             font-size: 0.7rem; cursor: pointer; z-index: 2;
             display: flex; align-items: center; justify-content: center;
         }
         .photo-slot.dragging {
             opacity: 0.5;
-            border-color: #3b82f6 !important;
+            border-color: var(--accent-blue) !important;
             transform: scale(0.95);
         }
         .photo-slot.drag-over {
-            border-color: #10b981 !important;
-            background: rgba(16,185,129,0.1);
+            border-color: var(--success-green) !important;
+            background: var(--success-green-light);
         }
         .photo-order-hint {
-            font-size: 0.7rem; color: #64748b; margin-top: 8px; text-align: center;
+            font-size: 0.75rem; color: var(--text-tertiary); margin-top: 8px; text-align: center;
         }
 
         /* Lang Tabs */
@@ -170,140 +194,142 @@
         .lang-tab {
             padding: 8px 14px; border-radius: 10px;
             font-size: 0.8rem; font-weight: 600;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.08);
-            color: #64748b; cursor: pointer; white-space: nowrap;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-light);
+            color: var(--text-tertiary); cursor: pointer; white-space: nowrap;
+            transition: all 0.2s;
         }
-        .lang-tab.active { background: rgba(59,130,246,0.2); color: #60a5fa; border-color: rgba(59,130,246,0.3); }
+        .lang-tab.active { background: var(--accent-blue-light); color: var(--accent-blue); border-color: rgba(59,130,246,0.3); }
 
         /* Buttons */
         .btn {
-            width: 100%; padding: 16px; border-radius: 14px;
-            border: none; font-size: 1rem; font-weight: 700;
+            width: 100%; padding: 14px; border-radius: 10px;
+            border: none; font-size: 1rem; font-weight: 600;
             cursor: pointer; display: flex; align-items: center;
             justify-content: center; gap: 10px; transition: all 0.2s;
         }
         .btn-primary {
-            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-            color: white; box-shadow: 0 4px 20px rgba(37,99,235,0.3);
+            background: var(--accent-blue);
+            color: white;
         }
-        .btn-primary:active { transform: scale(0.98); }
+        .btn-primary:hover { background: var(--accent-blue-hover); }
+        .btn-primary:active { transform: scale(0.97); }
         .btn-success {
-            background: linear-gradient(135deg, #059669 0%, #047857 100%);
-            color: white; box-shadow: 0 4px 20px rgba(5,150,105,0.3);
+            background: var(--success-green);
+            color: white;
         }
+        .btn-success:hover { background: #059669; }
         .btn-secondary {
-            background: rgba(255,255,255,0.08); color: #94a3b8;
-            border: 1px solid rgba(255,255,255,0.12);
+            background: var(--bg-primary); color: var(--text-secondary);
+            border: 1px solid var(--border-light);
         }
+        .btn-secondary:hover { background: var(--border-light); }
 
         /* GitHub Settings */
         .settings-toggle {
             display: flex; align-items: center; justify-content: center; gap: 8px;
             text-align: center; padding: 16px 20px;
-            color: #94a3b8; font-size: 0.9rem; font-weight: 600;
+            color: var(--text-secondary); font-size: 0.9rem; font-weight: 600;
             cursor: pointer;
             margin-bottom: 80px;
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.08);
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
             border-radius: 14px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
         }
         .settings-toggle:hover {
-            background: rgba(59,130,246,0.1);
-            border-color: rgba(59,130,246,0.3);
-            color: #60a5fa;
+            background: var(--accent-blue-light);
+            border-color: rgba(59,130,246,0.2);
+            color: var(--accent-blue);
         }
         .settings-panel {
-            display: none; background: rgba(255,255,255,0.02);
+            display: none; background: var(--bg-card);
+            border: 1px solid var(--border-light);
             border-radius: 12px; padding: 16px; margin-bottom: 16px;
         }
         .settings-panel.open { display: block; }
 
         /* Progress */
         .progress-overlay {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.85);
+            position: fixed; inset: 0; background: rgba(255,255,255,0.85);
             z-index: 1000; display: none;
             flex-direction: column; align-items: center; justify-content: center;
         }
         .progress-overlay.active { display: flex; }
         .spinner {
-            width: 48px; height: 48px; border: 4px solid rgba(255,255,255,0.1);
-            border-top-color: #3b82f6; border-radius: 50%;
-            animation: spin 1s linear infinite; margin-bottom: 20px;
+            width: 40px; height: 40px; border: 3px solid var(--border-light);
+            border-top-color: var(--accent-blue); border-radius: 50%;
+            animation: spin 1s linear infinite; margin-bottom: 16px;
         }
         @keyframes spin { to { transform: rotate(360deg); } }
-        .progress-text { color: #94a3b8; font-size: 0.9rem; }
+        .progress-text { color: var(--text-secondary); font-size: 0.9rem; }
 
         /* Toast */
         .toast {
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(100px);
-            background: #1e293b; color: white; padding: 14px 24px; border-radius: 12px;
+            position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%) translateY(100px);
+            background: #111827; color: white; padding: 12px 20px; border-radius: 10px;
             font-size: 0.9rem; font-weight: 600; z-index: 1001;
-            border: 1px solid rgba(255,255,255,0.1);
-            box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+            border-left: 4px solid transparent;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
             transition: transform 0.3s; white-space: nowrap;
         }
         .toast.show { transform: translateX(-50%) translateY(0); }
-        .toast.error { background: #7f1d1d; border-color: rgba(239,68,68,0.3); }
-        .toast.success { background: #064e3b; border-color: rgba(16,185,129,0.3); }
+        .toast.error { border-left-color: var(--danger-red); }
+        .toast.success { border-left-color: var(--success-green); }
 
         /* Product List Preview */
         .preview-list { max-height: 60vh; overflow-y: auto; padding-right: 4px; }
         .preview-item {
             display: flex; align-items: center; gap: 14px;
-            padding: 14px; background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.06);
-            border-radius: 14px; margin-bottom: 10px;
+            padding: 14px; background: var(--bg-card);
+            border-bottom: 1px solid var(--border-light);
             transition: all 0.15s;
         }
-        .preview-item:hover {
-            background: rgba(255,255,255,0.06);
-            border-color: rgba(59,130,246,0.2);
-        }
-        .preview-item img {
-            width: 56px; height: 56px; border-radius: 10px;
-            object-fit: cover; background: rgba(255,255,255,0.05);
-            flex-shrink: 0;
-        }
-        .preview-item .info { flex: 1; min-width: 0; }
-        .preview-item .name { font-weight: 700; font-size: 1rem; color: #e2e8f0; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .preview-item .meta { font-size: 0.8rem; color: #64748b; }
-        .preview-item .actions { display: flex; gap: 10px; }
-        .preview-item .actions button {
-            width: 38px; height: 38px; border-radius: 10px;
-            border: none; background: rgba(255,255,255,0.08);
-            color: #94a3b8; cursor: pointer; font-size: 0.9rem;
-            display: flex; align-items: center; justify-content: center;
-            transition: all 0.15s;
-        }
-        .preview-item .actions button:hover { background: rgba(59,130,246,0.2); color: #60a5fa; }
-        .preview-item .actions button.delete { background: rgba(239,68,68,0.12); color: #ef4444; }
-        .preview-item .actions button.delete:hover { background: rgba(239,68,68,0.25); color: #f87171; }
+        .preview-item:hover { background: var(--bg-primary); }
         .preview-item.dragging {
             opacity: 0.5;
-            border-color: #3b82f6 !important;
+            border-color: var(--accent-blue) !important;
             transform: scale(0.98);
         }
         .preview-item.drag-over {
-            border-color: #10b981 !important;
-            background: rgba(16,185,129,0.1);
+            background: var(--accent-blue-light);
         }
+        .preview-item img {
+            width: 48px; height: 48px; border-radius: 8px;
+            object-fit: cover; background: var(--bg-primary);
+            flex-shrink: 0;
+        }
+        .preview-item .info { flex: 1; min-width: 0; }
+        .preview-item .name { font-weight: 600; font-size: 0.95rem; color: var(--text-primary); margin-bottom: 2px; }
+        .preview-item .meta { font-size: 0.8rem; color: var(--text-tertiary); }
+        .preview-item .actions { display: flex; gap: 8px; }
+        .preview-item .actions button {
+            width: 36px; height: 36px; border-radius: 8px;
+            border: none; background: var(--bg-primary);
+            color: var(--text-tertiary); cursor: pointer; font-size: 0.85rem;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.15s;
+        }
+        .preview-item .actions button:hover { background: var(--accent-blue-light); color: var(--accent-blue); }
+        .preview-item .actions button.delete { background: var(--danger-red-light); color: var(--danger-red); }
+        .preview-item .actions button.delete:hover { background: #fee2e2; color: #dc2626; }
 
         /* Bottom Nav */
         .bottom-nav {
             position: fixed; bottom: 0; left: 0; right: 0;
-            background: rgba(11,15,25,0.95); backdrop-filter: blur(20px);
-            border-top: 1px solid rgba(255,255,255,0.08);
+            background: var(--bg-card);
+            border-top: 1px solid var(--border-light);
             display: flex; justify-content: space-around; padding: 8px 0;
-            z-index: 99;
+            z-index: 99; height: 64px;
         }
         .nav-item {
             flex: 1; text-align: center; padding: 8px;
-            color: #475569; font-size: 0.7rem; font-weight: 600;
+            color: var(--text-tertiary); font-size: 0.7rem; font-weight: 600;
             cursor: pointer; border: none; background: none;
+            transition: color 0.2s;
         }
         .nav-item i { display: block; font-size: 1.3rem; margin-bottom: 4px; }
-        .nav-item.active { color: #60a5fa; }
+        .nav-item.active { color: var(--accent-blue); }
 
         /* Views */
         .view { display: none; }
@@ -315,14 +341,13 @@
             .container { padding: 24px; }
         }
     </style>
-<base target="_blank">
 </head>
 <body>
 
     <!-- LOGIN OVERLAY -->
     <div class="login-overlay" id="loginOverlay">
         <div class="login-box">
-            <h2><i class="fas fa-lock" style="color:#60a5fa;margin-right:8px;"></i>Panel Admin</h2>
+            <h2><i class="fas fa-lock" style="color:var(--accent-blue);margin-right:8px;"></i>Panel Admin</h2>
             <p>Wprowadź hasło, aby kontynuować</p>
             <div class="form-group">
                 <input type="password" id="loginPassword" placeholder="Hasło..." onkeydown="if(event.key==='Enter')doLogin()">
@@ -335,9 +360,9 @@
     </div>
 
     <div class="header">
-        <h1><i class="fas fa-box-open" style="color:#60a5fa;margin-right:8px;"></i>Panel Admin</h1>
+        <h1><i class="fas fa-box-open" style="color:var(--accent-blue);margin-right:8px;"></i>Panel Admin</h1>
         <p>Dodawaj i zarządzaj produktami</p>
-        <button id="backToListBtn" onclick="showView('viewList')" style="display:none;position:absolute;left:16px;top:50%;transform:translateY(-50%);background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);color:#94a3b8;border-radius:10px;padding:8px 14px;font-size:0.85rem;cursor:pointer;">
+        <button id="backToListBtn" onclick="showView('viewList')" style="display:none;position:absolute;left:16px;top:50%;transform:translateY(-50%);background:var(--bg-primary);border:1px solid var(--border-light);color:var(--text-secondary);border-radius:10px;padding:8px 14px;font-size:0.85rem;cursor:pointer;">
             <i class="fas fa-arrow-left"></i> Lista
         </button>
     </div>
@@ -365,7 +390,7 @@
 
             <div class="form-group">
                 <label>Kategoria <span class="required">*</span></label>
-                <input list="kategoriaList" id="pKategoria" placeholder="Wybierz lub wpisz nową..." style="width:100%;padding:14px 16px;background:rgba(255,255,255,0.06);border:2px solid rgba(255,255,255,0.1);border-radius:12px;color:#fff;font-size:1rem;">
+                <input list="kategoriaList" id="pKategoria" placeholder="Wybierz lub wpisz nową..." style="width:100%;padding:12px 14px;background:var(--bg-input);border:1px solid var(--border-medium);border-radius:10px;color:var(--text-primary);font-size:1rem;">
                 <datalist id="kategoriaList">
                     <option value="zegarki-smartwatch">
                     <option value="sluchawki">
@@ -387,14 +412,14 @@
 
             <div class="form-group">
                 <label>Cena (EUR)</label>
-                <input type="number" id="pCena" min="0" step="0.01" placeholder="np. 46.50">
+                <input type="number" id="pCena" min="0" step="0.01" placeholder="np. 46.50" oninput="updatePlnPrice()">
                 <div class="last-sku" id="plnPrice" style="margin-top:6px;"></div>
             </div>
         </div>
 
         <div class="card">
             <div class="card-title"><i class="fas fa-camera"></i>Zdjęcia Produktu</div>
-            <p style="font-size:0.8rem;color:#64748b;margin-bottom:12px;">
+            <p style="font-size:0.8rem;color:var(--text-tertiary);margin-bottom:12px;">
                 Kliknij poniżej aby dodać zdjęcia z telefonu. Zdjęcia zostaną zmniejszone do rozmiaru web.
             </p>
             <div class="photo-grid" id="photoGrid">
@@ -404,7 +429,7 @@
                 </div>
             </div>
             <input type="file" id="photoInput" accept="image/*" multiple style="display:none" onchange="handlePhotos(this)">
-            <div style="margin-top:10px;font-size:0.75rem;color:#475569;">
+            <div style="margin-top:10px;font-size:0.75rem;color:var(--text-tertiary);">
                 <i class="fas fa-info-circle"></i> Zdjęcia zostaną automatycznie zmniejszone
             </div>
             <div class="photo-order-hint">
@@ -456,9 +481,9 @@
             <div class="form-group">
                 <label>GitHub Token</label>
                 <input type="password" id="githubToken" placeholder="ghp_xxxxxxxxxxxx" onchange="localStorage.setItem('gh_token',this.value)">
-                <p style="font-size:0.75rem;color:#475569;margin-top:6px;">
+                <p style="font-size:0.75rem;color:var(--text-tertiary);margin-top:6px;">
                     Token pozwala zapisać produkty bezpośrednio na GitHub. 
-                    <a href="https://github.com/settings/tokens/new?scopes=repo&description=Catalog+Admin" target="_blank" style="color:#60a5fa;">Utwórz token</a>
+                    <a href="https://github.com/settings/tokens/new?scopes=repo&description=Catalog+Admin" target="_blank" style="color:var(--accent-blue);">Utwórz token</a>
                 </p>
             </div>
             <div class="form-group">
@@ -476,12 +501,12 @@
         <div class="card">
             <div class="card-title" style="justify-content:space-between;">
                 <span><i class="fas fa-list"></i>Lista Produktów (<span id="countBadge">0</span>)</span>
-                <button onclick="refreshFromGitHub()" style="background:rgba(59,130,246,0.15);border:1px solid rgba(59,130,246,0.3);color:#60a5fa;border-radius:8px;padding:6px 12px;font-size:0.75rem;font-weight:600;cursor:pointer;">
+                <button onclick="refreshFromGitHub()" style="background:var(--accent-blue-light);border:1px solid rgba(59,130,246,0.2);color:var(--accent-blue);border-radius:8px;padding:6px 12px;font-size:0.75rem;font-weight:600;cursor:pointer;">
                     <i class="fas fa-sync-alt"></i> Odśwież z GitHub
                 </button>
             </div>
             <div style="margin-bottom:12px;">
-                <select id="listFilterKategoria" onchange="renderPreview()" style="width:100%;padding:10px 14px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:10px;color:#fff;font-size:0.9rem;">
+                <select id="listFilterKategoria" onchange="renderPreview()" style="width:100%;padding:10px 14px;background:var(--bg-input);border:1px solid var(--border-medium);border-radius:10px;color:var(--text-primary);font-size:0.9rem;outline:none;">
                     <option value="">Wszystkie kategorie</option>
                     <option value="zegarki-smartwatch">⌚ Zegarki Smartwatch</option>
                     <option value="sluchawki">🎧 Słuchawki</option>
@@ -490,7 +515,7 @@
                     <option value="inne">📦 Inne</option>
                 </select>
             </div>
-            <div style="margin-bottom:12px;font-size:0.75rem;color:#64748b;">
+            <div style="margin-bottom:12px;font-size:0.75rem;color:var(--text-tertiary);">
                 <i class="fas fa-info-circle"></i> Przeciągnij produkty, aby zmienić kolejność wyświetlania
             </div>
             <div class="preview-list" id="productPreview"></div>
@@ -513,10 +538,10 @@
 
     <!-- Bottom Nav -->
     <div class="bottom-nav">
-        <button class="nav-item active" onclick="showView('viewAdd')">
+        <button class="nav-item" onclick="showView('viewAdd')">
             <i class="fas fa-plus-circle"></i>Dodaj
         </button>
-        <button class="nav-item" onclick="showView('viewList')">
+        <button class="nav-item active" onclick="showView('viewList')">
             <i class="fas fa-list"></i>Lista
         </button>
     </div>
@@ -524,11 +549,11 @@
     <script>
         // === DATA ===
         let products = [];
-        let uploadedPhotos = []; // {file, thumbBase64, fullBase64, filename}
+        let uploadedPhotos = [];
         let currentLang = 'pl';
 
         // === LOGIN ===
-        const ADMIN_PASSWORD_HASH = 'cbb123bcacc6d8d49417dd3f7627a64fda9ac542f63bd0970e981957e1fbd9a3'; 
+        const ADMIN_PASSWORD_HASH = 'cbb123bcacc6d8d49417dd3f7627a64fda9ac542f63bd0970e981957e1fbd9a3';
 
         async function sha256(message) {
             const msgBuffer = new TextEncoder().encode(message);
@@ -586,50 +611,9 @@
                 return false;
             }
         }
-        // Wait for login before loading products (login overlay blocks UI)
         document.addEventListener('DOMContentLoaded', () => {
             setTimeout(loadProducts, 100);
         });
-
-        // Refresh products from GitHub (fetch raw file from GitHub API)
-        async function refreshFromGitHub() {
-            const token = document.getElementById('githubToken').value.trim();
-            const repo = document.getElementById('repoName').value.trim();
-
-            if(!token || !repo) {
-                showToast('Wypełnij token i nazwę repozytorium w Ustawieniach', 'error');
-                toggleSettings();
-                return;
-            }
-
-            showProgress('Pobieranie z GitHub...');
-            try {
-                const res = await fetch(`https://api.github.com/repos/${repo}/contents/csvjson.json`, {
-                    headers: { 'Authorization': `token ${token}` }
-                });
-                if(!res.ok) throw new Error('HTTP ' + res.status);
-                const jsonData = await res.json();
-
-                let remoteProducts = [];
-                try {
-                    const remoteContent = decodeURIComponent(escape(atob(jsonData.content)));
-                    const remoteData = JSON.parse(remoteContent);
-                    remoteProducts = Array.isArray(remoteData) ? remoteData : (remoteData.products || []);
-                } catch(e) {
-                    throw new Error('Błąd parsowania JSON');
-                }
-
-                products = remoteProducts;
-                updateLastSKU();
-                renderPreview();
-                hideProgress();
-                showToast('Produkty odświeżone z GitHub!', 'success');
-            } catch(err) {
-                hideProgress();
-                showToast('Błąd: ' + err.message, 'error');
-                console.error(err);
-            }
-        }
 
         // === NAVIGATION ===
         function showView(id) {
@@ -641,7 +625,6 @@
                     n.classList.add('active');
                 }
             });
-            // Show/hide back button
             const backBtn = document.getElementById('backToListBtn');
             if(backBtn) backBtn.style.display = (id === 'viewAdd') ? 'block' : 'none';
             if(id === 'viewList') renderPreview();
@@ -651,8 +634,6 @@
         function updateLastSKU() {
             const el = document.getElementById('lastSKU');
             if(!products.length) { el.textContent = 'Ostatni: — (zacznij od ZS-01)'; return; }
-
-            // Find highest number across all SKU prefixes
             let maxNum = 0;
             let lastPrefix = 'ZS-';
             products.forEach(p => {
@@ -685,26 +666,21 @@
         function handlePhotos(input) {
             const files = Array.from(input.files);
             if(!files.length) return;
-
             showProgress('Przetwarzanie zdjęć...');
             let processed = 0;
-
             files.forEach(file => {
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     const img = new Image();
                     img.onload = function() {
-                        // Create thumb (600px)
                         const thumb = resizeImage(img, 600);
                         const full = resizeImage(img, 1600);
-
                         uploadedPhotos.push({
                             file: file,
                             thumbBase64: thumb,
                             fullBase64: full,
                             filename: file.name.replace(/\.[^/.]+$/, '.jpg')
                         });
-
                         processed++;
                         if(processed === files.length) {
                             hideProgress();
@@ -725,18 +701,17 @@
             if(w > maxWidth) { h = Math.round(h * maxWidth / w); w = maxWidth; }
             canvas.width = w; canvas.height = h;
             ctx.drawImage(img, 0, 0, w, h);
-            return canvas.toDataURL('image/jpeg', 0.9);
+            return canvas.toDataURL('image/jpeg', 0.85);
         }
 
         function renderPhotoGrid() {
             const grid = document.getElementById('photoGrid');
             grid.innerHTML = uploadedPhotos.map((p, i) => {
-                // Existing photos from edit have no thumbBase64, show filename instead
                 const imgSrc = p.thumbBase64 || `images/watches/${p.filename}`;
                 const isExisting = !p.thumbBase64;
                 return `
                 <div class="photo-slot" draggable="true" data-index="${i}" ${isExisting ? 'style="border-style:solid;border-color:rgba(59,130,246,0.3);"' : ''}>
-                    <img src="${imgSrc}" onerror="this.style.display='none';this.parentElement.innerHTML='<span style=font-size:0.65rem;color:#94a3b8;padding:4px;>${p.filename}</span>'">
+                    <img src="${imgSrc}" onerror="this.style.display='none';this.parentElement.innerHTML='<span style=font-size:0.65rem;color:var(--text-secondary);padding:4px;>${p.filename}</span>'">
                     <button class="remove-btn" onclick="event.stopPropagation();removePhoto(${i})" type="button">×</button>
                 </div>
             `}).join('') + `
@@ -744,8 +719,6 @@
                     <i class="fas fa-plus"></i><span>Dodaj</span>
                 </div>
             `;
-
-            // Attach drag events
             grid.querySelectorAll('.photo-slot[draggable="true"]').forEach(slot => {
                 slot.addEventListener('dragstart', handleDragStart);
                 slot.addEventListener('dragend', handleDragEnd);
@@ -757,45 +730,31 @@
         }
 
         let dragSrcIndex = null;
-
         function handleDragStart(e) {
             dragSrcIndex = parseInt(this.dataset.index);
             this.classList.add('dragging');
             e.dataTransfer.effectAllowed = 'move';
             e.dataTransfer.setData('text/plain', dragSrcIndex);
         }
-
         function handleDragEnd(e) {
             this.classList.remove('dragging');
             document.querySelectorAll('.photo-slot').forEach(s => s.classList.remove('drag-over'));
         }
-
-        function handleDragOver(e) {
-            e.preventDefault();
-            e.dataTransfer.dropEffect = 'move';
-        }
-
+        function handleDragOver(e) { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; }
         function handleDragEnter(e) {
             e.preventDefault();
             if (this.dataset.index && parseInt(this.dataset.index) !== dragSrcIndex) {
                 this.classList.add('drag-over');
             }
         }
-
-        function handleDragLeave(e) {
-            this.classList.remove('drag-over');
-        }
-
+        function handleDragLeave(e) { this.classList.remove('drag-over'); }
         function handleDrop(e) {
             e.preventDefault();
             this.classList.remove('drag-over');
             const dropTargetIndex = parseInt(this.dataset.index);
             if (isNaN(dropTargetIndex) || dragSrcIndex === null || dragSrcIndex === dropTargetIndex) return;
-
-            // Reorder array
             const item = uploadedPhotos.splice(dragSrcIndex, 1)[0];
             uploadedPhotos.splice(dropTargetIndex, 0, item);
-
             dragSrcIndex = null;
             renderPhotoGrid();
         }
@@ -882,7 +841,6 @@
                 }
             };
 
-            // Check if SKU already exists (editing mode) — if so, remove old one first
             const existingIndex = products.findIndex(p => p.SKU === sku);
             if(existingIndex !== -1) {
                 products.splice(existingIndex, 1);
@@ -923,7 +881,7 @@
             document.getElementById('countBadge').textContent = displayProducts.length + (filterKat ? ' / ' + products.length : '');
 
             if(!displayProducts.length) {
-                container.innerHTML = '<p style="text-align:center;color:#475569;padding:20px;">Brak produktów. Dodaj pierwszy!</p>';
+                container.innerHTML = '<p style="text-align:center;color:var(--text-tertiary);padding:20px;">Brak produktów. Dodaj pierwszy!</p>';
                 return;
             }
 
@@ -946,7 +904,6 @@
                 `;
             }).join('');
 
-            // Attach drag events
             container.querySelectorAll('.preview-item[draggable="true"]').forEach(item => {
                 item.addEventListener('dragstart', handleListDragStart);
                 item.addEventListener('dragend', handleListDragEnd);
@@ -958,24 +915,17 @@
         }
 
         let listDragSrcIndex = null;
-
         function handleListDragStart(e) {
             listDragSrcIndex = parseInt(this.dataset.index);
             this.classList.add('dragging');
             e.dataTransfer.effectAllowed = 'move';
             e.dataTransfer.setData('text/plain', listDragSrcIndex);
         }
-
         function handleListDragEnd(e) {
             this.classList.remove('dragging');
             document.querySelectorAll('.preview-item').forEach(s => s.classList.remove('drag-over'));
         }
-
-        function handleListDragOver(e) {
-            e.preventDefault();
-            e.dataTransfer.dropEffect = 'move';
-        }
-
+        function handleListDragOver(e) { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; }
         function handleListDragEnter(e) {
             e.preventDefault();
             const idx = parseInt(this.dataset.index);
@@ -983,20 +933,14 @@
                 this.classList.add('drag-over');
             }
         }
-
-        function handleListDragLeave(e) {
-            this.classList.remove('drag-over');
-        }
-
+        function handleListDragLeave(e) { this.classList.remove('drag-over'); }
         function handleListDrop(e) {
             e.preventDefault();
             this.classList.remove('drag-over');
             const dropTargetIndex = parseInt(this.dataset.index);
             if(isNaN(dropTargetIndex) || listDragSrcIndex === null || listDragSrcIndex === dropTargetIndex) return;
-
             const item = products.splice(listDragSrcIndex, 1)[0];
             products.splice(dropTargetIndex, 0, item);
-
             listDragSrcIndex = null;
             renderPreview();
             showToast('Kolejność zmieniona', 'success');
@@ -1033,7 +977,6 @@
             document.getElementById('pOpis_kk').value = p.Opis?.kk || '';
             document.getElementById('pOpis_uz').value = p.Opis?.uz || '';
 
-            // Restore existing photos into the upload buffer so they are preserved on save
             uploadedPhotos = [];
             if (p.Zdjecia) {
                 const photoNames = p.Zdjecia.split(',').map(s => s.trim()).filter(Boolean);
@@ -1048,7 +991,6 @@
             }
             renderPhotoGrid();
 
-            // Remove from list so it can be re-added
             products.splice(index, 1);
             showView('viewAdd');
             showToast('Edytuj dane i kliknij Zapisz', 'success');
@@ -1080,13 +1022,11 @@
             showProgress('Wysyłanie na GitHub...');
 
             try {
-                // Collect all photos that need uploading (from all products, not just current session)
                 const allPhotosToUpload = [];
                 products.forEach(p => {
                     if (p.Zdjecia) {
                         const names = p.Zdjecia.split(',').map(s => s.trim()).filter(Boolean);
                         names.forEach(name => {
-                            // Check if this photo is in the current uploadedPhotos buffer (newly added)
                             const buffered = uploadedPhotos.find(up => up.filename === name);
                             if (buffered && !allPhotosToUpload.some(x => x.filename === name)) {
                                 allPhotosToUpload.push(buffered);
@@ -1095,13 +1035,10 @@
                     }
                 });
 
-                // 1. Upload photos (skip existing photos that have no base64 — they are already on GitHub)
                 const newPhotos = allPhotosToUpload.filter(p => p.fullBase64 && p.fullBase64.includes(','));
                 for(let i=0; i<newPhotos.length; i++) {
                     const p = newPhotos[i];
                     const base64 = p.fullBase64.split(',')[1];
-
-                    // Check if file exists
                     let existingSha = null;
                     try {
                         const checkRes = await fetch(`https://api.github.com/repos/${repo}/contents/images/watches/${p.filename}`, {
@@ -1111,9 +1048,7 @@
                             const checkData = await checkRes.json();
                             existingSha = checkData.sha;
                         }
-                    } catch(e) { /* 404 is ok */ }
-
-                    // Upload
+                    } catch(e) { }
                     const res = await fetch(`https://api.github.com/repos/${repo}/contents/images/watches/${p.filename}`, {
                         method: 'PUT',
                         headers: {
@@ -1126,12 +1061,10 @@
                             ...(existingSha ? { sha: existingSha } : {})
                         })
                     });
-
                     if(!res.ok && res.status !== 422) throw new Error('Photo upload failed');
                     document.getElementById('progressText').textContent = `Zdjęcie ${i+1}/${newPhotos.length}...`;
                 }
 
-                // 2. Get current csvjson.json from GitHub and merge with local products
                 document.getElementById('progressText').textContent = 'Łączenie danych z GitHub...';
                 const jsonRes = await fetch(`https://api.github.com/repos/${repo}/contents/csvjson.json`, {
                     headers: { 'Authorization': `token ${token}` }
@@ -1139,17 +1072,6 @@
                 const jsonData = await jsonRes.json();
                 const sha = jsonData.sha;
 
-                // Decode remote content
-                let remoteProducts = [];
-                try {
-                    const remoteContent = decodeURIComponent(escape(atob(jsonData.content)));
-                    const remoteData = JSON.parse(remoteContent);
-                    remoteProducts = Array.isArray(remoteData) ? remoteData : (remoteData.products || []);
-                } catch(e) {
-                    console.warn('Could not parse remote JSON, using local only', e);
-                }
-
-                // 3. Update JSON on GitHub (upload local products directly, no merge)
                 const content = btoa(unescape(encodeURIComponent(JSON.stringify({products: products}, null, 2))));
                 const updateRes = await fetch(`https://api.github.com/repos/${repo}/contents/csvjson.json`, {
                     method: 'PUT',
@@ -1167,11 +1089,50 @@
                 if(!updateRes.ok) throw new Error('JSON update failed');
 
                 hideProgress();
-                uploadedPhotos = []; // Clear after successful upload
+                uploadedPhotos = [];
                 renderPhotoGrid();
                 renderPreview();
                 showToast('Wysłano na GitHub! Strona zaktualizuje się za ~1 min.', 'success');
 
+            } catch(err) {
+                hideProgress();
+                showToast('Błąd: ' + err.message, 'error');
+                console.error(err);
+            }
+        }
+
+        async function refreshFromGitHub() {
+            const token = document.getElementById('githubToken').value.trim();
+            const repo = document.getElementById('repoName').value.trim();
+
+            if(!token || !repo) {
+                showToast('Wypełnij token i nazwę repozytorium w Ustawieniach', 'error');
+                toggleSettings();
+                return;
+            }
+
+            showProgress('Pobieranie z GitHub...');
+            try {
+                const res = await fetch(`https://api.github.com/repos/${repo}/contents/csvjson.json`, {
+                    headers: { 'Authorization': `token ${token}` }
+                });
+                if(!res.ok) throw new Error('HTTP ' + res.status);
+                const jsonData = await res.json();
+
+                let remoteProducts = [];
+                try {
+                    const remoteContent = decodeURIComponent(escape(atob(jsonData.content)));
+                    const remoteData = JSON.parse(remoteContent);
+                    remoteProducts = Array.isArray(remoteData) ? remoteData : (remoteData.products || []);
+                } catch(e) {
+                    throw new Error('Błąd parsowania JSON');
+                }
+
+                products = remoteProducts;
+                updateLastSKU();
+                renderPreview();
+                hideProgress();
+                showToast('Produkty odświeżone z GitHub!', 'success');
             } catch(err) {
                 hideProgress();
                 showToast('Błąd: ' + err.message, 'error');

@@ -8,78 +8,405 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-        body { background-color: #0b0f19; color: #e2e8f0; font-family: 'Inter', sans-serif; }
-        .glass { background: rgba(255,255,255,0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.08); }
-        .glass:hover { border-color: rgba(59,130,246,0.4); }
-        #modal { transition: opacity 0.3s ease; }
-        body.modal-active { overflow: hidden; }
-        .carousel-container { position: relative; width: 100%; overflow: hidden; border-radius: 1.5rem; background: rgba(255,255,255,0.03); }
-        #modal-main-img { transition: transform 0.3s ease, opacity 0.2s ease; cursor: zoom-in; }
-        #modal-main-img:active { transform: scale(1.5); cursor: zoom-out; }
-        .nav-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.5); color: white; padding: 0.75rem 1rem; border-radius: 50%; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); transition: all 0.2s; z-index: 10; font-size: 1.2rem; }
-        .nav-btn:hover { background: rgba(59, 130, 246, 0.8); }
-        .prev { left: 12px; } .next { right: 12px; }
-        .thumb { border: 2px solid rgba(255,255,255,0.1); }
-        .thumb-active { border-color: #3b82f6 !important; opacity: 1 !important; }
-        #lightbox { transition: opacity 0.3s ease; }
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #0b0f19; }
-        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
-        @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .animate-fade-up { animation: fadeUp 0.5s ease forwards; }
-        .cat-active { background: rgba(59,130,246,0.2); border-color: rgba(59,130,246,0.5); color: #60a5fa; }
+        
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --bg-tertiary: #f1f3f5;
+            --border-light: #e9ecef;
+            --border-medium: #dee2e6;
+            --accent-blue: #2563eb;
+            --accent-blue-hover: #1d4ed8;
+            --success-green: #10b981;
+            --danger-red: #ef4444;
+            --text-primary: #111827;
+            --text-secondary: #4b5563;
+            --text-tertiary: #9ca3af;
+        }
+        
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
+        body { 
+            background: var(--bg-primary); 
+            color: var(--text-primary); 
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.5;
+        }
+        
+        /* Header */
+        .site-header {
+            background: var(--bg-primary);
+            border-bottom: 1px solid var(--border-light);
+            padding: 16px 0;
+        }
+        
+        /* Search */
+        .search-bar {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-light);
+            border-radius: 9999px;
+            height: 44px;
+            width: 100%;
+            max-width: 400px;
+            padding: 0 16px 0 44px;
+            font-size: 14px;
+            color: var(--text-primary);
+            transition: all 0.2s;
+            outline: none;
+        }
+        .search-bar::placeholder { color: var(--text-tertiary); }
+        .search-bar:focus {
+            border-color: var(--accent-blue);
+            background: var(--bg-primary);
+            box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+        }
+        
+        /* Lang buttons */
+        .lang-btn {
+            font-size: 13px;
+            font-weight: 500;
+            color: #6b7280;
+            padding: 4px 8px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-bottom: 2px solid transparent;
+        }
+        .lang-btn.active {
+            color: var(--accent-blue);
+            font-weight: 600;
+            border-bottom-color: var(--accent-blue);
+        }
+        
+        /* Category chips */
+        .cat-chip {
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+            border: none;
+            border-radius: 9999px;
+            padding: 8px 16px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .cat-chip:hover { background: var(--border-light); }
+        .cat-chip.active {
+            background: var(--accent-blue);
+            color: #ffffff;
+            font-weight: 600;
+        }
+        
+        /* Product Card */
+        .product-card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            cursor: pointer;
+        }
+        .product-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        .product-card .img-wrap {
+            aspect-ratio: 1;
+            background: var(--bg-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px;
+            position: relative;
+        }
+        .product-card .img-wrap img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            transition: opacity 0.2s;
+        }
+        .product-card .info { padding: 12px; }
+        .product-card .name {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            margin-bottom: 6px;
+            min-height: 42px;
+        }
+        .product-card .desc {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            margin-bottom: 8px;
+            min-height: 39px;
+        }
+        .product-card .price {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--success-green);
+            margin-bottom: 6px;
+        }
+        .product-card .meta-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+        }
+        .product-card .stock {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .product-card .stock .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+        }
+        .product-card .stock.in { color: var(--success-green); }
+        .product-card .stock.in .dot { background: var(--success-green); }
+        .product-card .stock.out { color: var(--danger-red); }
+        .product-card .stock.out .dot { background: var(--danger-red); }
+        .product-card .color { color: var(--text-tertiary); }
+        .product-card .sku-badge {
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+            font-size: 11px;
+            color: #6b7280;
+            background: var(--bg-tertiary);
+            padding: 2px 6px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-bottom: 6px;
+        }
+        
+        /* Modal */
+        #modal {
+            transition: opacity 0.25s ease;
+        }
+        #modal .modal-backdrop {
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(4px);
+        }
+        #modal .modal-panel {
+            background: var(--bg-primary);
+            border-radius: 16px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+        }
+        @media (max-width: 767px) {
+            #modal .modal-panel {
+                border-radius: 16px 16px 0 0;
+                max-height: 92vh;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+            }
+        }
+        
+        .modal-img-area {
+            background: var(--bg-secondary);
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+        }
+        .modal-img-area img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+        .nav-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.9);
+            border: 1px solid var(--border-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--text-primary);
+            font-size: 14px;
+            z-index: 10;
+        }
+        .nav-arrow.prev { left: 12px; }
+        .nav-arrow.next { right: 12px; }
+        
+        .thumb-row {
+            display: flex;
+            gap: 8px;
+            padding: 12px 16px;
+            overflow-x: auto;
+        }
+        .thumb-row img {
+            width: 64px;
+            height: 64px;
+            border-radius: 8px;
+            object-fit: cover;
+            cursor: pointer;
+            border: 2px solid transparent;
+            opacity: 0.6;
+            transition: all 0.2s;
+        }
+        .thumb-row img.active {
+            border-color: var(--accent-blue);
+            opacity: 1;
+        }
+        
+        .sku-pill {
+            display: inline-block;
+            background: #eff6ff;
+            color: var(--accent-blue);
+            font-size: 12px;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 9999px;
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        }
+        
+        .availability-box {
+            border-radius: 12px;
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .availability-box.in {
+            background: #ecfdf5;
+            color: #059669;
+        }
+        .availability-box.out {
+            background: #fef2f2;
+            color: #dc2626;
+        }
+        
+        /* Lightbox */
+        #lightbox {
+            background: rgba(0,0,0,0.92);
+            transition: opacity 0.3s ease;
+        }
+        
+        /* Animations */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-up {
+            animation: fadeUp 0.3s ease-out forwards;
+        }
+        
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 3px; }
+        
+        /* Admin link */
+        .admin-link {
+            color: #6b7280;
+            font-size: 13px;
+            font-weight: 500;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: color 0.2s;
+        }
+        .admin-link:hover { color: var(--accent-blue); }
+        
+        /* Responsive grid */
+        .product-grid {
+            display: grid;
+            gap: 12px;
+            grid-template-columns: repeat(2, 1fr);
+        }
+        @media (min-width: 480px) {
+            .product-grid { gap: 16px; }
+        }
+        @media (min-width: 768px) {
+            .product-grid { grid-template-columns: repeat(3, 1fr); gap: 16px; }
+        }
+        @media (min-width: 1024px) {
+            .product-grid { grid-template-columns: repeat(4, 1fr); gap: 20px; }
+        }
+        @media (min-width: 1280px) {
+            .product-grid { grid-template-columns: repeat(5, 1fr); }
+        }
     </style>
-<base target="_blank">
 </head>
 <body class="min-h-screen">
 
-    <div id="lightbox" class="fixed inset-0 bg-black/95 z-[200] hidden flex-col items-center justify-center p-4 cursor-pointer" onclick="closeLightbox()">
-        <img id="lightbox-img" src="" class="max-w-full max-h-[90vh] object-contain shadow-2xl">
-        <div class="mt-4 text-white/50 text-sm font-light tracking-widest uppercase" id="lightboxHint">Kliknij, aby zamknąć</div>
+    <!-- Lightbox -->
+    <div id="lightbox" class="fixed inset-0 z-[200] hidden flex-col items-center justify-center p-4 cursor-pointer" onclick="closeLightbox()">
+        <img id="lightbox-img" src="" class="max-w-[90vw] max-h-[90vh] object-contain">
+        <div class="mt-4 text-sm text-gray-400" id="lightboxHint">Kliknij, aby zamknąć</div>
     </div>
 
-    <header class="max-w-7xl mx-auto px-6 pt-8 pb-6">
-        <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-8">
-            <div>
-                <h1 class="text-4xl lg:text-5xl font-extrabold bg-gradient-to-r from-blue-400 via-cyan-400 to-emerald-400 bg-clip-text text-transparent tracking-tight">PREMIUM WATCHES</h1>
-                <p class="text-slate-500 mt-2 text-sm tracking-wide" data-i18n="subtitle">Katalog Produktów & System Magazynowy</p>
-            </div>
-            <div class="flex flex-wrap items-center gap-3">
-                <div class="relative">
-                    <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-sm"></i>
-                    <input type="text" id="searchInput" data-i18n-placeholder="searchPlaceholder" placeholder="Szukaj modelu lub SKU..." 
-                           class="glass rounded-xl pl-9 pr-4 py-2.5 text-sm text-white placeholder-slate-500 outline-none focus:border-blue-500/50 w-64 transition-all" oninput="handleSearch()">
+    <!-- Header -->
+    <header class="site-header">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                <div>
+                    <h1 class="text-[28px] font-extrabold text-gray-900 tracking-tight leading-tight">PREMIUM WATCHES</h1>
+                    <p class="text-sm text-gray-400 mt-1" data-i18n="subtitle">Katalog Produktów & System Magazynowy</p>
                 </div>
-                <div class="flex gap-1 bg-white/5 p-1 rounded-xl border border-white/10">
-                    <button onclick="setLang('pl')" class="lang-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition hover:bg-white/10" data-lang="pl">PL</button>
-                    <button onclick="setLang('en')" class="lang-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition hover:bg-white/10" data-lang="en">EN</button>
-                    <button onclick="setLang('ru')" class="lang-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition hover:bg-white/10" data-lang="ru">RU</button>
-                    <button onclick="setLang('kk')" class="lang-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition hover:bg-white/10" data-lang="kk">KZ</button>
-                    <button onclick="setLang('uz')" class="lang-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition hover:bg-white/10" data-lang="uz">UZ</button>
+                <div class="flex flex-wrap items-center gap-4">
+                    <div class="relative flex-1 lg:flex-none">
+                        <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+                        <input type="text" id="searchInput" data-i18n-placeholder="searchPlaceholder" placeholder="Szukaj modelu lub SKU..." 
+                               class="search-bar" oninput="handleSearch()">
+                    </div>
+                    <div class="flex gap-1">
+                        <button onclick="setLang('pl')" class="lang-btn active" data-lang="pl">PL</button>
+                        <button onclick="setLang('en')" class="lang-btn" data-lang="en">EN</button>
+                        <button onclick="setLang('ru')" class="lang-btn" data-lang="ru">RU</button>
+                        <button onclick="setLang('kk')" class="lang-btn" data-lang="kk">KZ</button>
+                        <button onclick="setLang('uz')" class="lang-btn" data-lang="uz">UZ</button>
+                    </div>
+                    <a href="admin/" class="admin-link">
+                        <i class="fas fa-lock text-xs"></i> <span data-i18n="admin">Panel CMS</span>
+                    </a>
                 </div>
-                <a href="admin/" class="glass px-4 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white hover:border-blue-500/30 transition flex items-center gap-2">
-                    <i class="fas fa-lock"></i> <span data-i18n="admin">Panel CMS</span>
-                </a>
             </div>
-        </div>
-        <div id="categoryFilters" class="flex flex-wrap gap-2 mb-2">
-            <button onclick="filterCategory('all')" class="cat-btn cat-active px-4 py-2 rounded-xl text-xs font-semibold border border-white/10 transition hover:bg-white/5" data-cat="all" data-i18n="allProducts">Wszystkie Produkty</button>
+            <div id="categoryFilters" class="flex flex-wrap gap-2 mt-4 overflow-x-auto pb-1">
+                <button onclick="filterCategory('all')" class="cat-chip active" data-cat="all" data-i18n="allProducts">Wszystkie Produkty</button>
+            </div>
         </div>
     </header>
 
-    <main class="max-w-7xl mx-auto px-6 pb-20">
-        <div id="katalog" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
-        <div id="noResults" class="hidden text-center py-20 text-slate-500">
-            <i class="fas fa-search text-4xl mb-4 opacity-30"></i>
-            <p class="text-lg" data-i18n="noResults">Nie znaleziono produktów</p>
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-20">
+        <div id="katalog" class="product-grid"></div>
+        <div id="noResults" class="hidden text-center py-20">
+            <i class="fas fa-search text-4xl mb-4 text-gray-300"></i>
+            <p class="text-lg text-gray-500" data-i18n="noResults">Nie znaleziono produktów</p>
         </div>
     </main>
 
-    <div id="modal" class="opacity-0 pointer-events-none fixed inset-0 flex items-center justify-center p-4 z-[100]">
-        <div class="absolute inset-0 bg-black/90 backdrop-blur-md" onclick="closeModal()"></div>
-        <div class="glass w-full max-w-5xl rounded-[2rem] relative overflow-hidden max-h-[95vh] overflow-y-auto shadow-2xl shadow-blue-900/20">
-            <button onclick="closeModal()" class="absolute top-5 right-5 z-[110] text-slate-400 hover:text-white text-2xl w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/10 transition"><i class="fas fa-times"></i></button>
-            <div id="modal-content" class="p-6 md:p-10"></div>
+    <!-- Modal -->
+    <div id="modal" class="opacity-0 pointer-events-none fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-0 sm:p-4">
+        <div class="modal-backdrop absolute inset-0" onclick="closeModal()"></div>
+        <div class="modal-panel w-full sm:w-full sm:max-w-[900px] relative">
+            <button onclick="closeModal()" class="absolute top-4 right-4 z-[110] w-11 h-11 flex items-center justify-center rounded-full bg-white/90 border border-gray-200 text-gray-500 hover:text-gray-900 transition text-lg" aria-label="Close">
+                <i class="fas fa-times"></i>
+            </button>
+            <div id="modal-content"></div>
         </div>
     </div>
 
@@ -182,6 +509,14 @@
             }
         };
 
+        const categoryTranslations = {
+            'zegarki-smartwatch': { pl: 'Zegarki Smartwatch', en: 'Smartwatches', ru: 'Смарт-часы', kk: 'Смарт-сағаттар', uz: 'Aqlli soatlar' },
+            'sluchawki': { pl: 'Słuchawki', en: 'Headphones', ru: 'Наушники', kk: 'Құлақаспаптар', uz: 'Quloqchinlar' },
+            'powerbanki': { pl: 'Powerbanki', en: 'Power Banks', ru: 'Powerbank', kk: 'Powerbank', uz: 'Powerbanklar' },
+            'akcesoria': { pl: 'Akcesoria', en: 'Accessories', ru: 'Аксессуары', kk: 'Аксессуарлар', uz: 'Aksessuarlar' },
+            'inne': { pl: 'Inne', en: 'Other', ru: 'Другое', kk: 'Басқа', uz: 'Boshqalar' }
+        };
+
         let currentLang = 'pl';
         let products = [];
         let filteredProducts = [];
@@ -195,13 +530,17 @@
             return str;
         }
 
+        function getCategoryLabel(cat) {
+            if (categoryTranslations[cat] && categoryTranslations[cat][currentLang]) {
+                return categoryTranslations[cat][currentLang];
+            }
+            return cat.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+        }
+
         async function loadData() {
             try {
-                // Cache-bust to always get fresh data from server
                 const res = await fetch('csvjson.json?_=' + Date.now(), { cache: 'no-store' });
-                if (!res.ok) throw new Error('HTTP ' + res.status);
                 const data = await res.json();
-                // Support both old flat array and new wrapped format
                 products = Array.isArray(data) ? data : (data.products || []);
                 filteredProducts = [...products];
                 extractCategories();
@@ -210,23 +549,8 @@
                 updateLangUI();
             } catch (e) { 
                 console.error("Błąd ładowania JSON:", e);
-                document.getElementById('katalog').innerHTML = '<div class="text-center py-20 text-red-400">Błąd ładowania produktów.</div>';
+                document.getElementById('katalog').innerHTML = '<div class="text-center py-20 text-red-500">Błąd ładowania produktów.</div>';
             }
-        }
-
-        const categoryTranslations = {
-            'zegarki-smartwatch': { pl: 'Zegarki Smartwatch', en: 'Smartwatches', ru: 'Смарт-часы', kk: 'Смарт-сағаттар', uz: 'Aqlli soatlar' },
-            'sluchawki': { pl: 'Słuchawki', en: 'Headphones', ru: 'Наушники', kk: 'Құлақаспаптар', uz: 'Quloqchinlar' },
-            'powerbanki': { pl: 'Powerbanki', en: 'Power Banks', ru: 'Powerbank', kk: 'Powerbank', uz: 'Powerbanklar' },
-            'akcesoria': { pl: 'Akcesoria', en: 'Accessories', ru: 'Аксессуары', kk: 'Аксессуарлар', uz: 'Aksessuarlar' },
-            'inne': { pl: 'Inne', en: 'Other', ru: 'Другое', kk: 'Басқа', uz: 'Boshqalar' }
-        };
-
-        function getCategoryLabel(cat) {
-            if (categoryTranslations[cat] && categoryTranslations[cat][currentLang]) {
-                return categoryTranslations[cat][currentLang];
-            }
-            return cat.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
         }
 
         function extractCategories() { categories = new Set(products.map(p => p.Kategoria).filter(Boolean)); }
@@ -238,7 +562,7 @@
             container.appendChild(allBtn);
             categories.forEach(cat => {
                 const btn = document.createElement('button');
-                btn.className = 'cat-btn px-4 py-2 rounded-xl text-xs font-semibold border border-white/10 transition hover:bg-white/5 text-slate-400';
+                btn.className = 'cat-chip';
                 btn.dataset.cat = cat;
                 btn.textContent = getCategoryLabel(cat);
                 btn.onclick = () => filterCategory(cat);
@@ -251,17 +575,12 @@
             updateLangUI();
             render();
             updateLangButtons();
+            renderCategories();
         }
 
         function updateLangButtons() {
             document.querySelectorAll('.lang-btn').forEach(btn => {
-                if (btn.dataset.lang === currentLang) {
-                    btn.classList.add('bg-blue-500/20', 'text-blue-400');
-                    btn.classList.remove('text-slate-400');
-                } else {
-                    btn.classList.remove('bg-blue-500/20', 'text-blue-400');
-                    btn.classList.add('text-slate-400');
-                }
+                btn.classList.toggle('active', btn.dataset.lang === currentLang);
             });
         }
 
@@ -278,9 +597,8 @@
         }
 
         function filterCategory(cat) {
-            document.querySelectorAll('.cat-btn').forEach(btn => {
-                if (btn.dataset.cat === cat) { btn.classList.add('cat-active'); btn.classList.remove('text-slate-400'); }
-                else { btn.classList.remove('cat-active'); btn.classList.add('text-slate-400'); }
+            document.querySelectorAll('.cat-chip').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.cat === cat);
             });
             if (cat === 'all') filteredProducts = [...products];
             else filteredProducts = products.filter(p => p.Kategoria === cat);
@@ -291,7 +609,7 @@
             const query = document.getElementById('searchInput').value.toLowerCase().trim();
             let display = skipFilter ? [...filteredProducts] : [...products];
             if (!skipFilter) {
-                const activeCat = document.querySelector('.cat-active');
+                const activeCat = document.querySelector('.cat-chip.active');
                 const cat = activeCat ? activeCat.dataset.cat : 'all';
                 if (cat !== 'all') display = display.filter(p => p.Kategoria === cat);
             }
@@ -331,31 +649,29 @@
                 const mainImg = photos.length > 0 ? getImagePath(photos[0], 'thumb') : 'https://via.placeholder.com/400?text=Brak+Zdjecia';
                 const fallbackImg = photos.length > 0 ? `images/watches/${photos[0]}` : 'https://via.placeholder.com/400?text=Brak+Zdjecia';
                 const priceStr = p.Cena ? formatPrice(p.Cena) : '';
-                const delay = idx * 50;
+                const delay = idx * 40;
+                const stockClass = p.Ilosc > 0 ? 'in' : 'out';
+                const stockText = p.Ilosc > 0 ? t('inStock', {n: p.Ilosc}) : t('outOfStock');
 
                 container.innerHTML += `
                     <div onclick="openModal('${p.SKU}')" 
-                         class="glass rounded-[1.5rem] p-5 cursor-pointer hover:scale-[1.02] transition-all duration-300 border-white/5 hover:border-blue-500/40 flex flex-col h-full group animate-fade-up"
+                         class="product-card animate-fade-up"
                          style="animation-delay: ${delay}ms">
-                        <div class="aspect-square bg-slate-900/50 rounded-2xl mb-5 flex items-center justify-center overflow-hidden relative">
-                            <img src="${mainImg}" onerror="this.onerror=null;this.src='${fallbackImg}'" loading="lazy" alt="${p.Model}" 
-                                 class="max-h-full max-w-full object-contain p-4 transition-transform duration-500 group-hover:scale-110">
-                            <div class="absolute inset-0 bg-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                <span class="bg-white text-black px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider shadow-lg">${t('viewDetails')}</span>
+                        <div class="img-wrap">
+                            <img src="${mainImg}" onerror="this.onerror=null;this.src='${fallbackImg}'" loading="lazy" alt="${p.Model}">
+                        </div>
+                        <div class="info">
+                            <span class="sku-badge">${p.SKU}</span>
+                            <div class="name">${p.Model}</div>
+                            <div class="desc">${p.Opis && p.Opis[currentLang] ? p.Opis[currentLang] : ''}</div>
+                            ${priceStr ? `<div class="price">${priceStr}</div>` : ''}
+                            <div class="meta-row">
+                                <span class="stock ${stockClass}">
+                                    <span class="dot"></span>
+                                    ${stockText}
+                                </span>
+                                <span class="color">${p.Kolor || ''}</span>
                             </div>
-                        </div>
-                        <div class="flex justify-between items-start mb-2">
-                            <h3 class="text-lg font-bold text-white">${p.Model}</h3>
-                            <span class="text-slate-500 font-mono text-xs bg-white/5 px-2 py-1 rounded-md">${p.SKU}</span>
-                        </div>
-                        <p class="text-slate-500 text-sm line-clamp-2 mb-3 flex-grow">${p.Opis && p.Opis[currentLang] ? p.Opis[currentLang] : t('noResults')}</p>
-                        ${priceStr ? `<div class="text-emerald-400 font-bold text-sm mb-2">${priceStr}</div>` : ''}
-                        <div class="flex justify-between items-center text-xs font-medium uppercase tracking-wider mt-auto pt-4 border-t border-white/5">
-                            <span class="${p.Ilosc > 0 ? 'text-emerald-400' : 'text-red-400'} flex items-center gap-1.5">
-                                <i class="fas fa-circle text-[6px]"></i>
-                                ${p.Ilosc > 0 ? t('inStock', {n: p.Ilosc}) : t('outOfStock')}
-                            </span>
-                            <span class="text-slate-600">${p.Kolor || ''}</span>
                         </div>
                     </div>
                 `;
@@ -371,51 +687,51 @@
             const mainPhoto = currentPhotos.length > 0 ? getImagePath(currentPhotos[0], 'full') : 'https://via.placeholder.com/600';
             const mainFallback = currentPhotos.length > 0 ? `images/watches/${currentPhotos[0]}` : 'https://via.placeholder.com/600';
             const priceStr = p.Cena ? formatPrice(p.Cena) : '';
+            const stockClass = p.Ilosc > 0 ? 'in' : 'out';
+            const catLabel = getCategoryLabel(p.Kategoria || '');
 
             content.innerHTML = `
-                <div class="grid lg:grid-cols-2 gap-8 lg:gap-12">
-                    <div class="space-y-5">
-                        <div class="carousel-container aspect-square flex items-center justify-center relative group">
-                            ${currentPhotos.length > 1 ? `<div class="nav-btn prev" onclick="event.stopPropagation();changeSlide(-1)"><i class="fas fa-chevron-left"></i></div>` : ''}
+                <div class="grid grid-cols-1 md:grid-cols-2">
+                    <div>
+                        <div class="modal-img-area relative">
+                            ${currentPhotos.length > 1 ? `<div class="nav-arrow prev" onclick="event.stopPropagation();changeSlide(-1)"><i class="fas fa-chevron-left"></i></div>` : ''}
                             <img src="${mainPhoto}" onerror="this.onerror=null;this.src='${mainFallback}'" id="modal-main-img" 
-                                 class="max-h-full max-w-full object-contain p-6 lg:p-10" onclick="openLightbox()" title="${t('clickToEnlarge')}">
-                            ${currentPhotos.length > 1 ? `<div class="nav-btn next" onclick="event.stopPropagation();changeSlide(1)"><i class="fas fa-chevron-right"></i></div>` : ''}
+                                 class="max-h-full max-w-full object-contain cursor-zoom-in" onclick="openLightbox()" title="${t('clickToEnlarge')}">
+                            ${currentPhotos.length > 1 ? `<div class="nav-arrow next" onclick="event.stopPropagation();changeSlide(1)"><i class="fas fa-chevron-right"></i></div>` : ''}
                         </div>
-                        <div class="flex gap-3 overflow-x-auto pb-2 justify-center px-2">
+                        <div class="thumb-row">
                             ${currentPhotos.map((img, idx) => {
                                 const thumbPath = getImagePath(img, 'thumb');
                                 const fallback = `images/watches/${img}`;
                                 return `<img src="${thumbPath}" onerror="this.onerror=null;this.src='${fallback}'" onclick="setSlide(${idx})" 
-                                     class="thumb h-16 w-16 object-cover rounded-xl cursor-pointer opacity-50 hover:opacity-100 transition flex-shrink-0 ${idx === 0 ? 'thumb-active' : ''}">`;
+                                     class="${idx === 0 ? 'active' : ''}" data-thumb-idx="${idx}">`;
                             }).join('')}
                         </div>
                     </div>
-                    <div class="flex flex-col justify-center">
-                        <div class="flex items-center gap-3 mb-3">
-                            <span class="text-blue-500 font-bold tracking-widest text-xs uppercase bg-blue-500/10 px-3 py-1 rounded-full">${p.SKU}</span>
-                            <span class="text-slate-500 text-xs uppercase tracking-wider">${p.Kategoria ? p.Kategoria.replace(/-/g, ' ') : ''}</span>
+                    <div class="p-5 md:p-8">
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="sku-pill">${p.SKU}</span>
+                            <span class="text-sm text-gray-500 uppercase tracking-wide">${catLabel}</span>
                         </div>
-                        <h2 class="text-4xl lg:text-5xl font-bold mb-2 text-white">${p.Model}</h2>
-                        <div class="text-lg text-slate-400 mb-2 font-light">${p.Kolor || ''}</div>
-                        ${priceStr ? `<div class="text-3xl font-black text-emerald-400 mb-6">${priceStr}</div>` : '<div class="mb-6"></div>'}
+                        <h2 class="text-xl font-bold text-gray-900 mb-1">${p.Model}</h2>
+                        <p class="text-gray-600 mb-4">${p.Kolor || ''}</p>
+                        ${priceStr ? `<div class="text-2xl font-extrabold text-emerald-500 mb-6">${priceStr}</div>` : '<div class="mb-6"></div>'}
 
-                        <div class="space-y-4 mb-10">
-                            <h4 class="text-slate-500 text-xs uppercase font-bold tracking-tighter">${t('description')}</h4>
-                            <div class="p-6 bg-white/5 rounded-3xl border border-white/5">
-                                <p class="text-slate-300 leading-relaxed text-base">${p.Opis && p.Opis[currentLang] ? p.Opis[currentLang] : t('noResults')}</p>
+                        <div class="mb-6">
+                            <h4 class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">${t('description')}</h4>
+                            <div class="bg-gray-50 rounded-xl p-4">
+                                <p class="text-gray-600 leading-relaxed">${p.Opis && p.Opis[currentLang] ? p.Opis[currentLang] : ''}</p>
                             </div>
                         </div>
-                        <div class="flex items-center gap-4">
-                            <div class="flex-1 bg-gradient-to-br ${p.Ilosc > 0 ? 'from-emerald-500 to-emerald-700' : 'from-red-500 to-red-700'} p-5 rounded-2xl flex justify-between items-center shadow-lg ${p.Ilosc > 0 ? 'shadow-emerald-500/20' : 'shadow-red-500/20'}">
-                                <span class="text-white/80 text-sm font-bold uppercase tracking-wider">${t('availability')}</span>
-                                <span class="text-3xl font-black text-white">${p.Ilosc} <small class="text-sm font-normal opacity-70">${t('pcs')}</small></span>
-                            </div>
+                        <div class="availability-box ${stockClass}">
+                            <span class="font-semibold text-sm">${t('availability')}</span>
+                            <span class="text-xl font-bold">${p.Ilosc} <small class="text-sm font-normal opacity-70">${t('pcs')}</small></span>
                         </div>
                     </div>
                 </div>
             `;
             document.getElementById('modal').classList.remove('opacity-0', 'pointer-events-none');
-            document.body.classList.add('modal-active');
+            document.body.style.overflow = 'hidden';
         }
 
         function changeSlide(direction) {
@@ -427,12 +743,16 @@
 
         function updateModalImage() {
             const imgElement = document.getElementById('modal-main-img');
-            const thumbs = document.querySelectorAll('.thumb');
+            const thumbs = document.querySelectorAll('.thumb-row img');
             const newPath = getImagePath(currentPhotos[currentImgIndex], 'full');
             const fallback = `images/watches/${currentPhotos[currentImgIndex]}`;
             imgElement.style.opacity = '0.5';
-            setTimeout(() => { imgElement.src = newPath; imgElement.onerror = function() { this.onerror = null; this.src = fallback; }; imgElement.style.opacity = '1'; }, 150);
-            thumbs.forEach((t, i) => { if (i === currentImgIndex) t.classList.add('thumb-active'); else t.classList.remove('thumb-active'); });
+            setTimeout(() => { 
+                imgElement.src = newPath; 
+                imgElement.onerror = function() { this.onerror = null; this.src = fallback; }; 
+                imgElement.style.opacity = '1'; 
+            }, 150);
+            thumbs.forEach((t, i) => { t.classList.toggle('active', i === currentImgIndex); });
         }
 
         function openLightbox() {
@@ -443,17 +763,18 @@
             const lbImg = document.getElementById('lightbox-img');
             lbImg.src = path; lbImg.onerror = function() { this.onerror = null; this.src = fallback; };
             lb.classList.remove('hidden'); lb.classList.add('flex');
-            document.body.classList.add('modal-active');
+            document.body.style.overflow = 'hidden';
         }
         function closeLightbox() {
             const lb = document.getElementById('lightbox');
             lb.classList.add('hidden'); lb.classList.remove('flex');
-            if (!document.getElementById('modal').classList.contains('pointer-events-none')) return;
-            document.body.classList.remove('modal-active');
+            if (document.getElementById('modal').classList.contains('pointer-events-none')) {
+                document.body.style.overflow = '';
+            }
         }
         function closeModal() {
             document.getElementById('modal').classList.add('opacity-0', 'pointer-events-none');
-            document.body.classList.remove('modal-active');
+            document.body.style.overflow = '';
         }
 
         document.addEventListener('keydown', (e) => {
@@ -462,7 +783,7 @@
                 if (!lb.classList.contains('hidden')) closeLightbox();
                 else closeModal();
             }
-            if (document.body.classList.contains('modal-active')) {
+            if (document.body.style.overflow === 'hidden') {
                 if (e.key === "ArrowRight") changeSlide(1);
                 if (e.key === "ArrowLeft") changeSlide(-1);
             }
@@ -470,6 +791,5 @@
 
         document.addEventListener('DOMContentLoaded', loadData);
     </script>
-
 </body>
 </html>
