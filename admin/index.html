@@ -422,12 +422,17 @@
         function showView(id) {
             document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
             document.getElementById(id).classList.add('active');
+<<<<<<< HEAD
             document.querySelectorAll('.nav-item').forEach(n => {
                 n.classList.remove('active');
                 if (n.getAttribute('onclick') && n.getAttribute('onclick').includes("'" + id + "'")) {
                     n.classList.add('active');
                 }
             });
+=======
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+>>>>>>> 1decc81ec1dc6de826dc43bbe255f9f6c5b6d949
             if(id === 'viewList') renderPreview();
         }
 
@@ -688,6 +693,7 @@
                     const base64 = p.fullBase64.split(',')[1];
 
                     // Check if file exists
+<<<<<<< HEAD
                     let existingSha = null;
                     try {
                         const checkRes = await fetch(`https://api.github.com/repos/${repo}/contents/images/watches/${p.filename}`, {
@@ -698,6 +704,11 @@
                             existingSha = checkData.sha;
                         }
                     } catch(e) { /* 404 is ok */ }
+=======
+                    await fetch(`https://api.github.com/repos/${repo}/contents/images/watches/${p.filename}`, {
+                        headers: { 'Authorization': `token ${token}` }
+                    }).catch(() => {}); // 404 is ok
+>>>>>>> 1decc81ec1dc6de826dc43bbe255f9f6c5b6d949
 
                     // Upload
                     const res = await fetch(`https://api.github.com/repos/${repo}/contents/images/watches/${p.filename}`, {
@@ -708,8 +719,12 @@
                         },
                         body: JSON.stringify({
                             message: `Add photo ${p.filename}`,
+<<<<<<< HEAD
                             content: base64,
                             ...(existingSha ? { sha: existingSha } : {})
+=======
+                            content: base64
+>>>>>>> 1decc81ec1dc6de826dc43bbe255f9f6c5b6d949
                         })
                     });
 
@@ -717,14 +732,19 @@
                     document.getElementById('progressText').textContent = `Zdjęcie ${i+1}/${uploadedPhotos.length}...`;
                 }
 
+<<<<<<< HEAD
                 // 2. Get current csvjson.json from GitHub and merge with local products
                 document.getElementById('progressText').textContent = 'Łączenie danych z GitHub...';
+=======
+                // 2. Get current csvjson.json SHA
+>>>>>>> 1decc81ec1dc6de826dc43bbe255f9f6c5b6d949
                 const jsonRes = await fetch(`https://api.github.com/repos/${repo}/contents/csvjson.json`, {
                     headers: { 'Authorization': `token ${token}` }
                 });
                 const jsonData = await jsonRes.json();
                 const sha = jsonData.sha;
 
+<<<<<<< HEAD
                 // Decode remote content
                 let remoteProducts = [];
                 try {
@@ -746,6 +766,10 @@
 
                 // 3. Update JSON on GitHub
                 const content = btoa(unescape(encodeURIComponent(JSON.stringify({products: mergedProducts}, null, 2))));
+=======
+                // 3. Update JSON
+                const content = btoa(unescape(encodeURIComponent(JSON.stringify({products}, null, 2))));
+>>>>>>> 1decc81ec1dc6de826dc43bbe255f9f6c5b6d949
                 const updateRes = await fetch(`https://api.github.com/repos/${repo}/contents/csvjson.json`, {
                     method: 'PUT',
                     headers: {
@@ -764,7 +788,10 @@
                 hideProgress();
                 uploadedPhotos = []; // Clear after successful upload
                 renderPhotoGrid();
+<<<<<<< HEAD
                 renderPreview();
+=======
+>>>>>>> 1decc81ec1dc6de826dc43bbe255f9f6c5b6d949
                 showToast('Wysłano na GitHub! Strona zaktualizuje się za ~1 min.', 'success');
 
             } catch(err) {
@@ -816,4 +843,8 @@
         }
     </script>
 </body>
+<<<<<<< HEAD
 </html>
+=======
+</html>
+>>>>>>> 1decc81ec1dc6de826dc43bbe255f9f6c5b6d949

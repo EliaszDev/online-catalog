@@ -454,5 +454,23 @@
         document.addEventListener('DOMContentLoaded', loadData);
     </script>
 
+<<<<<<< HEAD
 </body>
 </html>
+=======
+    <!-- Netlify Identity Widget -->
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    <script>
+        if (window.netlifyIdentity) {
+            window.netlifyIdentity.on("init", user => {
+                if (!user) {
+                    window.netlifyIdentity.on("login", () => {
+                        document.location.href = "/admin/";
+                    });
+                }
+            });
+        }
+    </script>
+</body>
+</html>
+>>>>>>> 1decc81ec1dc6de826dc43bbe255f9f6c5b6d949

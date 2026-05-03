@@ -1,3 +1,66 @@
+<<<<<<< HEAD
 # NOTE: Netlify CMS / Decap CMS has been removed.
 # This project now uses a custom admin panel (admin/index.html) with GitHub API integration.
 # Product data is managed through the custom panel and deployed via Cloudflare Pages.
+=======
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: "images/watches"
+public_folder: "/images/watches"
+
+locale: 'pl'
+
+collections:
+  - name: "products"
+    label: "Produkty"
+    files:
+      - label: "Lista Produktów"
+        name: "products"
+        file: "csvjson.json"
+        fields:
+          - name: "products"
+            label: "Produkty"
+            widget: "list"
+            collapsed: false
+            summary: "{{fields.SKU}} — {{fields.Model}} ({{fields.Ilosc}} szt.)"
+            fields:
+              - name: "SKU"
+                label: "SKU"
+                widget: "string"
+              - name: "Model"
+                label: "Model"
+                widget: "string"
+              - name: "Kategoria"
+                label: "Kategoria"
+                widget: "string"
+              - name: "Kolor"
+                label: "Kolor"
+                widget: "string"
+                required: false
+              - name: "Ilosc"
+                label: "Ilość na stanie"
+                widget: "number"
+                value_type: "int"
+                min: 0
+                default: 0
+              - name: "Cena"
+                label: "Cena (PLN)"
+                widget: "number"
+                value_type: "float"
+                required: false
+              - name: "Zdjecia"
+                label: "Zdjęcia"
+                widget: "string"
+              - name: "Opis"
+                label: "Opisy w językach"
+                widget: "object"
+                collapsed: false
+                fields:
+                  - {name: "pl", label: "Polski", widget: "text"}
+                  - {name: "en", label: "English", widget: "text"}
+                  - {name: "ru", label: "Русский", widget: "text"}
+                  - {name: "kk", label: "Қазақша", widget: "text"}
+                  - {name: "ne", label: "नेपाली", widget: "text"}
+>>>>>>> 1decc81ec1dc6de826dc43bbe255f9f6c5b6d949
