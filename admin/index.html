@@ -12,7 +12,50 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             font-size: 16px; line-height: 1.5;
         }
+        body.locked { overflow: hidden; }
         .container { max-width: 600px; margin: 0 auto; padding: 16px; padding-bottom: 160px; }
+
+        /* Login Overlay */
+        .login-overlay {
+            position: fixed; inset: 0; background: #0b0f19; z-index: 2000;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            padding: 20px;
+        }
+        .login-overlay.hidden { display: none; }
+        .login-box {
+            width: 100%; max-width: 360px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 20px; padding: 32px;
+        }
+        .login-box h2 {
+            margin: 0 0 8px; font-size: 1.4rem; text-align: center;
+        }
+        .login-box p {
+            margin: 0 0 24px; color: #64748b; font-size: 0.9rem; text-align: center;
+        }
+        .login-box .form-group { margin-bottom: 16px; }
+        .login-box input {
+            width: 100%; padding: 14px 16px;
+            background: rgba(255,255,255,0.06);
+            border: 2px solid rgba(255,255,255,0.1);
+            border-radius: 12px; color: #fff;
+            font-size: 1rem; font-family: inherit;
+        }
+        .login-box input:focus {
+            outline: none; border-color: #3b82f6;
+            background: rgba(255,255,255,0.08);
+        }
+        .login-box .btn {
+            width: 100%; padding: 14px; border-radius: 12px;
+            border: none; font-size: 1rem; font-weight: 700;
+            cursor: pointer; background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            color: white; margin-top: 8px;
+        }
+        .login-error {
+            color: #ef4444; font-size: 0.85rem; text-align: center;
+            margin-top: 12px; min-height: 20px;
+        }
 
         /* Header */
         .header {
@@ -235,6 +278,21 @@
 </head>
 <body>
 
+    <!-- LOGIN OVERLAY -->
+    <div class="login-overlay" id="loginOverlay">
+        <div class="login-box">
+            <h2><i class="fas fa-lock" style="color:#60a5fa;margin-right:8px;"></i>Panel Admin</h2>
+            <p>Wprowadź hasło, aby kontynuować</p>
+            <div class="form-group">
+                <input type="password" id="loginPassword" placeholder="Hasło..." onkeydown="if(event.key==='Enter')doLogin()">
+            </div>
+            <button class="btn" onclick="doLogin()">
+                <i class="fas fa-sign-in-alt"></i> Zaloguj
+            </button>
+            <div class="login-error" id="loginError"></div>
+        </div>
+    </div>
+
     <div class="header">
         <h1><i class="fas fa-box-open" style="color:#60a5fa;margin-right:8px;"></i>Panel Admin</h1>
         <p>Dodawaj i zarządzaj produktami</p>
@@ -400,6 +458,46 @@
         let products = [];
         let uploadedPhotos = []; // {file, thumbBase64, fullBase64, filename}
         let currentLang = 'pl';
+
+        // === LOGIN ===
+        const ADMIN_PASSWORD_HASH = '5994471abb01112afcc18159f6cc74b4f511b99806da59b3caf5a9c173cacfc5'; // sha256 of 'Illia2004'
+
+        async function sha256(message) {
+            const msgBuffer = new TextEncoder().encode(message);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+
+        function checkLogin() {
+            const session = sessionStorage.getItem('admin_logged_in');
+            if (session === 'true') {
+                document.getElementById('loginOverlay').classList.add('hidden');
+                document.body.classList.remove('locked');
+            } else {
+                document.getElementById('loginOverlay').classList.remove('hidden');
+                document.body.classList.add('locked');
+                setTimeout(() => document.getElementById('loginPassword').focus(), 100);
+            }
+        }
+
+        async function doLogin() {
+            const input = document.getElementById('loginPassword').value;
+            const hash = await sha256(input);
+            if (hash === ADMIN_PASSWORD_HASH) {
+                sessionStorage.setItem('admin_logged_in', 'true');
+                document.getElementById('loginOverlay').classList.add('hidden');
+                document.body.classList.remove('locked');
+                document.getElementById('loginError').textContent = '';
+                document.getElementById('loginPassword').value = '';
+            } else {
+                document.getElementById('loginError').textContent = 'Nieprawidłowe hasło';
+                document.getElementById('loginPassword').value = '';
+                document.getElementById('loginPassword').focus();
+            }
+        }
+
+        checkLogin();
 
         // Load saved settings
         document.getElementById('githubToken').value = localStorage.getItem('gh_token') || '';
@@ -683,9 +781,24 @@
             showProgress('Wysyłanie na GitHub...');
 
             try {
+                // Collect all photos that need uploading (from all products, not just current session)
+                const allPhotosToUpload = [];
+                products.forEach(p => {
+                    if (p.Zdjecia) {
+                        const names = p.Zdjecia.split(',').map(s => s.trim()).filter(Boolean);
+                        names.forEach(name => {
+                            // Check if this photo is in the current uploadedPhotos buffer (newly added)
+                            const buffered = uploadedPhotos.find(up => up.filename === name);
+                            if (buffered && !allPhotosToUpload.some(x => x.filename === name)) {
+                                allPhotosToUpload.push(buffered);
+                            }
+                        });
+                    }
+                });
+
                 // 1. Upload photos
-                for(let i=0; i<uploadedPhotos.length; i++) {
-                    const p = uploadedPhotos[i];
+                for(let i=0; i<allPhotosToUpload.length; i++) {
+                    const p = allPhotosToUpload[i];
                     const base64 = p.fullBase64.split(',')[1];
 
                     // Check if file exists
@@ -715,7 +828,7 @@
                     });
 
                     if(!res.ok && res.status !== 422) throw new Error('Photo upload failed');
-                    document.getElementById('progressText').textContent = `Zdjęcie ${i+1}/${uploadedPhotos.length}...`;
+                    document.getElementById('progressText').textContent = `Zdjęcie ${i+1}/${allPhotosToUpload.length}...`;
                 }
 
                 // 2. Get current csvjson.json from GitHub and merge with local products
