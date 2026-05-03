@@ -149,6 +149,18 @@
             font-size: 0.7rem; cursor: pointer; z-index: 2;
             display: flex; align-items: center; justify-content: center;
         }
+        .photo-slot.dragging {
+            opacity: 0.5;
+            border-color: #3b82f6 !important;
+            transform: scale(0.95);
+        }
+        .photo-slot.drag-over {
+            border-color: #10b981 !important;
+            background: rgba(16,185,129,0.1);
+        }
+        .photo-order-hint {
+            font-size: 0.7rem; color: #64748b; margin-top: 8px; text-align: center;
+        }
 
         /* Lang Tabs */
         .lang-tabs {
@@ -374,6 +386,9 @@
             <input type="file" id="photoInput" accept="image/*" multiple style="display:none" onchange="handlePhotos(this)">
             <div style="margin-top:10px;font-size:0.75rem;color:#475569;">
                 <i class="fas fa-info-circle"></i> Zdjęcia zostaną automatycznie zmniejszone
+            </div>
+            <div class="photo-order-hint">
+                <i class="fas fa-hand-pointer"></i> Przeciągnij zdjęcia, aby zmienić kolejność
             </div>
         </div>
 
@@ -687,15 +702,69 @@
                 const imgSrc = p.thumbBase64 || `images/watches/${p.filename}`;
                 const isExisting = !p.thumbBase64;
                 return `
-                <div class="photo-slot" ${isExisting ? 'style="border-style:solid;border-color:rgba(59,130,246,0.3);"' : ''}>
+                <div class="photo-slot" draggable="true" data-index="${i}" ${isExisting ? 'style="border-style:solid;border-color:rgba(59,130,246,0.3);"' : ''}>
                     <img src="${imgSrc}" onerror="this.style.display='none';this.parentElement.innerHTML='<span style=font-size:0.65rem;color:#94a3b8;padding:4px;>${p.filename}</span>'">
-                    <button class="remove-btn" onclick="removePhoto(${i})" type="button">×</button>
+                    <button class="remove-btn" onclick="event.stopPropagation();removePhoto(${i})" type="button">×</button>
                 </div>
             `}).join('') + `
                 <div class="photo-slot" onclick="document.getElementById('photoInput').click()">
                     <i class="fas fa-plus"></i><span>Dodaj</span>
                 </div>
             `;
+
+            // Attach drag events
+            grid.querySelectorAll('.photo-slot[draggable="true"]').forEach(slot => {
+                slot.addEventListener('dragstart', handleDragStart);
+                slot.addEventListener('dragend', handleDragEnd);
+                slot.addEventListener('dragover', handleDragOver);
+                slot.addEventListener('dragenter', handleDragEnter);
+                slot.addEventListener('dragleave', handleDragLeave);
+                slot.addEventListener('drop', handleDrop);
+            });
+        }
+
+        let dragSrcIndex = null;
+
+        function handleDragStart(e) {
+            dragSrcIndex = parseInt(this.dataset.index);
+            this.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/plain', dragSrcIndex);
+        }
+
+        function handleDragEnd(e) {
+            this.classList.remove('dragging');
+            document.querySelectorAll('.photo-slot').forEach(s => s.classList.remove('drag-over'));
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+        }
+
+        function handleDragEnter(e) {
+            e.preventDefault();
+            if (this.dataset.index && parseInt(this.dataset.index) !== dragSrcIndex) {
+                this.classList.add('drag-over');
+            }
+        }
+
+        function handleDragLeave(e) {
+            this.classList.remove('drag-over');
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            this.classList.remove('drag-over');
+            const dropTargetIndex = parseInt(this.dataset.index);
+            if (isNaN(dropTargetIndex) || dragSrcIndex === null || dragSrcIndex === dropTargetIndex) return;
+
+            // Reorder array
+            const item = uploadedPhotos.splice(dragSrcIndex, 1)[0];
+            uploadedPhotos.splice(dropTargetIndex, 0, item);
+
+            dragSrcIndex = null;
+            renderPhotoGrid();
         }
 
         function removePhoto(index) {
