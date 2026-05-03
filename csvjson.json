@@ -175,22 +175,6 @@
         "uz": "Minimalist dizaynga ega professional sog&#39;liqni saqlash kuzatuvchisi. U kun davomida EKG, stress va energiya darajasini kuzatib boradi."
       },
       "Cena": null
-    },
-    {
-      "SKU": "ZS-15",
-      "Model": "Testowy",
-      "Kategoria": "powerbanki",
-      "Kolor": "Black",
-      "Ilosc": 2,
-      "Cena": 10,
-      "Zdjecia": "IMG_0707.jpg",
-      "Opis": {
-        "pl": "Testowy produkt",
-        "en": "Test product",
-        "ru": "Испытуемый продукт",
-        "kk": "Сынақ өнімі",
-        "uz": "Sinov mahsuloti"
-      }
     }
   ]
 }
