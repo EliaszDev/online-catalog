@@ -191,6 +191,22 @@
         "ne": "न्यूनतम डिजाइनको साथ व्यावसायिक स्वास्थ्य ट्रयाकर। यसले ECG, तनाव र दिनभरको ऊर्जा स्तर निगरानी गर्दछ।"
       },
       "Cena": null
+    },
+    {
+      "SKU": "test",
+      "Model": "test",
+      "Kategoria": "powerbanki",
+      "Kolor": "black",
+      "Ilosc": 1,
+      "Cena": 1110.98,
+      "Zdjecia": "IMG_0181_white.jpg",
+      "Opis": {
+        "pl": "test",
+        "en": "",
+        "ru": "",
+        "kk": "",
+        "ne": ""
+      }
     }
   ]
 }
