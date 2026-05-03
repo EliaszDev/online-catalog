@@ -207,6 +207,22 @@
         "kk": "",
         "ne": ""
       }
+    },
+    {
+      "SKU": "ZS-15",
+      "Model": "test1",
+      "Kategoria": "powerbanki",
+      "Kolor": "black",
+      "Ilosc": 2,
+      "Cena": 1110.98,
+      "Zdjecia": "",
+      "Opis": {
+        "pl": "test",
+        "en": "",
+        "ru": "",
+        "kk": "",
+        "ne": ""
+      }
     }
   ]
 }
