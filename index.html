@@ -2,784 +2,469 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Panel Admin — Dodaj Produkt</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PREMIUM WATCHES — Katalog</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body {
-            margin: 0; padding: 0; background: #0b0f19; color: #e2e8f0;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            font-size: 16px; line-height: 1.5;
-        }
-        .container { max-width: 600px; margin: 0 auto; padding: 16px; padding-bottom: 100px; }
-
-        /* Header */
-        .header {
-            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-            padding: 20px 16px; text-align: center;
-            border-bottom: 1px solid rgba(255,255,255,0.08);
-            position: sticky; top: 0; z-index: 100;
-            backdrop-filter: blur(10px);
-        }
-        .header h1 { margin: 0; font-size: 1.3rem; font-weight: 700; }
-        .header p { margin: 4px 0 0; font-size: 0.85rem; color: #64748b; }
-
-        /* Cards */
-        .card {
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 16px; padding: 20px; margin-bottom: 16px;
-        }
-        .card-title {
-            font-size: 0.75rem; font-weight: 700; text-transform: uppercase;
-            letter-spacing: 0.05em; color: #60a5fa; margin-bottom: 16px;
-            display: flex; align-items: center; gap: 8px;
-        }
-
-        /* Form Elements */
-        .form-group { margin-bottom: 20px; }
-        .form-group:last-child { margin-bottom: 0; }
-        label {
-            display: block; font-size: 0.85rem; font-weight: 600;
-            color: #94a3b8; margin-bottom: 8px;
-        }
-        .required { color: #ef4444; }
-
-        input, select, textarea {
-            width: 100%; padding: 14px 16px;
-            background: rgba(255,255,255,0.06);
-            border: 2px solid rgba(255,255,255,0.1);
-            border-radius: 12px; color: #fff;
-            font-size: 1rem; font-family: inherit;
-            transition: border-color 0.2s;
-            -webkit-appearance: none; appearance: none;
-        }
-        input:focus, select:focus, textarea:focus {
-            outline: none; border-color: #3b82f6;
-            background: rgba(255,255,255,0.08);
-        }
-        select {
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-            background-repeat: no-repeat; background-position: right 12px center;
-            padding-right: 40px;
-        }
-        textarea { min-height: 100px; resize: vertical; }
-
-        /* SKU Suggestion */
-        .sku-row { display: flex; gap: 10px; }
-        .sku-row input { flex: 1; }
-        .btn-suggest {
-            padding: 14px 16px; background: rgba(59,130,246,0.15);
-            border: 2px solid rgba(59,130,246,0.3); color: #60a5fa;
-            border-radius: 12px; font-size: 0.85rem; font-weight: 600;
-            white-space: nowrap; cursor: pointer;
-        }
-        .last-sku {
-            font-size: 0.75rem; color: #64748b; margin-top: 6px;
-        }
-
-        /* Photo Upload */
-        .photo-grid {
-            display: grid; grid-template-columns: repeat(3, 1fr);
-            gap: 10px; margin-top: 10px;
-        }
-        .photo-slot {
-            aspect-ratio: 1; background: rgba(255,255,255,0.04);
-            border: 2px dashed rgba(255,255,255,0.15);
-            border-radius: 12px; display: flex;
-            flex-direction: column; align-items: center; justify-content: center;
-            cursor: pointer; position: relative; overflow: hidden;
-            transition: all 0.2s;
-        }
-        .photo-slot:active { border-color: #3b82f6; background: rgba(59,130,246,0.1); }
-        .photo-slot i { font-size: 1.5rem; color: #475569; margin-bottom: 4px; }
-        .photo-slot span { font-size: 0.7rem; color: #475569; }
-        .photo-slot img {
-            position: absolute; inset: 0; width: 100%; height: 100%;
-            object-fit: cover; border-radius: 10px;
-        }
-        .photo-slot .remove-btn {
-            position: absolute; top: 4px; right: 4px;
-            width: 24px; height: 24px; background: rgba(239,68,68,0.9);
-            color: white; border-radius: 50%; border: none;
-            font-size: 0.7rem; cursor: pointer; z-index: 2;
-            display: flex; align-items: center; justify-content: center;
-        }
-
-        /* Lang Tabs */
-        .lang-tabs {
-            display: flex; gap: 6px; margin-bottom: 12px;
-            overflow-x: auto; padding-bottom: 4px;
-        }
-        .lang-tab {
-            padding: 8px 14px; border-radius: 10px;
-            font-size: 0.8rem; font-weight: 600;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.08);
-            color: #64748b; cursor: pointer; white-space: nowrap;
-        }
-        .lang-tab.active { background: rgba(59,130,246,0.2); color: #60a5fa; border-color: rgba(59,130,246,0.3); }
-
-        /* Buttons */
-        .btn {
-            width: 100%; padding: 16px; border-radius: 14px;
-            border: none; font-size: 1rem; font-weight: 700;
-            cursor: pointer; display: flex; align-items: center;
-            justify-content: center; gap: 10px; transition: all 0.2s;
-        }
-        .btn-primary {
-            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-            color: white; box-shadow: 0 4px 20px rgba(37,99,235,0.3);
-        }
-        .btn-primary:active { transform: scale(0.98); }
-        .btn-success {
-            background: linear-gradient(135deg, #059669 0%, #047857 100%);
-            color: white; box-shadow: 0 4px 20px rgba(5,150,105,0.3);
-        }
-        .btn-secondary {
-            background: rgba(255,255,255,0.08); color: #94a3b8;
-            border: 1px solid rgba(255,255,255,0.12);
-        }
-
-        /* GitHub Settings */
-        .settings-toggle {
-            text-align: center; padding: 16px;
-            color: #64748b; font-size: 0.85rem;
-            cursor: pointer;
-        }
-        .settings-panel {
-            display: none; background: rgba(255,255,255,0.02);
-            border-radius: 12px; padding: 16px; margin-bottom: 16px;
-        }
-        .settings-panel.open { display: block; }
-
-        /* Progress */
-        .progress-overlay {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.85);
-            z-index: 1000; display: none;
-            flex-direction: column; align-items: center; justify-content: center;
-        }
-        .progress-overlay.active { display: flex; }
-        .spinner {
-            width: 48px; height: 48px; border: 4px solid rgba(255,255,255,0.1);
-            border-top-color: #3b82f6; border-radius: 50%;
-            animation: spin 1s linear infinite; margin-bottom: 20px;
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        .progress-text { color: #94a3b8; font-size: 0.9rem; }
-
-        /* Toast */
-        .toast {
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(100px);
-            background: #1e293b; color: white; padding: 14px 24px; border-radius: 12px;
-            font-size: 0.9rem; font-weight: 600; z-index: 1001;
-            border: 1px solid rgba(255,255,255,0.1);
-            box-shadow: 0 10px 40px rgba(0,0,0,0.4);
-            transition: transform 0.3s; white-space: nowrap;
-        }
-        .toast.show { transform: translateX(-50%) translateY(0); }
-        .toast.error { background: #7f1d1d; border-color: rgba(239,68,68,0.3); }
-        .toast.success { background: #064e3b; border-color: rgba(16,185,129,0.3); }
-
-        /* Product List Preview */
-        .preview-list { max-height: 300px; overflow-y: auto; }
-        .preview-item {
-            display: flex; align-items: center; gap: 12px;
-            padding: 12px; background: rgba(255,255,255,0.03);
-            border-radius: 10px; margin-bottom: 8px;
-        }
-        .preview-item img {
-            width: 48px; height: 48px; border-radius: 8px;
-            object-fit: cover; background: rgba(255,255,255,0.05);
-        }
-        .preview-item .info { flex: 1; min-width: 0; }
-        .preview-item .name { font-weight: 600; font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .preview-item .meta { font-size: 0.75rem; color: #64748b; }
-        .preview-item .actions { display: flex; gap: 8px; }
-        .preview-item .actions button {
-            width: 32px; height: 32px; border-radius: 8px;
-            border: none; background: rgba(255,255,255,0.08);
-            color: #94a3b8; cursor: pointer; font-size: 0.8rem;
-        }
-        .preview-item .actions button.delete { background: rgba(239,68,68,0.15); color: #ef4444; }
-
-        /* Bottom Nav */
-        .bottom-nav {
-            position: fixed; bottom: 0; left: 0; right: 0;
-            background: rgba(11,15,25,0.95); backdrop-filter: blur(20px);
-            border-top: 1px solid rgba(255,255,255,0.08);
-            display: flex; justify-content: space-around; padding: 8px 0;
-            z-index: 99;
-        }
-        .nav-item {
-            flex: 1; text-align: center; padding: 8px;
-            color: #475569; font-size: 0.7rem; font-weight: 600;
-            cursor: pointer; border: none; background: none;
-        }
-        .nav-item i { display: block; font-size: 1.3rem; margin-bottom: 4px; }
-        .nav-item.active { color: #60a5fa; }
-
-        /* Views */
-        .view { display: none; }
-        .view.active { display: block; }
-
-        /* Responsive */
-        @media (min-width: 640px) {
-            body { font-size: 15px; }
-            .container { padding: 24px; }
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        body { background-color: #0b0f19; color: #e2e8f0; font-family: 'Inter', sans-serif; }
+        .glass { background: rgba(255,255,255,0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.08); }
+        .glass:hover { border-color: rgba(59,130,246,0.4); }
+        #modal { transition: opacity 0.3s ease; }
+        body.modal-active { overflow: hidden; }
+        .carousel-container { position: relative; width: 100%; overflow: hidden; border-radius: 1.5rem; background: rgba(255,255,255,0.03); }
+        #modal-main-img { transition: transform 0.3s ease, opacity 0.2s ease; cursor: zoom-in; }
+        #modal-main-img:active { transform: scale(1.5); cursor: zoom-out; }
+        .nav-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.5); color: white; padding: 0.75rem 1rem; border-radius: 50%; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); transition: all 0.2s; z-index: 10; font-size: 1.2rem; }
+        .nav-btn:hover { background: rgba(59, 130, 246, 0.8); }
+        .prev { left: 12px; } .next { right: 12px; }
+        .thumb { border: 2px solid rgba(255,255,255,0.1); }
+        .thumb-active { border-color: #3b82f6 !important; opacity: 1 !important; }
+        #lightbox { transition: opacity 0.3s ease; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0b0f19; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade-up { animation: fadeUp 0.5s ease forwards; }
+        .cat-active { background: rgba(59,130,246,0.2); border-color: rgba(59,130,246,0.5); color: #60a5fa; }
     </style>
 <base target="_blank">
 </head>
-<body>
+<body class="min-h-screen">
 
-    <div class="header">
-        <h1><i class="fas fa-box-open" style="color:#60a5fa;margin-right:8px;"></i>Panel Admin</h1>
-        <p>Dodawaj i zarządzaj produktami</p>
+    <div id="lightbox" class="fixed inset-0 bg-black/95 z-[200] hidden flex-col items-center justify-center p-4 cursor-pointer" onclick="closeLightbox()">
+        <img id="lightbox-img" src="" class="max-w-full max-h-[90vh] object-contain shadow-2xl">
+        <div class="mt-4 text-white/50 text-sm font-light tracking-widest uppercase" id="lightboxHint">Kliknij, aby zamknąć</div>
     </div>
 
-    <!-- VIEW: Add Product -->
-    <div id="viewAdd" class="view active container">
-        <div class="card">
-            <div class="card-title"><i class="fas fa-tag"></i>Podstawowe Informacje</div>
-
-            <div class="form-group">
-                <label>SKU <span class="required">*</span></label>
-                <div class="sku-row">
-                    <input type="text" id="pSKU" placeholder="np. ZS-14">
-                    <button class="btn-suggest" onclick="suggestSKU()" type="button">
-                        <i class="fas fa-magic"></i> Sugeruj
-                    </button>
+    <header class="max-w-7xl mx-auto px-6 pt-8 pb-6">
+        <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-8">
+            <div>
+                <h1 class="text-4xl lg:text-5xl font-extrabold bg-gradient-to-r from-blue-400 via-cyan-400 to-emerald-400 bg-clip-text text-transparent tracking-tight">PREMIUM WATCHES</h1>
+                <p class="text-slate-500 mt-2 text-sm tracking-wide" data-i18n="subtitle">Katalog Produktów & System Magazynowy</p>
+            </div>
+            <div class="flex flex-wrap items-center gap-3">
+                <div class="relative">
+                    <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-sm"></i>
+                    <input type="text" id="searchInput" data-i18n-placeholder="searchPlaceholder" placeholder="Szukaj modelu lub SKU..." 
+                           class="glass rounded-xl pl-9 pr-4 py-2.5 text-sm text-white placeholder-slate-500 outline-none focus:border-blue-500/50 w-64 transition-all" oninput="handleSearch()">
                 </div>
-                <div class="last-sku" id="lastSKU">Ostatni: —</div>
-            </div>
-
-            <div class="form-group">
-                <label>Model <span class="required">*</span></label>
-                <input type="text" id="pModel" placeholder="np. X-100 Pro">
-            </div>
-
-            <div class="form-group">
-                <label>Kategoria <span class="required">*</span></label>
-                <select id="pKategoria">
-                    <option value="">Wybierz kategorię...</option>
-                    <option value="zegarki-smartwatch">⌚ Zegarki Smartwatch</option>
-                    <option value="sluchawki">🎧 Słuchawki</option>
-                    <option value="powerbanki">🔋 Powerbanki</option>
-                    <option value="akcesoria">📱 Akcesoria</option>
-                    <option value="inne">📦 Inne</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label>Kolor</label>
-                <input type="text" id="pKolor" placeholder="np. BLACK / SILVER">
-            </div>
-
-            <div class="form-group">
-                <label>Ilość na stanie <span class="required">*</span></label>
-                <input type="number" id="pIlosc" min="0" value="0" placeholder="0">
-            </div>
-
-            <div class="form-group">
-                <label>Cena (PLN)</label>
-                <input type="number" id="pCena" min="0" step="0.01" placeholder="np. 199.99">
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-title"><i class="fas fa-camera"></i>Zdjęcia Produktu</div>
-            <p style="font-size:0.8rem;color:#64748b;margin-bottom:12px;">
-                Kliknij poniżej aby dodać zdjęcia z telefonu. Zdjęcia zostaną zmniejszone do rozmiaru web.
-            </p>
-            <div class="photo-grid" id="photoGrid">
-                <div class="photo-slot" onclick="document.getElementById('photoInput').click()">
-                    <i class="fas fa-plus"></i>
-                    <span>Dodaj</span>
+                <div class="flex gap-1 bg-white/5 p-1 rounded-xl border border-white/10">
+                    <button onclick="setLang('pl')" class="lang-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition hover:bg-white/10" data-lang="pl">PL</button>
+                    <button onclick="setLang('en')" class="lang-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition hover:bg-white/10" data-lang="en">EN</button>
+                    <button onclick="setLang('ru')" class="lang-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition hover:bg-white/10" data-lang="ru">RU</button>
+                    <button onclick="setLang('kk')" class="lang-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition hover:bg-white/10" data-lang="kk">KK</button>
+                    <button onclick="setLang('ne')" class="lang-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition hover:bg-white/10" data-lang="ne">NE</button>
                 </div>
-            </div>
-            <input type="file" id="photoInput" accept="image/*" multiple style="display:none" onchange="handlePhotos(this)">
-            <div style="margin-top:10px;font-size:0.75rem;color:#475569;">
-                <i class="fas fa-info-circle"></i> Zdjęcia zostaną automatycznie zmniejszone
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-title"><i class="fas fa-language"></i>Opisy w Językach</div>
-            <div class="lang-tabs">
-                <div class="lang-tab active" onclick="switchLang('pl')">🇵🇱 PL</div>
-                <div class="lang-tab" onclick="switchLang('en')">🇬🇧 EN</div>
-                <div class="lang-tab" onclick="switchLang('ru')">🇷🇺 RU</div>
-                <div class="lang-tab" onclick="switchLang('kk')">🇰🇿 KK</div>
-                <div class="lang-tab" onclick="switchLang('ne')">🇳🇵 NE</div>
-            </div>
-            <div id="desc-pl" class="desc-panel">
-                <textarea id="pOpis_pl" placeholder="Opis po polsku..."></textarea>
-            </div>
-            <div id="desc-en" class="desc-panel" style="display:none">
-                <textarea id="pOpis_en" placeholder="English description..."></textarea>
-            </div>
-            <div id="desc-ru" class="desc-panel" style="display:none">
-                <textarea id="pOpis_ru" placeholder="Описание на русском..."></textarea>
-            </div>
-            <div id="desc-kk" class="desc-panel" style="display:none">
-                <textarea id="pOpis_kk" placeholder="Қазақша сипаттама..."></textarea>
-            </div>
-            <div id="desc-ne" class="desc-panel" style="display:none">
-                <textarea id="pOpis_ne" placeholder="नेपाली विवरण..."></textarea>
+                <a href="admin/" class="glass px-4 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white hover:border-blue-500/30 transition flex items-center gap-2">
+                    <i class="fas fa-lock"></i> <span data-i18n="admin">Panel CMS</span>
+                </a>
             </div>
         </div>
-
-        <div style="margin-bottom: 24px;">
-            <button class="btn btn-primary" onclick="saveProduct()">
-                <i class="fas fa-save"></i>Zapisz Produkt
-            </button>
+        <div id="categoryFilters" class="flex flex-wrap gap-2 mb-2">
+            <button onclick="filterCategory('all')" class="cat-btn cat-active px-4 py-2 rounded-xl text-xs font-semibold border border-white/10 transition hover:bg-white/5" data-cat="all" data-i18n="allProducts">Wszystkie Produkty</button>
         </div>
+    </header>
 
-        <div class="settings-toggle" onclick="toggleSettings()">
-            <i class="fas fa-cog"></i> Ustawienia GitHub (opcjonalne — auto-upload)
+    <main class="max-w-7xl mx-auto px-6 pb-20">
+        <div id="katalog" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
+        <div id="noResults" class="hidden text-center py-20 text-slate-500">
+            <i class="fas fa-search text-4xl mb-4 opacity-30"></i>
+            <p class="text-lg" data-i18n="noResults">Nie znaleziono produktów</p>
         </div>
-        <div class="settings-panel" id="settingsPanel">
-            <div class="form-group">
-                <label>GitHub Token</label>
-                <input type="password" id="githubToken" placeholder="ghp_xxxxxxxxxxxx" onchange="localStorage.setItem('gh_token',this.value)">
-                <p style="font-size:0.75rem;color:#475569;margin-top:6px;">
-                    Token pozwala zapisać produkty bezpośrednio na GitHub. 
-                    <a href="https://github.com/settings/tokens/new?scopes=repo&description=Catalog+Admin" target="_blank" style="color:#60a5fa;">Utwórz token</a>
-                </p>
-            </div>
-            <div class="form-group">
-                <label>Nazwa repozytorium</label>
-                <input type="text" id="repoName" placeholder="username/repo-name" onchange="localStorage.setItem('gh_repo',this.value)">
-            </div>
-            <button class="btn btn-secondary" onclick="testGitHub()" style="margin-top:10px;">
-                <i class="fas fa-plug"></i>Testuj Połączenie
-            </button>
+    </main>
+
+    <div id="modal" class="opacity-0 pointer-events-none fixed inset-0 flex items-center justify-center p-4 z-[100]">
+        <div class="absolute inset-0 bg-black/90 backdrop-blur-md" onclick="closeModal()"></div>
+        <div class="glass w-full max-w-5xl rounded-[2rem] relative overflow-hidden max-h-[95vh] overflow-y-auto shadow-2xl shadow-blue-900/20">
+            <button onclick="closeModal()" class="absolute top-5 right-5 z-[110] text-slate-400 hover:text-white text-2xl w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/10 transition"><i class="fas fa-times"></i></button>
+            <div id="modal-content" class="p-6 md:p-10"></div>
         </div>
-    </div>
-
-    <!-- VIEW: Product List -->
-    <div id="viewList" class="view container">
-        <div class="card">
-            <div class="card-title"><i class="fas fa-list"></i>Lista Produktów (<span id="countBadge">0</span>)</div>
-            <div class="preview-list" id="productPreview"></div>
-        </div>
-        <div style="margin-bottom: 24px;">
-            <button class="btn btn-success" onclick="exportJSON()">
-                <i class="fas fa-download"></i>Pobierz csvjson.json
-            </button>
-            <button class="btn btn-secondary" onclick="uploadToGitHub()" style="margin-top:10px;">
-                <i class="fab fa-github"></i>Wyślij na GitHub
-            </button>
-        </div>
-    </div>
-
-    <!-- Progress Overlay -->
-    <div class="progress-overlay" id="progressOverlay">
-        <div class="spinner"></div>
-        <div class="progress-text" id="progressText">Przetwarzanie...</div>
-    </div>
-
-    <!-- Toast -->
-    <div class="toast" id="toast"></div>
-
-    <!-- Bottom Nav -->
-    <div class="bottom-nav">
-        <button class="nav-item active" onclick="showView('viewAdd')">
-            <i class="fas fa-plus-circle"></i>Dodaj
-        </button>
-        <button class="nav-item" onclick="showView('viewList')">
-            <i class="fas fa-list"></i>Lista
-        </button>
     </div>
 
     <script>
-        // === DATA ===
-        let products = [];
-        let uploadedPhotos = []; // {file, thumbBase64, fullBase64, filename}
+        const i18n = {
+            pl: {
+                subtitle: "Katalog Produktów & System Magazynowy",
+                searchPlaceholder: "Szukaj modelu lub SKU...",
+                admin: "Panel CMS",
+                allProducts: "Wszystkie Produkty",
+                noResults: "Nie znaleziono produktów",
+                viewDetails: "ZOBACZ SZCZEGÓŁY",
+                inStock: "Dostępny: {n} szt.",
+                outOfStock: "Brak na stanie",
+                sku: "SKU",
+                category: "Kategoria",
+                description: "Opis",
+                availability: "Dostępność",
+                pcs: "szt.",
+                color: "Kolor",
+                price: "Cena",
+                clickToClose: "Kliknij, aby zamknąć",
+                clickToEnlarge: "Kliknij, aby powiększyć"
+            },
+            en: {
+                subtitle: "Product Catalog & Inventory System",
+                searchPlaceholder: "Search model or SKU...",
+                admin: "CMS Panel",
+                allProducts: "All Products",
+                noResults: "No products found",
+                viewDetails: "VIEW DETAILS",
+                inStock: "In stock: {n} pcs",
+                outOfStock: "Out of stock",
+                sku: "SKU",
+                category: "Category",
+                description: "Description",
+                availability: "Availability",
+                pcs: "pcs",
+                color: "Color",
+                price: "Price",
+                clickToClose: "Click to close",
+                clickToEnlarge: "Click to enlarge"
+            },
+            ru: {
+                subtitle: "Каталог Продуктов & Система Учета",
+                searchPlaceholder: "Поиск модели или артикула...",
+                admin: "Панель CMS",
+                allProducts: "Все Продукты",
+                noResults: "Товары не найдены",
+                viewDetails: "ПОДРОБНЕЕ",
+                inStock: "В наличии: {n} шт.",
+                outOfStock: "Нет в наличии",
+                sku: "Артикул",
+                category: "Категория",
+                description: "Описание",
+                availability: "Наличие",
+                pcs: "шт.",
+                color: "Цвет",
+                price: "Цена",
+                clickToClose: "Нажмите, чтобы закрыть",
+                clickToEnlarge: "Нажмите, чтобы увеличить"
+            },
+            kk: {
+                subtitle: "Өнім Каталогы & Қойма Жүйесі",
+                searchPlaceholder: "Модель немесе SKU іздеу...",
+                admin: "CMS Панелі",
+                allProducts: "Барлық Өнімдер",
+                noResults: "Өнімдер табылмады",
+                viewDetails: "ТОЛЫҒЫРАҚ",
+                inStock: "Қоймада: {n} дана",
+                outOfStock: "Қоймада жоқ",
+                sku: "SKU",
+                category: "Санат",
+                description: "Сипаттама",
+                availability: "Қолжетімділік",
+                pcs: "дана",
+                color: "Түс",
+                price: "Бағасы",
+                clickToClose: "Жабу үшін басыңыз",
+                clickToEnlarge: "Үлкейту үшін басыңыз"
+            },
+            ne: {
+                subtitle: "उत्पादन सूची & इन्भेन्ट्री प्रणाली",
+                searchPlaceholder: "मोडेल वा SKU खोज्नुहोस्...",
+                admin: "CMS प्यानल",
+                allProducts: "सबै उत्पादनहरू",
+                noResults: "कुनै उत्पादन भेटिएन",
+                viewDetails: "विवरण हेर्नुहोस्",
+                inStock: "स्टकमा: {n} pcs",
+                outOfStock: "स्टकमा छैन",
+                sku: "SKU",
+                category: "कोटि",
+                description: "विवरण",
+                availability: "उपलब्धता",
+                pcs: "pcs",
+                color: "रङ",
+                price: "मूल्य",
+                clickToClose: "बन्द गर्न क्लिक गर्नुहोस्",
+                clickToEnlarge: "ठूलो बनाउन क्लिक गर्नुहोस्"
+            }
+        };
+
         let currentLang = 'pl';
+        let products = [];
+        let filteredProducts = [];
+        let currentImgIndex = 0;
+        let currentPhotos = [];
+        let categories = new Set();
 
-        // Load saved settings
-        document.getElementById('githubToken').value = localStorage.getItem('gh_token') || '';
-        document.getElementById('repoName').value = localStorage.getItem('gh_repo') || '';
+        function t(key, vars = {}) {
+            let str = i18n[currentLang] && i18n[currentLang][key] ? i18n[currentLang][key] : (i18n.en[key] || key);
+            for (let k in vars) str = str.replace('{' + k + '}', vars[k]);
+            return str;
+        }
 
-        // Load existing products
-        async function loadProducts() {
+        async function loadData() {
             try {
                 const res = await fetch('csvjson.json');
                 const data = await res.json();
+                // Support both old flat array and new wrapped format
                 products = Array.isArray(data) ? data : (data.products || []);
-                updateLastSKU();
-                renderPreview();
-            } catch(e) {
-                console.log('No existing products');
+                filteredProducts = [...products];
+                extractCategories();
+                renderCategories();
+                render();
+                updateLangUI();
+            } catch (e) { 
+                console.error("Błąd ładowania JSON:", e);
+                document.getElementById('katalog').innerHTML = '<div class="text-center py-20 text-red-400">Błąd ładowania produktów.</div>';
             }
         }
-        loadProducts();
 
-        // === NAVIGATION ===
-        function showView(id) {
-            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            event.currentTarget.classList.add('active');
-            if(id === 'viewList') renderPreview();
-        }
+        function extractCategories() { categories = new Set(products.map(p => p.Kategoria).filter(Boolean)); }
 
-        // === SKU SUGGESTION ===
-        function updateLastSKU() {
-            const el = document.getElementById('lastSKU');
-            if(!products.length) { el.textContent = 'Ostatni: — (zacznij od ZS-01)'; return; }
-
-            // Find highest number across all SKU prefixes
-            let maxNum = 0;
-            let lastPrefix = 'ZS-';
-            products.forEach(p => {
-                const match = p.SKU.match(/^(\D+)(\d+)$/);
-                if(match) {
-                    const num = parseInt(match[2]);
-                    if(num > maxNum) { maxNum = num; lastPrefix = match[1]; }
-                }
-            });
-            const last = products[products.length-1];
-            el.textContent = `Ostatni: ${last.SKU} (${last.Model}) — następny: ${lastPrefix}${String(maxNum+1).padStart(2,'0')}`;
-        }
-
-        function suggestSKU() {
-            if(!products.length) { document.getElementById('pSKU').value = 'ZS-01'; return; }
-            let maxNum = 0;
-            let prefix = 'ZS-';
-            products.forEach(p => {
-                const match = p.SKU.match(/^(\D+)(\d+)$/);
-                if(match) {
-                    const num = parseInt(match[2]);
-                    if(num > maxNum) { maxNum = num; prefix = match[1]; }
-                }
-            });
-            document.getElementById('pSKU').value = prefix + String(maxNum+1).padStart(2,'0');
-            showToast('SKU wypełnione: ' + document.getElementById('pSKU').value, 'success');
-        }
-
-        // === PHOTOS ===
-        function handlePhotos(input) {
-            const files = Array.from(input.files);
-            if(!files.length) return;
-
-            showProgress('Przetwarzanie zdjęć...');
-            let processed = 0;
-
-            files.forEach(file => {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const img = new Image();
-                    img.onload = function() {
-                        // Create thumb (600px)
-                        const thumb = resizeImage(img, 600);
-                        const full = resizeImage(img, 1600);
-
-                        uploadedPhotos.push({
-                            file: file,
-                            thumbBase64: thumb,
-                            fullBase64: full,
-                            filename: file.name.replace(/\.[^/.]+$/, '.jpg')
-                        });
-
-                        processed++;
-                        if(processed === files.length) {
-                            hideProgress();
-                            renderPhotoGrid();
-                            showToast(`Dodano ${files.length} zdjęcie`, 'success');
-                        }
-                    };
-                    img.src = e.target.result;
-                };
-                reader.readAsDataURL(file);
+        function renderCategories() {
+            const container = document.getElementById('categoryFilters');
+            const allBtn = container.querySelector('[data-cat="all"]');
+            container.innerHTML = '';
+            container.appendChild(allBtn);
+            categories.forEach(cat => {
+                const btn = document.createElement('button');
+                btn.className = 'cat-btn px-4 py-2 rounded-xl text-xs font-semibold border border-white/10 transition hover:bg-white/5 text-slate-400';
+                btn.dataset.cat = cat;
+                btn.textContent = cat.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                btn.onclick = () => filterCategory(cat);
+                container.appendChild(btn);
             });
         }
 
-        function resizeImage(img, maxWidth) {
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-            let w = img.width, h = img.height;
-            if(w > maxWidth) { h = Math.round(h * maxWidth / w); w = maxWidth; }
-            canvas.width = w; canvas.height = h;
-            ctx.drawImage(img, 0, 0, w, h);
-            return canvas.toDataURL('image/jpeg', 0.9);
-        }
-
-        function renderPhotoGrid() {
-            const grid = document.getElementById('photoGrid');
-            grid.innerHTML = uploadedPhotos.map((p, i) => `
-                <div class="photo-slot">
-                    <img src="${p.thumbBase64}">
-                    <button class="remove-btn" onclick="removePhoto(${i})" type="button">×</button>
-                </div>
-            `).join('') + `
-                <div class="photo-slot" onclick="document.getElementById('photoInput').click()">
-                    <i class="fas fa-plus"></i><span>Dodaj</span>
-                </div>
-            `;
-        }
-
-        function removePhoto(index) {
-            uploadedPhotos.splice(index, 1);
-            renderPhotoGrid();
-        }
-
-        // === LANGUAGE TABS ===
-        function switchLang(lang) {
+        function setLang(lang) {
             currentLang = lang;
-            document.querySelectorAll('.lang-tab').forEach(t => t.classList.remove('active'));
-            event.target.classList.add('active');
-            document.querySelectorAll('.desc-panel').forEach(p => p.style.display = 'none');
-            document.getElementById('desc-' + lang).style.display = 'block';
+            updateLangUI();
+            render();
+            updateLangButtons();
         }
 
-        // === SAVE PRODUCT ===
-        function saveProduct() {
-            const sku = document.getElementById('pSKU').value.trim();
-            const model = document.getElementById('pModel').value.trim();
-            const kat = document.getElementById('pKategoria').value;
-            const ilosc = parseInt(document.getElementById('pIlosc').value) || 0;
-            const cena = document.getElementById('pCena').value;
-
-            if(!sku || !model || !kat) {
-                showToast('Wypełnij SKU, Model i Kategorię', 'error');
-                return;
-            }
-
-            if(products.some(p => p.SKU === sku)) {
-                showToast('SKU już istnieje!', 'error');
-                return;
-            }
-
-            const photoNames = uploadedPhotos.map(p => p.filename).join(', ');
-
-            const product = {
-                SKU: sku,
-                Model: model,
-                Kategoria: kat,
-                Kolor: document.getElementById('pKolor').value.trim(),
-                Ilosc: ilosc,
-                Cena: cena ? parseFloat(cena) : null,
-                Zdjecia: photoNames,
-                Opis: {
-                    pl: document.getElementById('pOpis_pl').value.trim(),
-                    en: document.getElementById('pOpis_en').value.trim(),
-                    ru: document.getElementById('pOpis_ru').value.trim(),
-                    kk: document.getElementById('pOpis_kk').value.trim(),
-                    ne: document.getElementById('pOpis_ne').value.trim()
+        function updateLangButtons() {
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                if (btn.dataset.lang === currentLang) {
+                    btn.classList.add('bg-blue-500/20', 'text-blue-400');
+                    btn.classList.remove('text-slate-400');
+                } else {
+                    btn.classList.remove('bg-blue-500/20', 'text-blue-400');
+                    btn.classList.add('text-slate-400');
                 }
-            };
-
-            products.push(product);
-
-            // Clear form
-            document.getElementById('pSKU').value = '';
-            document.getElementById('pModel').value = '';
-            document.getElementById('pKategoria').value = '';
-            document.getElementById('pKolor').value = '';
-            document.getElementById('pIlosc').value = '0';
-            document.getElementById('pCena').value = '';
-            document.getElementById('pOpis_pl').value = '';
-            document.getElementById('pOpis_en').value = '';
-            document.getElementById('pOpis_ru').value = '';
-            document.getElementById('pOpis_kk').value = '';
-            document.getElementById('pOpis_ne').value = '';
-            uploadedPhotos = [];
-            renderPhotoGrid();
-            updateLastSKU();
-            renderPreview();
-
-            showToast('Produkt zapisany! Przejdź do "Lista" aby wyeksportować.', 'success');
+            });
         }
 
-        // === PREVIEW ===
-        function renderPreview() {
-            const container = document.getElementById('productPreview');
-            document.getElementById('countBadge').textContent = products.length;
+        function updateLangUI() {
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.dataset.i18n;
+                if (i18n[currentLang] && i18n[currentLang][key]) el.textContent = i18n[currentLang][key];
+            });
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                const key = el.dataset.i18nPlaceholder;
+                if (i18n[currentLang] && i18n[currentLang][key]) el.placeholder = i18n[currentLang][key];
+            });
+            document.getElementById('lightboxHint').textContent = t('clickToClose');
+        }
 
-            if(!products.length) {
-                container.innerHTML = '<p style="text-align:center;color:#475569;padding:20px;">Brak produktów. Dodaj pierwszy!</p>';
-                return;
+        function filterCategory(cat) {
+            document.querySelectorAll('.cat-btn').forEach(btn => {
+                if (btn.dataset.cat === cat) { btn.classList.add('cat-active'); btn.classList.remove('text-slate-400'); }
+                else { btn.classList.remove('cat-active'); btn.classList.add('text-slate-400'); }
+            });
+            if (cat === 'all') filteredProducts = [...products];
+            else filteredProducts = products.filter(p => p.Kategoria === cat);
+            handleSearch(true);
+        }
+
+        function handleSearch(skipFilter = false) {
+            const query = document.getElementById('searchInput').value.toLowerCase().trim();
+            let display = skipFilter ? [...filteredProducts] : [...products];
+            if (!skipFilter) {
+                const activeCat = document.querySelector('.cat-active');
+                const cat = activeCat ? activeCat.dataset.cat : 'all';
+                if (cat !== 'all') display = display.filter(p => p.Kategoria === cat);
             }
+            if (query) {
+                display = display.filter(p => 
+                    (p.Model && p.Model.toLowerCase().includes(query)) ||
+                    (p.SKU && p.SKU.toLowerCase().includes(query)) ||
+                    (p.Kolor && p.Kolor.toLowerCase().includes(query)) ||
+                    (p.Opis && p.Opis[currentLang] && p.Opis[currentLang].toLowerCase().includes(query))
+                );
+            }
+            filteredProducts = display;
+            render();
+        }
 
-            container.innerHTML = products.map((p, i) => {
-                const photos = p.Zdjecia ? p.Zdjecia.split(',').filter(Boolean) : [];
-                const img = photos.length ? `images/watches/${photos[0]}` : '';
-                return `
-                    <div class="preview-item">
-                        <img src="${img}" onerror="this.style.display='none'" alt="">
-                        <div class="info">
-                            <div class="name">${p.Model}</div>
-                            <div class="meta">${p.SKU} • ${p.Ilosc} szt. • ${p.Kategoria}</div>
+        function getImagePath(filename, size = 'thumb') {
+            const base = filename.replace(/\.[^/.]+$/, "");
+            const ext = filename.match(/\.[^/.]+$/) ? filename.match(/\.[^/.]+$/)[0] : '.jpg';
+            return `images/watches/${base}_${size}${ext}`;
+        }
+
+        function formatPrice(price) {
+            if (price === null || price === undefined || price === '') return '';
+            return new Intl.NumberFormat(currentLang === 'pl' ? 'pl-PL' : currentLang === 'ru' ? 'ru-RU' : 'en-US', 
+                { style: 'currency', currency: 'PLN' }).format(price);
+        }
+
+        function render() {
+            const container = document.getElementById('katalog');
+            const noResults = document.getElementById('noResults');
+            container.innerHTML = '';
+            if (filteredProducts.length === 0) { noResults.classList.remove('hidden'); return; }
+            noResults.classList.add('hidden');
+
+            filteredProducts.forEach((p, idx) => {
+                const photos = (p.Zdjecia && p.Zdjecia !== 'xxx') ? p.Zdjecia.split(',').map(s => s.trim()).filter(Boolean) : [];
+                const mainImg = photos.length > 0 ? getImagePath(photos[0], 'thumb') : 'https://via.placeholder.com/400?text=Brak+Zdjecia';
+                const fallbackImg = photos.length > 0 ? `images/watches/${photos[0]}` : 'https://via.placeholder.com/400?text=Brak+Zdjecia';
+                const priceStr = p.Cena ? formatPrice(p.Cena) : '';
+                const delay = idx * 50;
+
+                container.innerHTML += `
+                    <div onclick="openModal('${p.SKU}')" 
+                         class="glass rounded-[1.5rem] p-5 cursor-pointer hover:scale-[1.02] transition-all duration-300 border-white/5 hover:border-blue-500/40 flex flex-col h-full group animate-fade-up"
+                         style="animation-delay: ${delay}ms">
+                        <div class="aspect-square bg-slate-900/50 rounded-2xl mb-5 flex items-center justify-center overflow-hidden relative">
+                            <img src="${mainImg}" onerror="this.onerror=null;this.src='${fallbackImg}'" loading="lazy" alt="${p.Model}" 
+                                 class="max-h-full max-w-full object-contain p-4 transition-transform duration-500 group-hover:scale-110">
+                            <div class="absolute inset-0 bg-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                <span class="bg-white text-black px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider shadow-lg">${t('viewDetails')}</span>
+                            </div>
                         </div>
-                        <div class="actions">
-                            <button onclick="editProduct(${i})" title="Edytuj"><i class="fas fa-pen"></i></button>
-                            <button class="delete" onclick="deleteProduct(${i})" title="Usuń"><i class="fas fa-trash"></i></button>
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-lg font-bold text-white">${p.Model}</h3>
+                            <span class="text-slate-500 font-mono text-xs bg-white/5 px-2 py-1 rounded-md">${p.SKU}</span>
+                        </div>
+                        <p class="text-slate-500 text-sm line-clamp-2 mb-3 flex-grow">${p.Opis && p.Opis[currentLang] ? p.Opis[currentLang] : t('noResults')}</p>
+                        ${priceStr ? `<div class="text-emerald-400 font-bold text-sm mb-2">${priceStr}</div>` : ''}
+                        <div class="flex justify-between items-center text-xs font-medium uppercase tracking-wider mt-auto pt-4 border-t border-white/5">
+                            <span class="${p.Ilosc > 0 ? 'text-emerald-400' : 'text-red-400'} flex items-center gap-1.5">
+                                <i class="fas fa-circle text-[6px]"></i>
+                                ${p.Ilosc > 0 ? t('inStock', {n: p.Ilosc}) : t('outOfStock')}
+                            </span>
+                            <span class="text-slate-600">${p.Kolor || ''}</span>
                         </div>
                     </div>
                 `;
-            }).join('');
+            });
         }
 
-        function deleteProduct(index) {
-            if(!confirm('Usunąć ' + products[index].Model + '?')) return;
-            products.splice(index, 1);
-            renderPreview();
-            updateLastSKU();
-            showToast('Produkt usunięty', 'success');
+        function openModal(sku) {
+            const p = products.find(x => x.SKU === sku);
+            if (!p) return;
+            currentPhotos = (p.Zdjecia && p.Zdjecia !== 'xxx') ? p.Zdjecia.split(',').map(s => s.trim()).filter(Boolean) : [];
+            currentImgIndex = 0;
+            const content = document.getElementById('modal-content');
+            const mainPhoto = currentPhotos.length > 0 ? getImagePath(currentPhotos[0], 'full') : 'https://via.placeholder.com/600';
+            const mainFallback = currentPhotos.length > 0 ? `images/watches/${currentPhotos[0]}` : 'https://via.placeholder.com/600';
+            const priceStr = p.Cena ? formatPrice(p.Cena) : '';
+
+            content.innerHTML = `
+                <div class="grid lg:grid-cols-2 gap-8 lg:gap-12">
+                    <div class="space-y-5">
+                        <div class="carousel-container aspect-square flex items-center justify-center relative group">
+                            ${currentPhotos.length > 1 ? `<div class="nav-btn prev" onclick="event.stopPropagation();changeSlide(-1)"><i class="fas fa-chevron-left"></i></div>` : ''}
+                            <img src="${mainPhoto}" onerror="this.onerror=null;this.src='${mainFallback}'" id="modal-main-img" 
+                                 class="max-h-full max-w-full object-contain p-6 lg:p-10" onclick="openLightbox()" title="${t('clickToEnlarge')}">
+                            ${currentPhotos.length > 1 ? `<div class="nav-btn next" onclick="event.stopPropagation();changeSlide(1)"><i class="fas fa-chevron-right"></i></div>` : ''}
+                        </div>
+                        <div class="flex gap-3 overflow-x-auto pb-2 justify-center px-2">
+                            ${currentPhotos.map((img, idx) => {
+                                const thumbPath = getImagePath(img, 'thumb');
+                                const fallback = `images/watches/${img}`;
+                                return `<img src="${thumbPath}" onerror="this.onerror=null;this.src='${fallback}'" onclick="setSlide(${idx})" 
+                                     class="thumb h-16 w-16 object-cover rounded-xl cursor-pointer opacity-50 hover:opacity-100 transition flex-shrink-0 ${idx === 0 ? 'thumb-active' : ''}">`;
+                            }).join('')}
+                        </div>
+                    </div>
+                    <div class="flex flex-col justify-center">
+                        <div class="flex items-center gap-3 mb-3">
+                            <span class="text-blue-500 font-bold tracking-widest text-xs uppercase bg-blue-500/10 px-3 py-1 rounded-full">${p.SKU}</span>
+                            <span class="text-slate-500 text-xs uppercase tracking-wider">${p.Kategoria ? p.Kategoria.replace(/-/g, ' ') : ''}</span>
+                        </div>
+                        <h2 class="text-4xl lg:text-5xl font-bold mb-2 text-white">${p.Model}</h2>
+                        <div class="text-lg text-slate-400 mb-2 font-light">${p.Kolor || ''}</div>
+                        ${priceStr ? `<div class="text-3xl font-black text-emerald-400 mb-6">${priceStr}</div>` : '<div class="mb-6"></div>'}
+
+                        <div class="space-y-4 mb-10">
+                            <h4 class="text-slate-500 text-xs uppercase font-bold tracking-tighter">${t('description')}</h4>
+                            <div class="p-6 bg-white/5 rounded-3xl border border-white/5">
+                                <p class="text-slate-300 leading-relaxed text-base">${p.Opis && p.Opis[currentLang] ? p.Opis[currentLang] : t('noResults')}</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <div class="flex-1 bg-gradient-to-br ${p.Ilosc > 0 ? 'from-emerald-500 to-emerald-700' : 'from-red-500 to-red-700'} p-5 rounded-2xl flex justify-between items-center shadow-lg ${p.Ilosc > 0 ? 'shadow-emerald-500/20' : 'shadow-red-500/20'}">
+                                <span class="text-white/80 text-sm font-bold uppercase tracking-wider">${t('availability')}</span>
+                                <span class="text-3xl font-black text-white">${p.Ilosc} <small class="text-sm font-normal opacity-70">${t('pcs')}</small></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('modal').classList.remove('opacity-0', 'pointer-events-none');
+            document.body.classList.add('modal-active');
         }
 
-        function editProduct(index) {
-            const p = products[index];
-            document.getElementById('pSKU').value = p.SKU;
-            document.getElementById('pModel').value = p.Model;
-            document.getElementById('pKategoria').value = p.Kategoria;
-            document.getElementById('pKolor').value = p.Kolor || '';
-            document.getElementById('pIlosc').value = p.Ilosc;
-            document.getElementById('pCena').value = p.Cena || '';
-            document.getElementById('pOpis_pl').value = p.Opis?.pl || '';
-            document.getElementById('pOpis_en').value = p.Opis?.en || '';
-            document.getElementById('pOpis_ru').value = p.Opis?.ru || '';
-            document.getElementById('pOpis_kk').value = p.Opis?.kk || '';
-            document.getElementById('pOpis_ne').value = p.Opis?.ne || '';
+        function changeSlide(direction) {
+            if (currentPhotos.length <= 1) return;
+            currentImgIndex = (currentImgIndex + direction + currentPhotos.length) % currentPhotos.length;
+            updateModalImage();
+        }
+        function setSlide(index) { currentImgIndex = index; updateModalImage(); }
 
-            // Remove from list so it can be re-added
-            products.splice(index, 1);
-            showView('viewAdd');
-            showToast('Edytuj dane i kliknij Zapisz', 'success');
+        function updateModalImage() {
+            const imgElement = document.getElementById('modal-main-img');
+            const thumbs = document.querySelectorAll('.thumb');
+            const newPath = getImagePath(currentPhotos[currentImgIndex], 'full');
+            const fallback = `images/watches/${currentPhotos[currentImgIndex]}`;
+            imgElement.style.opacity = '0.5';
+            setTimeout(() => { imgElement.src = newPath; imgElement.onerror = function() { this.onerror = null; this.src = fallback; }; imgElement.style.opacity = '1'; }, 150);
+            thumbs.forEach((t, i) => { if (i === currentImgIndex) t.classList.add('thumb-active'); else t.classList.remove('thumb-active'); });
         }
 
-        // === EXPORT ===
-        function exportJSON() {
-            const data = { products: products };
-            const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url; a.download = 'csvjson.json';
-            a.click();
-            URL.revokeObjectURL(url);
-            showToast('Plik csvjson.json pobrany!', 'success');
+        function openLightbox() {
+            if (!currentPhotos.length) return;
+            const path = getImagePath(currentPhotos[currentImgIndex], 'full');
+            const fallback = `images/watches/${currentPhotos[currentImgIndex]}`;
+            const lb = document.getElementById('lightbox');
+            const lbImg = document.getElementById('lightbox-img');
+            lbImg.src = path; lbImg.onerror = function() { this.onerror = null; this.src = fallback; };
+            lb.classList.remove('hidden'); lb.classList.add('flex');
+            document.body.classList.add('modal-active');
+        }
+        function closeLightbox() {
+            const lb = document.getElementById('lightbox');
+            lb.classList.add('hidden'); lb.classList.remove('flex');
+            if (!document.getElementById('modal').classList.contains('pointer-events-none')) return;
+            document.body.classList.remove('modal-active');
+        }
+        function closeModal() {
+            document.getElementById('modal').classList.add('opacity-0', 'pointer-events-none');
+            document.body.classList.remove('modal-active');
         }
 
-        // === GITHUB UPLOAD ===
-        async function uploadToGitHub() {
-            const token = document.getElementById('githubToken').value.trim();
-            const repo = document.getElementById('repoName').value.trim();
-
-            if(!token || !repo) {
-                showToast('Wypełnij token i nazwę repozytorium w Ustawieniach', 'error');
-                toggleSettings();
-                return;
+        document.addEventListener('keydown', (e) => {
+            if (e.key === "Escape") {
+                const lb = document.getElementById('lightbox');
+                if (!lb.classList.contains('hidden')) closeLightbox();
+                else closeModal();
             }
+            if (document.body.classList.contains('modal-active')) {
+                if (e.key === "ArrowRight") changeSlide(1);
+                if (e.key === "ArrowLeft") changeSlide(-1);
+            }
+        });
 
-            showProgress('Wysyłanie na GitHub...');
+        document.addEventListener('DOMContentLoaded', loadData);
+    </script>
 
-            try {
-                // 1. Upload photos
-                for(let i=0; i<uploadedPhotos.length; i++) {
-                    const p = uploadedPhotos[i];
-                    const base64 = p.fullBase64.split(',')[1];
-
-                    // Check if file exists
-                    await fetch(`https://api.github.com/repos/${repo}/contents/images/watches/${p.filename}`, {
-                        headers: { 'Authorization': `token ${token}` }
-                    }).catch(() => {}); // 404 is ok
-
-                    // Upload
-                    const res = await fetch(`https://api.github.com/repos/${repo}/contents/images/watches/${p.filename}`, {
-                        method: 'PUT',
-                        headers: {
-                            'Authorization': `token ${token}`,
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            message: `Add photo ${p.filename}`,
-                            content: base64
-                        })
+    <!-- Netlify Identity Widget -->
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    <script>
+        if (window.netlifyIdentity) {
+            window.netlifyIdentity.on("init", user => {
+                if (!user) {
+                    window.netlifyIdentity.on("login", () => {
+                        document.location.href = "/admin/";
                     });
-
-                    if(!res.ok && res.status !== 422) throw new Error('Photo upload failed');
-                    document.getElementById('progressText').textContent = `Zdjęcie ${i+1}/${uploadedPhotos.length}...`;
                 }
-
-                // 2. Get current csvjson.json SHA
-                const jsonRes = await fetch(`https://api.github.com/repos/${repo}/contents/csvjson.json`, {
-                    headers: { 'Authorization': `token ${token}` }
-                });
-                const jsonData = await jsonRes.json();
-                const sha = jsonData.sha;
-
-                // 3. Update JSON
-                const content = btoa(unescape(encodeURIComponent(JSON.stringify({products}, null, 2))));
-                const updateRes = await fetch(`https://api.github.com/repos/${repo}/contents/csvjson.json`, {
-                    method: 'PUT',
-                    headers: {
-                        'Authorization': `token ${token}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        message: 'Update products via admin panel',
-                        content: content,
-                        sha: sha
-                    })
-                });
-
-                if(!updateRes.ok) throw new Error('JSON update failed');
-
-                hideProgress();
-                uploadedPhotos = []; // Clear after successful upload
-                renderPhotoGrid();
-                showToast('Wysłano na GitHub! Strona zaktualizuje się za ~1 min.', 'success');
-
-            } catch(err) {
-                hideProgress();
-                showToast('Błąd: ' + err.message, 'error');
-                console.error(err);
-            }
-        }
-
-        async function testGitHub() {
-            const token = document.getElementById('githubToken').value.trim();
-            const repo = document.getElementById('repoName').value.trim();
-            if(!token || !repo) { showToast('Wypełnij token i repo', 'error'); return; }
-
-            showProgress('Testowanie...');
-            try {
-                const res = await fetch(`https://api.github.com/repos/${repo}`, {
-                    headers: { 'Authorization': `token ${token}` }
-                });
-                if(res.ok) {
-                    hideProgress();
-                    showToast('Połączenie OK!', 'success');
-                } else {
-                    throw new Error('Status ' + res.status);
-                }
-            } catch(e) {
-                hideProgress();
-                showToast('Błąd połączenia: ' + e.message, 'error');
-            }
-        }
-
-        // === UI HELPERS ===
-        function showProgress(text) {
-            document.getElementById('progressText').textContent = text;
-            document.getElementById('progressOverlay').classList.add('active');
-        }
-        function hideProgress() {
-            document.getElementById('progressOverlay').classList.remove('active');
-        }
-        function showToast(msg, type='') {
-            const t = document.getElementById('toast');
-            t.textContent = msg;
-            t.className = 'toast ' + type;
-            t.classList.add('show');
-            setTimeout(() => t.classList.remove('show'), 3000);
-        }
-        function toggleSettings() {
-            document.getElementById('settingsPanel').classList.toggle('open');
+            });
         }
     </script>
 </body>
