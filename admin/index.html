@@ -435,7 +435,12 @@
     <!-- VIEW: Product List -->
     <div id="viewList" class="view container">
         <div class="card">
-            <div class="card-title"><i class="fas fa-list"></i>Lista Produktów (<span id="countBadge">0</span>)</div>
+            <div class="card-title" style="justify-content:space-between;">
+                <span><i class="fas fa-list"></i>Lista Produktów (<span id="countBadge">0</span>)</span>
+                <button onclick="refreshFromGitHub()" style="background:rgba(59,130,246,0.15);border:1px solid rgba(59,130,246,0.3);color:#60a5fa;border-radius:8px;padding:6px 12px;font-size:0.75rem;font-weight:600;cursor:pointer;">
+                    <i class="fas fa-sync-alt"></i> Odśwież z GitHub
+                </button>
+            </div>
             <div class="preview-list" id="productPreview"></div>
         </div>
         <div style="margin-bottom: 24px;">
@@ -526,14 +531,56 @@
                 products = Array.isArray(data) ? data : (data.products || []);
                 updateLastSKU();
                 renderPreview();
+                return true;
             } catch(e) {
                 console.error('Failed to load products:', e);
+                return false;
             }
         }
         // Wait for login before loading products (login overlay blocks UI)
         document.addEventListener('DOMContentLoaded', () => {
             setTimeout(loadProducts, 100);
         });
+
+        // Refresh products from GitHub (fetch raw file from GitHub API)
+        async function refreshFromGitHub() {
+            const token = document.getElementById('githubToken').value.trim();
+            const repo = document.getElementById('repoName').value.trim();
+
+            if(!token || !repo) {
+                showToast('Wypełnij token i nazwę repozytorium w Ustawieniach', 'error');
+                toggleSettings();
+                return;
+            }
+
+            showProgress('Pobieranie z GitHub...');
+            try {
+                const res = await fetch(`https://api.github.com/repos/${repo}/contents/csvjson.json`, {
+                    headers: { 'Authorization': `token ${token}` }
+                });
+                if(!res.ok) throw new Error('HTTP ' + res.status);
+                const jsonData = await res.json();
+
+                let remoteProducts = [];
+                try {
+                    const remoteContent = decodeURIComponent(escape(atob(jsonData.content)));
+                    const remoteData = JSON.parse(remoteContent);
+                    remoteProducts = Array.isArray(remoteData) ? remoteData : (remoteData.products || []);
+                } catch(e) {
+                    throw new Error('Błąd parsowania JSON');
+                }
+
+                products = remoteProducts;
+                updateLastSKU();
+                renderPreview();
+                hideProgress();
+                showToast('Produkty odświeżone z GitHub!', 'success');
+            } catch(err) {
+                hideProgress();
+                showToast('Błąd: ' + err.message, 'error');
+                console.error(err);
+            }
+        }
 
         // === NAVIGATION ===
         function showView(id) {
