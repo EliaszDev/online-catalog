@@ -403,8 +403,8 @@
                 <div class="lang-tab active" onclick="switchLang('pl')">🇵🇱 PL</div>
                 <div class="lang-tab" onclick="switchLang('en')">🇬🇧 EN</div>
                 <div class="lang-tab" onclick="switchLang('ru')">🇷🇺 RU</div>
-                <div class="lang-tab" onclick="switchLang('kk')">🇰🇿 KK</div>
-                <div class="lang-tab" onclick="switchLang('ne')">🇳🇵 NE</div>
+                <div class="lang-tab" onclick="switchLang('kk')">🇰🇿 KZ</div>
+                <div class="lang-tab" onclick="switchLang('uz')">🇺🇿 UZ</div>
             </div>
             <div id="desc-pl" class="desc-panel">
                 <textarea id="pOpis_pl" placeholder="Opis po polsku..."></textarea>
@@ -418,8 +418,8 @@
             <div id="desc-kk" class="desc-panel" style="display:none">
                 <textarea id="pOpis_kk" placeholder="Қазақша сипаттама..."></textarea>
             </div>
-            <div id="desc-ne" class="desc-panel" style="display:none">
-                <textarea id="pOpis_ne" placeholder="नेपाली विवरण..."></textarea>
+            <div id="desc-uz" class="desc-panel" style="display:none">
+                <textarea id="pOpis_uz" placeholder="O'zbekcha tavsif..."></textarea>
             </div>
         </div>
 
@@ -794,16 +794,16 @@
                 return;
             }
             showProgress('Tłumaczenie...');
-            const [en, ru, kk, ne] = await Promise.all([
+            const [en, ru, kk, uz] = await Promise.all([
                 translateText(plText, 'en'),
                 translateText(plText, 'ru'),
                 translateText(plText, 'kk'),
-                translateText(plText, 'ne')
+                translateText(plText, 'uz')
             ]);
             document.getElementById('pOpis_en').value = en;
             document.getElementById('pOpis_ru').value = ru;
             document.getElementById('pOpis_kk').value = kk;
-            document.getElementById('pOpis_ne').value = ne;
+            document.getElementById('pOpis_uz').value = uz;
             hideProgress();
             showToast('Przetłumaczono!', 'success');
         }
@@ -850,7 +850,7 @@
                     en: document.getElementById('pOpis_en').value.trim(),
                     ru: document.getElementById('pOpis_ru').value.trim(),
                     kk: document.getElementById('pOpis_kk').value.trim(),
-                    ne: document.getElementById('pOpis_ne').value.trim()
+                    uz: document.getElementById('pOpis_uz').value.trim()
                 }
             };
 
@@ -867,7 +867,7 @@
             document.getElementById('pOpis_en').value = '';
             document.getElementById('pOpis_ru').value = '';
             document.getElementById('pOpis_kk').value = '';
-            document.getElementById('pOpis_ne').value = '';
+            document.getElementById('pOpis_uz').value = '';
             uploadedPhotos = [];
             renderPhotoGrid();
             updateLastSKU();
@@ -1052,17 +1052,8 @@
                     console.warn('Could not parse remote JSON, using local only', e);
                 }
 
-                // Merge: remote products + local products (local wins on SKU conflict)
-                const mergedMap = new Map();
-                remoteProducts.forEach(p => { if(p.SKU) mergedMap.set(p.SKU, p); });
-                products.forEach(p => { if(p.SKU) mergedMap.set(p.SKU, p); });
-                const mergedProducts = Array.from(mergedMap.values());
-
-                // Update local products array with merged data so subsequent exports are correct
-                products = mergedProducts;
-
-                // 3. Update JSON on GitHub
-                const content = btoa(unescape(encodeURIComponent(JSON.stringify({products: mergedProducts}, null, 2))));
+                // 3. Update JSON on GitHub (upload local products directly, no merge)
+                const content = btoa(unescape(encodeURIComponent(JSON.stringify({products: products}, null, 2))));
                 const updateRes = await fetch(`https://api.github.com/repos/${repo}/contents/csvjson.json`, {
                     method: 'PUT',
                     headers: {
