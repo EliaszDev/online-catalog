@@ -1,11 +1,11 @@
-# Decap CMS Setup Guide — Premium Watches Catalog
+# Setup Guide — Premium Watches Catalog (Cloudflare Pages)
 
 ## What You're Building
 
 A true CMS (Content Management System) for your product catalog. You will:
 1. Store your website files on **GitHub**
-2. Host the site on **Netlify** (connected to GitHub)
-3. Edit products through a web interface at `yoursite.netlify.app/admin/`
+2. Host the site on **Cloudflare Pages** (connected to GitHub)
+3. Edit products through a web interface at `yoursite.pages.dev/admin/`
 4. Every save auto-redeploys your live site in ~1 minute
 
 **No more downloading JSON files. No more manual uploads.**
@@ -19,7 +19,7 @@ GitHub stores your website files and tracks every change you make.
 1. Go to **github.com** and sign up (or log in)
 2. Click the **+** button (top right) → **"New repository"**
 3. Name it: `premium-watches-catalog` (or any name)
-4. Select **Public** (required for Netlify free tier)
+4. Select **Public** (easiest for setup)
 5. Click **"Create repository"**
 
 ---
@@ -32,9 +32,9 @@ You need to upload these files to GitHub:
 premium-watches-catalog/
 ├── index.html
 ├── csvjson.json
+├── _headers
 ├── admin/
-│   ├── index.html
-│   └── config.yml
+│   └── index.html
 └── images/
     └── watches/
         ├── zw-95-black.jpg
@@ -49,12 +49,12 @@ premium-watches-catalog/
 2. Drag and drop:
    - `index.html`
    - `csvjson.json`
+   - `_headers`
 3. For folders: GitHub web upload doesn't support folders directly. Instead:
    - Click **"Add file" → "Create new file"**
    - Type the path: `admin/index.html`
    - Paste the contents of the `admin/index.html` file
    - Click **"Commit changes"**
-   - Repeat for `admin/config.yml`
 4. For images: Click **"Add file" → "Upload files"**
    - Create the folder structure by typing `images/watches/` before the filename when using "Create new file" (GitHub creates folders automatically when you use `/` in the filename)
    - Or use GitHub Desktop app for easier folder uploads
@@ -63,127 +63,97 @@ premium-watches-catalog/
 
 ---
 
-## Phase 3: Connect Netlify to GitHub
+## Phase 3: Connect Cloudflare Pages to GitHub
 
-1. Go to **app.netlify.com** and sign up/log in (use your GitHub account for easiest setup)
-2. Click **"Add new site" → "Import an existing project"**
-3. Select **GitHub** as your Git provider
-4. Find and select your `premium-watches-catalog` repository
-5. Netlify will auto-detect settings. Leave everything default:
-   - Build command: (leave empty for static site)
-   - Publish directory: `/` (root)
-6. Click **"Deploy site"**
+1. Go to **dash.cloudflare.com** and sign up/log in
+2. Navigate to **Pages** in the left sidebar
+3. Click **"Create a project"**
+4. Select **Connect to Git**
+5. Choose **GitHub** and authorize Cloudflare to access your repositories
+6. Find and select your `premium-watches-catalog` repository
+7. In **Build settings**:
+   - **Build command:** (leave empty for static site)
+   - **Build output directory:** `/` (root)
+8. Click **"Save and Deploy"**
 
-Netlify will give you a random URL like `https://premium-watches-123abc.netlify.app`
+Cloudflare Pages will give you a URL like `https://premium-watches-catalog.pages.dev`
 
-**Your site is now live!** But the CMS isn't enabled yet.
-
----
-
-## Phase 4: Enable Netlify Identity (Authentication)
-
-This lets you log into the CMS securely.
-
-1. In your Netlify dashboard, click your site
-2. Go to the **"Identity"** tab
-3. Click **"Enable Identity"**
-4. Go to **"Settings"** (still in Identity tab)
-5. Under **"Registration"**, select **"Invite only"** (recommended — prevents random signups)
-6. Under **"External providers"**, you can leave everything off
+**Your site is now live!**
 
 ---
 
-## Phase 5: Enable Git Gateway
+## Phase 4: Configure GitHub Access for Admin Panel
 
-This lets the CMS write changes back to your GitHub repository.
+The admin panel pushes changes directly to GitHub. You need a Personal Access Token.
 
-1. Still in the **Identity** tab, scroll to **"Services"**
-2. Click **"Enable Git Gateway"**
-3. Netlify will generate a token automatically — this is secure and normal
-
----
-
-## Phase 6: Add Yourself as a User
-
-1. In the **Identity** tab, click **"Invite users"**
-2. Enter your email address
-3. Click **"Send invite"**
-4. Check your email inbox for an invite from Netlify
-5. Click the link in the email and set your password
-
-**Note:** This password is separate from your old `admin`/`Illia2004` login. You can use any password you want here.
+1. Go to **github.com/settings/tokens/new**
+2. Give it a name like `Catalog Admin`
+3. Select scope: **repo** (full control of private repositories)
+4. Click **"Generate token"**
+5. **Copy the token immediately** — you won't be able to see it again
 
 ---
 
-## Phase 7: Access the CMS
+## Phase 5: Using the Admin Panel
 
-1. Go to your site URL: `https://YOUR-SITE.netlify.app/admin/`
-   (Replace YOUR-SITE with your actual Netlify subdomain)
-2. You'll see a **"Login with Netlify Identity"** button
-3. Click it and enter your email + the password you just set
-4. You are now in the CMS!
+1. Go to your site URL: `https://YOUR-SITE.pages.dev/admin/`
+   (Replace YOUR-SITE with your actual Cloudflare Pages subdomain)
+2. Click **"Ustawienia GitHub"** and enter:
+   - **GitHub Token:** your token from Phase 4
+   - **Nazwa repozytorium:** `yourusername/premium-watches-catalog`
+3. Click **"Testuj Połączenie"** to verify
+4. You can now add products directly through the panel
 
 ---
 
-## Phase 8: Using the CMS
+## Phase 6: Using the Admin Panel
 
 ### Interface Overview
 
-The CMS shows **"Produkty"** in the left sidebar. Click it.
-
-You will see a list of all your products. Each product shows:
-- SKU
-- Model name
-- Quantity in stock
+The panel has two tabs at the bottom: **Dodaj** (Add) and **Lista** (List).
 
 ### Adding a New Product
 
-1. Click **"Dodaj Produkt"** (Add Product) at the top right
+1. Go to the **Dodaj** tab
 2. Fill in the form:
-   - **SKU**: Unique code (e.g., `ZS-14`)
-   - **Model**: Product name (e.g., `X-100`)
-   - **Kategoria**: Category (e.g., `zegarki-smartwatch` or create new like `sluchawki`)
-   - **Kolor**: Color (e.g., `BLACK / SILVER`)
-   - **Ilość na stanie**: Stock quantity (number)
-   - **Cena (PLN)**: Price, optional (e.g., `199.99`)
-   - **Zdjęcia**: Comma-separated filenames (e.g., `x100-black.jpg, x100-side.jpg`)
-   - **Opisy w językach**: Fill descriptions in all 5 languages (PL, EN, RU, KK, NE)
-3. Click **"Zapisz"** (Save) at the top right
-4. The CMS will commit the changes to GitHub
+   - **SKU:** Unique code (e.g., `ZS-14`)
+   - **Model:** Product name (e.g., `X-100`)
+   - **Kategoria:** Category (choose from the list or type your own)
+   - **Kolor:** Color (e.g., `BLACK / SILVER`)
+   - **Ilość na stanie:** Stock quantity (number)
+   - **Cena (PLN):** Price, optional (e.g., `199.99`)
+   - **Zdjęcia:** Tap the photo slots to upload images from your phone/computer
+   - **Opisy w językach:** Fill descriptions in all 5 languages (PL, EN, RU, KK, NE)
+3. Click **"Zapisz Produkt"**
+4. Go to the **Lista** tab and click **"Wyślij na GitHub"**
+5. Changes will be live in ~1 minute
 
 ### Editing a Product
 
-1. Click on any product in the list
-2. Edit fields
-3. Click **"Zapisz"**
+1. Go to the **Lista** tab
+2. Find the product and click the **pen icon** (✏️)
+3. Edit fields
+4. Click **"Zapisz Produkt"**
+5. Go back to **Lista** and **"Wyślij na GitHub"**
 
 ### Deleting a Product
 
-1. Open the product
-2. Click the **trash icon** (🗑️) at the top right
+1. Go to the **Lista** tab
+2. Find the product and click the **trash icon** (🗑️)
 3. Confirm deletion
-4. Click **"Zapisz"**
-
-### Uploading Photos via CMS
-
-You can also upload photos directly through the CMS:
-
-1. In any product, look for the **Media** button (left sidebar, image icon)
-2. Or when editing, you can use the media library
-3. Uploaded images go to `images/watches/` automatically
-4. **Important**: The CMS uploads original files. You still need to run the Python background-removal + resize script locally for best results, then upload the processed versions.
+4. Click **"Wyślij na GitHub"**
 
 ---
 
-## Phase 9: Understanding Auto-Deploy
+## Phase 7: Understanding Auto-Deploy
 
-**Every time you save in the CMS:**
-1. Decap CMS commits the new `csvjson.json` to GitHub
-2. GitHub notifies Netlify
-3. Netlify rebuilds and redeploys your site (~30–60 seconds)
+**Every time you send changes to GitHub:**
+1. The admin panel commits the new `csvjson.json` and photos to GitHub
+2. GitHub notifies Cloudflare Pages
+3. Cloudflare Pages rebuilds and redeploys your site (~30–60 seconds)
 4. Your live catalog updates automatically
 
-**You don't need to do anything.** Just save and wait a minute.
+**You don't need to do anything.** Just send to GitHub and wait a minute.
 
 ---
 
@@ -193,36 +163,32 @@ You can also upload photos directly through the CMS:
 |---|---|---|
 | Take photos | iPhone 16 Pro | Your phone |
 | Remove background + resize | Run Python script | Your Windows PC |
-| Upload processed photos | GitHub Desktop or CMS Media | GitHub repo |
-| Add/edit products | Fill form in CMS | `yoursite.netlify.app/admin/` |
-| Site updates | Auto-deploy | Netlify (30 sec) |
+| Upload processed photos | Admin panel photo upload or GitHub Desktop | GitHub repo |
+| Add/edit products | Fill form in admin panel | `yoursite.pages.dev/admin/` |
+| Site updates | Auto-deploy | Cloudflare Pages (~30 sec) |
 
 ---
 
 ## Troubleshooting
 
-### "Login with Netlify Identity" button doesn't work
-- Make sure you enabled **Identity** and **Git Gateway** (Steps 4–5)
-- Make sure you accepted the email invite (Step 6)
-- Try refreshing the `/admin/` page
-
-### CMS loads but shows "No collections"
-- Check that `admin/config.yml` was uploaded correctly
-- Make sure the indentation in `config.yml` is correct (YAML is sensitive to spaces)
+### Admin panel shows "Błąd połączenia"
+- Make sure your GitHub token is correct and has **repo** scope
+- Make sure the repository name is exactly `username/repo-name`
+- Check that the repository is accessible with your token
 
 ### Changes don't appear on the live site
-- Wait 1 minute after saving
-- Check the Netlify dashboard **"Deploys"** tab — you should see a new deploy triggered
+- Wait 1 minute after sending to GitHub
+- Check the Cloudflare Pages dashboard **"Deployments"** tab — you should see a new deployment triggered
 - If deploy failed, check the deploy log for errors
 
 ### Images don't show on the site
 - Make sure images are in the `images/watches/` folder in your repo
-- Make sure the filenames in the CMS match exactly (case-sensitive)
+- Make sure the filenames match exactly (case-sensitive)
 - Remember: the site looks for `photo_thumb.jpg` and `photo_full.jpg` first, then falls back to original
 
-### I want to go back to the old admin panel
-- The old `admin.html` still works at `yoursite.netlify.app/admin.html`
-- But the Decap CMS at `/admin/` is the recommended workflow now
+### Adding new product removed previous ones
+- This should not happen with the updated panel. The panel now **merges** local changes with remote data on GitHub before uploading
+- Always click **"Wyślij na GitHub"** from the Lista tab to ensure all products are synced
 
 ---
 
@@ -231,21 +197,21 @@ You can also upload photos directly through the CMS:
 | File | Purpose | Do Not Edit Manually |
 |---|---|---|
 | `index.html` | Customer catalog | No (auto-deployed) |
-| `csvjson.json` | Product database | No (edit via CMS only) |
-| `admin/index.html` | CMS interface loader | No |
-| `admin/config.yml` | CMS configuration | Only if adding fields |
-| `images/watches/` | Product photos | Upload via GitHub or CMS |
+| `csvjson.json` | Product database | No (edit via admin panel only) |
+| `admin/index.html` | Admin panel interface | No |
+| `images/watches/` | Product photos | Upload via admin panel or GitHub |
+| `_headers` | Cloudflare cache rules | No |
 
 ---
 
 ## Next Steps
 
-1. **Download all files** from the output folder
+1. **Download all files** from the project folder
 2. **Create GitHub repo** and upload files
-3. **Connect Netlify** and deploy
-4. **Enable Identity + Git Gateway**
-5. **Invite yourself** and set password
-6. **Go to `/admin/`** and try adding a test product
+3. **Connect Cloudflare Pages** and deploy
+4. **Generate GitHub token** with repo access
+5. **Go to `/admin/`** and configure token + repo
+6. **Add a test product** and send to GitHub
 7. **Check your live site** after 1 minute — the new product should appear
 
-**Need help?** The most common issue is forgetting to enable Git Gateway. Double-check Step 5.
+**Need help?** The most common issue is forgetting the repo name format. Make sure it's exactly `username/repo-name`.

@@ -1,0 +1,5 @@
+/csvjson.json
+  Cache-Control: no-cache, must-revalidate
+
+/admin/*
+  Cache-Control: no-cache
