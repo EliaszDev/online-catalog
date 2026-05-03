@@ -365,14 +365,14 @@
 
             <div class="form-group">
                 <label>Kategoria <span class="required">*</span></label>
-                <select id="pKategoria">
-                    <option value="">Wybierz kategorię...</option>
-                    <option value="zegarki-smartwatch">⌚ Zegarki Smartwatch</option>
-                    <option value="sluchawki">🎧 Słuchawki</option>
-                    <option value="powerbanki">🔋 Powerbanki</option>
-                    <option value="akcesoria">📱 Akcesoria</option>
-                    <option value="inne">📦 Inne</option>
-                </select>
+                <input list="kategoriaList" id="pKategoria" placeholder="Wybierz lub wpisz nową..." style="width:100%;padding:14px 16px;background:rgba(255,255,255,0.06);border:2px solid rgba(255,255,255,0.1);border-radius:12px;color:#fff;font-size:1rem;">
+                <datalist id="kategoriaList">
+                    <option value="zegarki-smartwatch">
+                    <option value="sluchawki">
+                    <option value="powerbanki">
+                    <option value="akcesoria">
+                    <option value="inne">
+                </datalist>
             </div>
 
             <div class="form-group">
@@ -489,6 +489,9 @@
                     <option value="akcesoria">📱 Akcesoria</option>
                     <option value="inne">📦 Inne</option>
                 </select>
+            </div>
+            <div style="margin-bottom:12px;font-size:0.75rem;color:#64748b;">
+                <i class="fas fa-info-circle"></i> Przeciągnij produkty, aby zmienić kolejność wyświetlania
             </div>
             <div class="preview-list" id="productPreview"></div>
         </div>
