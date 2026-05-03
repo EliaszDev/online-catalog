@@ -1,26 +1,786 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="robots" content="noindex" />
-  <title>Panel CMS — Premium Watches</title>
-  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Panel Admin — Dodaj Produkt</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body {
+            margin: 0; padding: 0; background: #0b0f19; color: #e2e8f0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-size: 16px; line-height: 1.5;
+        }
+        .container { max-width: 600px; margin: 0 auto; padding: 16px; padding-bottom: 100px; }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            padding: 20px 16px; text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            position: sticky; top: 0; z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+        .header h1 { margin: 0; font-size: 1.3rem; font-weight: 700; }
+        .header p { margin: 4px 0 0; font-size: 0.85rem; color: #64748b; }
+
+        /* Cards */
+        .card {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 16px; padding: 20px; margin-bottom: 16px;
+        }
+        .card-title {
+            font-size: 0.75rem; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.05em; color: #60a5fa; margin-bottom: 16px;
+            display: flex; align-items: center; gap: 8px;
+        }
+
+        /* Form Elements */
+        .form-group { margin-bottom: 20px; }
+        .form-group:last-child { margin-bottom: 0; }
+        label {
+            display: block; font-size: 0.85rem; font-weight: 600;
+            color: #94a3b8; margin-bottom: 8px;
+        }
+        .required { color: #ef4444; }
+
+        input, select, textarea {
+            width: 100%; padding: 14px 16px;
+            background: rgba(255,255,255,0.06);
+            border: 2px solid rgba(255,255,255,0.1);
+            border-radius: 12px; color: #fff;
+            font-size: 1rem; font-family: inherit;
+            transition: border-color 0.2s;
+            -webkit-appearance: none; appearance: none;
+        }
+        input:focus, select:focus, textarea:focus {
+            outline: none; border-color: #3b82f6;
+            background: rgba(255,255,255,0.08);
+        }
+        select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat; background-position: right 12px center;
+            padding-right: 40px;
+        }
+        textarea { min-height: 100px; resize: vertical; }
+
+        /* SKU Suggestion */
+        .sku-row { display: flex; gap: 10px; }
+        .sku-row input { flex: 1; }
+        .btn-suggest {
+            padding: 14px 16px; background: rgba(59,130,246,0.15);
+            border: 2px solid rgba(59,130,246,0.3); color: #60a5fa;
+            border-radius: 12px; font-size: 0.85rem; font-weight: 600;
+            white-space: nowrap; cursor: pointer;
+        }
+        .last-sku {
+            font-size: 0.75rem; color: #64748b; margin-top: 6px;
+        }
+
+        /* Photo Upload */
+        .photo-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 10px; margin-top: 10px;
+        }
+        .photo-slot {
+            aspect-ratio: 1; background: rgba(255,255,255,0.04);
+            border: 2px dashed rgba(255,255,255,0.15);
+            border-radius: 12px; display: flex;
+            flex-direction: column; align-items: center; justify-content: center;
+            cursor: pointer; position: relative; overflow: hidden;
+            transition: all 0.2s;
+        }
+        .photo-slot:active { border-color: #3b82f6; background: rgba(59,130,246,0.1); }
+        .photo-slot i { font-size: 1.5rem; color: #475569; margin-bottom: 4px; }
+        .photo-slot span { font-size: 0.7rem; color: #475569; }
+        .photo-slot img {
+            position: absolute; inset: 0; width: 100%; height: 100%;
+            object-fit: cover; border-radius: 10px;
+        }
+        .photo-slot .remove-btn {
+            position: absolute; top: 4px; right: 4px;
+            width: 24px; height: 24px; background: rgba(239,68,68,0.9);
+            color: white; border-radius: 50%; border: none;
+            font-size: 0.7rem; cursor: pointer; z-index: 2;
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        /* Lang Tabs */
+        .lang-tabs {
+            display: flex; gap: 6px; margin-bottom: 12px;
+            overflow-x: auto; padding-bottom: 4px;
+        }
+        .lang-tab {
+            padding: 8px 14px; border-radius: 10px;
+            font-size: 0.8rem; font-weight: 600;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.08);
+            color: #64748b; cursor: pointer; white-space: nowrap;
+        }
+        .lang-tab.active { background: rgba(59,130,246,0.2); color: #60a5fa; border-color: rgba(59,130,246,0.3); }
+
+        /* Buttons */
+        .btn {
+            width: 100%; padding: 16px; border-radius: 14px;
+            border: none; font-size: 1rem; font-weight: 700;
+            cursor: pointer; display: flex; align-items: center;
+            justify-content: center; gap: 10px; transition: all 0.2s;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            color: white; box-shadow: 0 4px 20px rgba(37,99,235,0.3);
+        }
+        .btn-primary:active { transform: scale(0.98); }
+        .btn-success {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            color: white; box-shadow: 0 4px 20px rgba(5,150,105,0.3);
+        }
+        .btn-secondary {
+            background: rgba(255,255,255,0.08); color: #94a3b8;
+            border: 1px solid rgba(255,255,255,0.12);
+        }
+
+        /* GitHub Settings */
+        .settings-toggle {
+            text-align: center; padding: 16px;
+            color: #64748b; font-size: 0.85rem;
+            cursor: pointer;
+        }
+        .settings-panel {
+            display: none; background: rgba(255,255,255,0.02);
+            border-radius: 12px; padding: 16px; margin-bottom: 16px;
+        }
+        .settings-panel.open { display: block; }
+
+        /* Progress */
+        .progress-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.85);
+            z-index: 1000; display: none;
+            flex-direction: column; align-items: center; justify-content: center;
+        }
+        .progress-overlay.active { display: flex; }
+        .spinner {
+            width: 48px; height: 48px; border: 4px solid rgba(255,255,255,0.1);
+            border-top-color: #3b82f6; border-radius: 50%;
+            animation: spin 1s linear infinite; margin-bottom: 20px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .progress-text { color: #94a3b8; font-size: 0.9rem; }
+
+        /* Toast */
+        .toast {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(100px);
+            background: #1e293b; color: white; padding: 14px 24px; border-radius: 12px;
+            font-size: 0.9rem; font-weight: 600; z-index: 1001;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+            transition: transform 0.3s; white-space: nowrap;
+        }
+        .toast.show { transform: translateX(-50%) translateY(0); }
+        .toast.error { background: #7f1d1d; border-color: rgba(239,68,68,0.3); }
+        .toast.success { background: #064e3b; border-color: rgba(16,185,129,0.3); }
+
+        /* Product List Preview */
+        .preview-list { max-height: 300px; overflow-y: auto; }
+        .preview-item {
+            display: flex; align-items: center; gap: 12px;
+            padding: 12px; background: rgba(255,255,255,0.03);
+            border-radius: 10px; margin-bottom: 8px;
+        }
+        .preview-item img {
+            width: 48px; height: 48px; border-radius: 8px;
+            object-fit: cover; background: rgba(255,255,255,0.05);
+        }
+        .preview-item .info { flex: 1; min-width: 0; }
+        .preview-item .name { font-weight: 600; font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .preview-item .meta { font-size: 0.75rem; color: #64748b; }
+        .preview-item .actions { display: flex; gap: 8px; }
+        .preview-item .actions button {
+            width: 32px; height: 32px; border-radius: 8px;
+            border: none; background: rgba(255,255,255,0.08);
+            color: #94a3b8; cursor: pointer; font-size: 0.8rem;
+        }
+        .preview-item .actions button.delete { background: rgba(239,68,68,0.15); color: #ef4444; }
+
+        /* Bottom Nav */
+        .bottom-nav {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            background: rgba(11,15,25,0.95); backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255,255,255,0.08);
+            display: flex; justify-content: space-around; padding: 8px 0;
+            z-index: 99;
+        }
+        .nav-item {
+            flex: 1; text-align: center; padding: 8px;
+            color: #475569; font-size: 0.7rem; font-weight: 600;
+            cursor: pointer; border: none; background: none;
+        }
+        .nav-item i { display: block; font-size: 1.3rem; margin-bottom: 4px; }
+        .nav-item.active { color: #60a5fa; }
+
+        /* Views */
+        .view { display: none; }
+        .view.active { display: block; }
+
+        /* Responsive */
+        @media (min-width: 640px) {
+            body { font-size: 15px; }
+            .container { padding: 24px; }
+        }
+    </style>
 <base target="_blank">
 </head>
 <body>
-  <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
-  <script>
-    // Initialize Netlify Identity
-    if (window.netlifyIdentity) {
-      window.netlifyIdentity.on("init", user => {
-        if (!user) {
-          window.netlifyIdentity.on("login", () => {
-            document.location.href = "/admin/";
-          });
+
+    <div class="header">
+        <h1><i class="fas fa-box-open" style="color:#60a5fa;margin-right:8px;"></i>Panel Admin</h1>
+        <p>Dodawaj i zarządzaj produktami</p>
+    </div>
+
+    <!-- VIEW: Add Product -->
+    <div id="viewAdd" class="view active container">
+        <div class="card">
+            <div class="card-title"><i class="fas fa-tag"></i>Podstawowe Informacje</div>
+
+            <div class="form-group">
+                <label>SKU <span class="required">*</span></label>
+                <div class="sku-row">
+                    <input type="text" id="pSKU" placeholder="np. ZS-14">
+                    <button class="btn-suggest" onclick="suggestSKU()" type="button">
+                        <i class="fas fa-magic"></i> Sugeruj
+                    </button>
+                </div>
+                <div class="last-sku" id="lastSKU">Ostatni: —</div>
+            </div>
+
+            <div class="form-group">
+                <label>Model <span class="required">*</span></label>
+                <input type="text" id="pModel" placeholder="np. X-100 Pro">
+            </div>
+
+            <div class="form-group">
+                <label>Kategoria <span class="required">*</span></label>
+                <select id="pKategoria">
+                    <option value="">Wybierz kategorię...</option>
+                    <option value="zegarki-smartwatch">⌚ Zegarki Smartwatch</option>
+                    <option value="sluchawki">🎧 Słuchawki</option>
+                    <option value="powerbanki">🔋 Powerbanki</option>
+                    <option value="akcesoria">📱 Akcesoria</option>
+                    <option value="inne">📦 Inne</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Kolor</label>
+                <input type="text" id="pKolor" placeholder="np. BLACK / SILVER">
+            </div>
+
+            <div class="form-group">
+                <label>Ilość na stanie <span class="required">*</span></label>
+                <input type="number" id="pIlosc" min="0" value="0" placeholder="0">
+            </div>
+
+            <div class="form-group">
+                <label>Cena (PLN)</label>
+                <input type="number" id="pCena" min="0" step="0.01" placeholder="np. 199.99">
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title"><i class="fas fa-camera"></i>Zdjęcia Produktu</div>
+            <p style="font-size:0.8rem;color:#64748b;margin-bottom:12px;">
+                Kliknij poniżej aby dodać zdjęcia z telefonu. Zdjęcia zostaną zmniejszone do rozmiaru web.
+            </p>
+            <div class="photo-grid" id="photoGrid">
+                <div class="photo-slot" onclick="document.getElementById('photoInput').click()">
+                    <i class="fas fa-plus"></i>
+                    <span>Dodaj</span>
+                </div>
+            </div>
+            <input type="file" id="photoInput" accept="image/*" multiple style="display:none" onchange="handlePhotos(this)">
+            <div style="margin-top:10px;font-size:0.75rem;color:#475569;">
+                <i class="fas fa-info-circle"></i> Zdjęcia zostaną automatycznie zmniejszone
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title"><i class="fas fa-language"></i>Opisy w Językach</div>
+            <div class="lang-tabs">
+                <div class="lang-tab active" onclick="switchLang('pl')">🇵🇱 PL</div>
+                <div class="lang-tab" onclick="switchLang('en')">🇬🇧 EN</div>
+                <div class="lang-tab" onclick="switchLang('ru')">🇷🇺 RU</div>
+                <div class="lang-tab" onclick="switchLang('kk')">🇰🇿 KK</div>
+                <div class="lang-tab" onclick="switchLang('ne')">🇳🇵 NE</div>
+            </div>
+            <div id="desc-pl" class="desc-panel">
+                <textarea id="pOpis_pl" placeholder="Opis po polsku..."></textarea>
+            </div>
+            <div id="desc-en" class="desc-panel" style="display:none">
+                <textarea id="pOpis_en" placeholder="English description..."></textarea>
+            </div>
+            <div id="desc-ru" class="desc-panel" style="display:none">
+                <textarea id="pOpis_ru" placeholder="Описание на русском..."></textarea>
+            </div>
+            <div id="desc-kk" class="desc-panel" style="display:none">
+                <textarea id="pOpis_kk" placeholder="Қазақша сипаттама..."></textarea>
+            </div>
+            <div id="desc-ne" class="desc-panel" style="display:none">
+                <textarea id="pOpis_ne" placeholder="नेपाली विवरण..."></textarea>
+            </div>
+        </div>
+
+        <div style="margin-bottom: 24px;">
+            <button class="btn btn-primary" onclick="saveProduct()">
+                <i class="fas fa-save"></i>Zapisz Produkt
+            </button>
+        </div>
+
+        <div class="settings-toggle" onclick="toggleSettings()">
+            <i class="fas fa-cog"></i> Ustawienia GitHub (opcjonalne — auto-upload)
+        </div>
+        <div class="settings-panel" id="settingsPanel">
+            <div class="form-group">
+                <label>GitHub Token</label>
+                <input type="password" id="githubToken" placeholder="ghp_xxxxxxxxxxxx" onchange="localStorage.setItem('gh_token',this.value)">
+                <p style="font-size:0.75rem;color:#475569;margin-top:6px;">
+                    Token pozwala zapisać produkty bezpośrednio na GitHub. 
+                    <a href="https://github.com/settings/tokens/new?scopes=repo&description=Catalog+Admin" target="_blank" style="color:#60a5fa;">Utwórz token</a>
+                </p>
+            </div>
+            <div class="form-group">
+                <label>Nazwa repozytorium</label>
+                <input type="text" id="repoName" placeholder="username/repo-name" onchange="localStorage.setItem('gh_repo',this.value)">
+            </div>
+            <button class="btn btn-secondary" onclick="testGitHub()" style="margin-top:10px;">
+                <i class="fas fa-plug"></i>Testuj Połączenie
+            </button>
+        </div>
+    </div>
+
+    <!-- VIEW: Product List -->
+    <div id="viewList" class="view container">
+        <div class="card">
+            <div class="card-title"><i class="fas fa-list"></i>Lista Produktów (<span id="countBadge">0</span>)</div>
+            <div class="preview-list" id="productPreview"></div>
+        </div>
+        <div style="margin-bottom: 24px;">
+            <button class="btn btn-success" onclick="exportJSON()">
+                <i class="fas fa-download"></i>Pobierz csvjson.json
+            </button>
+            <button class="btn btn-secondary" onclick="uploadToGitHub()" style="margin-top:10px;">
+                <i class="fab fa-github"></i>Wyślij na GitHub
+            </button>
+        </div>
+    </div>
+
+    <!-- Progress Overlay -->
+    <div class="progress-overlay" id="progressOverlay">
+        <div class="spinner"></div>
+        <div class="progress-text" id="progressText">Przetwarzanie...</div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <!-- Bottom Nav -->
+    <div class="bottom-nav">
+        <button class="nav-item active" onclick="showView('viewAdd')">
+            <i class="fas fa-plus-circle"></i>Dodaj
+        </button>
+        <button class="nav-item" onclick="showView('viewList')">
+            <i class="fas fa-list"></i>Lista
+        </button>
+    </div>
+
+    <script>
+        // === DATA ===
+        let products = [];
+        let uploadedPhotos = []; // {file, thumbBase64, fullBase64, filename}
+        let currentLang = 'pl';
+
+        // Load saved settings
+        document.getElementById('githubToken').value = localStorage.getItem('gh_token') || '';
+        document.getElementById('repoName').value = localStorage.getItem('gh_repo') || '';
+
+        // Load existing products
+        async function loadProducts() {
+            try {
+                const res = await fetch('csvjson.json');
+                const data = await res.json();
+                products = Array.isArray(data) ? data : (data.products || []);
+                updateLastSKU();
+                renderPreview();
+            } catch(e) {
+                console.log('No existing products');
+            }
         }
-      });
-    }
-  </script>
+        loadProducts();
+
+        // === NAVIGATION ===
+        function showView(id) {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            if(id === 'viewList') renderPreview();
+        }
+
+        // === SKU SUGGESTION ===
+        function updateLastSKU() {
+            const el = document.getElementById('lastSKU');
+            if(!products.length) { el.textContent = 'Ostatni: — (zacznij od ZS-01)'; return; }
+
+            // Find highest number across all SKU prefixes
+            let maxNum = 0;
+            let lastPrefix = 'ZS-';
+            products.forEach(p => {
+                const match = p.SKU.match(/^(\D+)(\d+)$/);
+                if(match) {
+                    const num = parseInt(match[2]);
+                    if(num > maxNum) { maxNum = num; lastPrefix = match[1]; }
+                }
+            });
+            const last = products[products.length-1];
+            el.textContent = `Ostatni: ${last.SKU} (${last.Model}) — następny: ${lastPrefix}${String(maxNum+1).padStart(2,'0')}`;
+        }
+
+        function suggestSKU() {
+            if(!products.length) { document.getElementById('pSKU').value = 'ZS-01'; return; }
+            let maxNum = 0;
+            let prefix = 'ZS-';
+            products.forEach(p => {
+                const match = p.SKU.match(/^(\D+)(\d+)$/);
+                if(match) {
+                    const num = parseInt(match[2]);
+                    if(num > maxNum) { maxNum = num; prefix = match[1]; }
+                }
+            });
+            document.getElementById('pSKU').value = prefix + String(maxNum+1).padStart(2,'0');
+            showToast('SKU wypełnione: ' + document.getElementById('pSKU').value, 'success');
+        }
+
+        // === PHOTOS ===
+        function handlePhotos(input) {
+            const files = Array.from(input.files);
+            if(!files.length) return;
+
+            showProgress('Przetwarzanie zdjęć...');
+            let processed = 0;
+
+            files.forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = new Image();
+                    img.onload = function() {
+                        // Create thumb (600px)
+                        const thumb = resizeImage(img, 600);
+                        const full = resizeImage(img, 1600);
+
+                        uploadedPhotos.push({
+                            file: file,
+                            thumbBase64: thumb,
+                            fullBase64: full,
+                            filename: file.name.replace(/\.[^/.]+$/, '.jpg')
+                        });
+
+                        processed++;
+                        if(processed === files.length) {
+                            hideProgress();
+                            renderPhotoGrid();
+                            showToast(`Dodano ${files.length} zdjęcie`, 'success');
+                        }
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        function resizeImage(img, maxWidth) {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            let w = img.width, h = img.height;
+            if(w > maxWidth) { h = Math.round(h * maxWidth / w); w = maxWidth; }
+            canvas.width = w; canvas.height = h;
+            ctx.drawImage(img, 0, 0, w, h);
+            return canvas.toDataURL('image/jpeg', 0.9);
+        }
+
+        function renderPhotoGrid() {
+            const grid = document.getElementById('photoGrid');
+            grid.innerHTML = uploadedPhotos.map((p, i) => `
+                <div class="photo-slot">
+                    <img src="${p.thumbBase64}">
+                    <button class="remove-btn" onclick="removePhoto(${i})" type="button">×</button>
+                </div>
+            `).join('') + `
+                <div class="photo-slot" onclick="document.getElementById('photoInput').click()">
+                    <i class="fas fa-plus"></i><span>Dodaj</span>
+                </div>
+            `;
+        }
+
+        function removePhoto(index) {
+            uploadedPhotos.splice(index, 1);
+            renderPhotoGrid();
+        }
+
+        // === LANGUAGE TABS ===
+        function switchLang(lang) {
+            currentLang = lang;
+            document.querySelectorAll('.lang-tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            document.querySelectorAll('.desc-panel').forEach(p => p.style.display = 'none');
+            document.getElementById('desc-' + lang).style.display = 'block';
+        }
+
+        // === SAVE PRODUCT ===
+        function saveProduct() {
+            const sku = document.getElementById('pSKU').value.trim();
+            const model = document.getElementById('pModel').value.trim();
+            const kat = document.getElementById('pKategoria').value;
+            const ilosc = parseInt(document.getElementById('pIlosc').value) || 0;
+            const cena = document.getElementById('pCena').value;
+
+            if(!sku || !model || !kat) {
+                showToast('Wypełnij SKU, Model i Kategorię', 'error');
+                return;
+            }
+
+            if(products.some(p => p.SKU === sku)) {
+                showToast('SKU już istnieje!', 'error');
+                return;
+            }
+
+            const photoNames = uploadedPhotos.map(p => p.filename).join(', ');
+
+            const product = {
+                SKU: sku,
+                Model: model,
+                Kategoria: kat,
+                Kolor: document.getElementById('pKolor').value.trim(),
+                Ilosc: ilosc,
+                Cena: cena ? parseFloat(cena) : null,
+                Zdjecia: photoNames,
+                Opis: {
+                    pl: document.getElementById('pOpis_pl').value.trim(),
+                    en: document.getElementById('pOpis_en').value.trim(),
+                    ru: document.getElementById('pOpis_ru').value.trim(),
+                    kk: document.getElementById('pOpis_kk').value.trim(),
+                    ne: document.getElementById('pOpis_ne').value.trim()
+                }
+            };
+
+            products.push(product);
+
+            // Clear form
+            document.getElementById('pSKU').value = '';
+            document.getElementById('pModel').value = '';
+            document.getElementById('pKategoria').value = '';
+            document.getElementById('pKolor').value = '';
+            document.getElementById('pIlosc').value = '0';
+            document.getElementById('pCena').value = '';
+            document.getElementById('pOpis_pl').value = '';
+            document.getElementById('pOpis_en').value = '';
+            document.getElementById('pOpis_ru').value = '';
+            document.getElementById('pOpis_kk').value = '';
+            document.getElementById('pOpis_ne').value = '';
+            uploadedPhotos = [];
+            renderPhotoGrid();
+            updateLastSKU();
+            renderPreview();
+
+            showToast('Produkt zapisany! Przejdź do "Lista" aby wyeksportować.', 'success');
+        }
+
+        // === PREVIEW ===
+        function renderPreview() {
+            const container = document.getElementById('productPreview');
+            document.getElementById('countBadge').textContent = products.length;
+
+            if(!products.length) {
+                container.innerHTML = '<p style="text-align:center;color:#475569;padding:20px;">Brak produktów. Dodaj pierwszy!</p>';
+                return;
+            }
+
+            container.innerHTML = products.map((p, i) => {
+                const photos = p.Zdjecia ? p.Zdjecia.split(',').filter(Boolean) : [];
+                const img = photos.length ? `images/watches/${photos[0]}` : '';
+                return `
+                    <div class="preview-item">
+                        <img src="${img}" onerror="this.style.display='none'" alt="">
+                        <div class="info">
+                            <div class="name">${p.Model}</div>
+                            <div class="meta">${p.SKU} • ${p.Ilosc} szt. • ${p.Kategoria}</div>
+                        </div>
+                        <div class="actions">
+                            <button onclick="editProduct(${i})" title="Edytuj"><i class="fas fa-pen"></i></button>
+                            <button class="delete" onclick="deleteProduct(${i})" title="Usuń"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function deleteProduct(index) {
+            if(!confirm('Usunąć ' + products[index].Model + '?')) return;
+            products.splice(index, 1);
+            renderPreview();
+            updateLastSKU();
+            showToast('Produkt usunięty', 'success');
+        }
+
+        function editProduct(index) {
+            const p = products[index];
+            document.getElementById('pSKU').value = p.SKU;
+            document.getElementById('pModel').value = p.Model;
+            document.getElementById('pKategoria').value = p.Kategoria;
+            document.getElementById('pKolor').value = p.Kolor || '';
+            document.getElementById('pIlosc').value = p.Ilosc;
+            document.getElementById('pCena').value = p.Cena || '';
+            document.getElementById('pOpis_pl').value = p.Opis?.pl || '';
+            document.getElementById('pOpis_en').value = p.Opis?.en || '';
+            document.getElementById('pOpis_ru').value = p.Opis?.ru || '';
+            document.getElementById('pOpis_kk').value = p.Opis?.kk || '';
+            document.getElementById('pOpis_ne').value = p.Opis?.ne || '';
+
+            // Remove from list so it can be re-added
+            products.splice(index, 1);
+            showView('viewAdd');
+            showToast('Edytuj dane i kliknij Zapisz', 'success');
+        }
+
+        // === EXPORT ===
+        function exportJSON() {
+            const data = { products: products };
+            const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url; a.download = 'csvjson.json';
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast('Plik csvjson.json pobrany!', 'success');
+        }
+
+        // === GITHUB UPLOAD ===
+        async function uploadToGitHub() {
+            const token = document.getElementById('githubToken').value.trim();
+            const repo = document.getElementById('repoName').value.trim();
+
+            if(!token || !repo) {
+                showToast('Wypełnij token i nazwę repozytorium w Ustawieniach', 'error');
+                toggleSettings();
+                return;
+            }
+
+            showProgress('Wysyłanie na GitHub...');
+
+            try {
+                // 1. Upload photos
+                for(let i=0; i<uploadedPhotos.length; i++) {
+                    const p = uploadedPhotos[i];
+                    const base64 = p.fullBase64.split(',')[1];
+
+                    // Check if file exists
+                    await fetch(`https://api.github.com/repos/${repo}/contents/images/watches/${p.filename}`, {
+                        headers: { 'Authorization': `token ${token}` }
+                    }).catch(() => {}); // 404 is ok
+
+                    // Upload
+                    const res = await fetch(`https://api.github.com/repos/${repo}/contents/images/watches/${p.filename}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Authorization': `token ${token}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            message: `Add photo ${p.filename}`,
+                            content: base64
+                        })
+                    });
+
+                    if(!res.ok && res.status !== 422) throw new Error('Photo upload failed');
+                    document.getElementById('progressText').textContent = `Zdjęcie ${i+1}/${uploadedPhotos.length}...`;
+                }
+
+                // 2. Get current csvjson.json SHA
+                const jsonRes = await fetch(`https://api.github.com/repos/${repo}/contents/csvjson.json`, {
+                    headers: { 'Authorization': `token ${token}` }
+                });
+                const jsonData = await jsonRes.json();
+                const sha = jsonData.sha;
+
+                // 3. Update JSON
+                const content = btoa(unescape(encodeURIComponent(JSON.stringify({products}, null, 2))));
+                const updateRes = await fetch(`https://api.github.com/repos/${repo}/contents/csvjson.json`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `token ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        message: 'Update products via admin panel',
+                        content: content,
+                        sha: sha
+                    })
+                });
+
+                if(!updateRes.ok) throw new Error('JSON update failed');
+
+                hideProgress();
+                uploadedPhotos = []; // Clear after successful upload
+                renderPhotoGrid();
+                showToast('Wysłano na GitHub! Strona zaktualizuje się za ~1 min.', 'success');
+
+            } catch(err) {
+                hideProgress();
+                showToast('Błąd: ' + err.message, 'error');
+                console.error(err);
+            }
+        }
+
+        async function testGitHub() {
+            const token = document.getElementById('githubToken').value.trim();
+            const repo = document.getElementById('repoName').value.trim();
+            if(!token || !repo) { showToast('Wypełnij token i repo', 'error'); return; }
+
+            showProgress('Testowanie...');
+            try {
+                const res = await fetch(`https://api.github.com/repos/${repo}`, {
+                    headers: { 'Authorization': `token ${token}` }
+                });
+                if(res.ok) {
+                    hideProgress();
+                    showToast('Połączenie OK!', 'success');
+                } else {
+                    throw new Error('Status ' + res.status);
+                }
+            } catch(e) {
+                hideProgress();
+                showToast('Błąd połączenia: ' + e.message, 'error');
+            }
+        }
+
+        // === UI HELPERS ===
+        function showProgress(text) {
+            document.getElementById('progressText').textContent = text;
+            document.getElementById('progressOverlay').classList.add('active');
+        }
+        function hideProgress() {
+            document.getElementById('progressOverlay').classList.remove('active');
+        }
+        function showToast(msg, type='') {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.className = 'toast ' + type;
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 3000);
+        }
+        function toggleSettings() {
+            document.getElementById('settingsPanel').classList.toggle('open');
+        }
+    </script>
 </body>
 </html>
