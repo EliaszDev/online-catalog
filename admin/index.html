@@ -515,13 +515,14 @@
         // Load existing products
         async function loadProducts() {
             try {
-                const res = await fetch('csvjson.json');
+                const res = await fetch('csvjson.json?_=' + Date.now(), { cache: 'no-store' });
+                if (!res.ok) throw new Error('HTTP ' + res.status);
                 const data = await res.json();
                 products = Array.isArray(data) ? data : (data.products || []);
                 updateLastSKU();
                 renderPreview();
             } catch(e) {
-                console.log('No existing products');
+                console.log('No existing products', e);
             }
         }
         loadProducts();
