@@ -236,7 +236,7 @@
         .toast.success { background: #064e3b; border-color: rgba(16,185,129,0.3); }
 
         /* Product List Preview */
-        .preview-list { max-height: 300px; overflow-y: auto; }
+        .preview-list { max-height: 55vh; overflow-y: auto; }
         .preview-item {
             display: flex; align-items: center; gap: 12px;
             padding: 12px; background: rgba(255,255,255,0.03);
@@ -305,6 +305,9 @@
     <div class="header">
         <h1><i class="fas fa-box-open" style="color:#60a5fa;margin-right:8px;"></i>Panel Admin</h1>
         <p>Dodawaj i zarządzaj produktami</p>
+        <button id="backToListBtn" onclick="showView('viewList')" style="display:none;position:absolute;left:16px;top:50%;transform:translateY(-50%);background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);color:#94a3b8;border-radius:10px;padding:8px 14px;font-size:0.85rem;cursor:pointer;">
+            <i class="fas fa-arrow-left"></i> Lista
+        </button>
     </div>
 
     <!-- VIEW: Add Product -->
@@ -352,7 +355,8 @@
 
             <div class="form-group">
                 <label>Cena (PLN)</label>
-                <input type="number" id="pCena" min="0" step="0.01" placeholder="np. 199.99">
+                <input type="number" id="pCena" min="0" step="0.01" placeholder="np. 199.99" oninput="updateEuroPrice()">
+                <div class="last-sku" id="euroPrice" style="margin-top:6px;"></div>
             </div>
         </div>
 
@@ -444,9 +448,6 @@
             <div class="preview-list" id="productPreview"></div>
         </div>
         <div style="margin-bottom: 24px;">
-            <button class="btn btn-success" onclick="exportJSON()">
-                <i class="fas fa-download"></i>Pobierz csvjson.json
-            </button>
             <button class="btn btn-secondary" onclick="uploadToGitHub()" style="margin-top:10px;">
                 <i class="fab fa-github"></i>Wyślij na GitHub
             </button>
@@ -592,6 +593,9 @@
                     n.classList.add('active');
                 }
             });
+            // Show/hide back button
+            const backBtn = document.getElementById('backToListBtn');
+            if(backBtn) backBtn.style.display = (id === 'viewAdd') ? 'block' : 'none';
             if(id === 'viewList') renderPreview();
         }
 
@@ -836,6 +840,14 @@
             showToast('Produkt usunięty', 'success');
         }
 
+        function updateEuroPrice() {
+            const pln = parseFloat(document.getElementById('pCena').value);
+            const el = document.getElementById('euroPrice');
+            if (!pln || pln <= 0) { el.textContent = ''; return; }
+            const euro = (pln / 4.3).toFixed(2);
+            el.textContent = '≈ ' + euro + ' EUR';
+        }
+
         function editProduct(index) {
             const p = products[index];
             document.getElementById('pSKU').value = p.SKU;
@@ -844,6 +856,7 @@
             document.getElementById('pKolor').value = p.Kolor || '';
             document.getElementById('pIlosc').value = p.Ilosc;
             document.getElementById('pCena').value = p.Cena || '';
+            updateEuroPrice();
             document.getElementById('pOpis_pl').value = p.Opis?.pl || '';
             document.getElementById('pOpis_en').value = p.Opis?.en || '';
             document.getElementById('pOpis_ru').value = p.Opis?.ru || '';
