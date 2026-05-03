@@ -682,12 +682,16 @@
 
         function renderPhotoGrid() {
             const grid = document.getElementById('photoGrid');
-            grid.innerHTML = uploadedPhotos.map((p, i) => `
-                <div class="photo-slot">
-                    <img src="${p.thumbBase64}">
+            grid.innerHTML = uploadedPhotos.map((p, i) => {
+                // Existing photos from edit have no thumbBase64, show filename instead
+                const imgSrc = p.thumbBase64 || `images/watches/${p.filename}`;
+                const isExisting = !p.thumbBase64;
+                return `
+                <div class="photo-slot" ${isExisting ? 'style="border-style:solid;border-color:rgba(59,130,246,0.3);"' : ''}>
+                    <img src="${imgSrc}" onerror="this.style.display='none';this.parentElement.innerHTML='<span style=font-size:0.65rem;color:#94a3b8;padding:4px;>${p.filename}</span>'">
                     <button class="remove-btn" onclick="removePhoto(${i})" type="button">×</button>
                 </div>
-            `).join('') + `
+            `}).join('') + `
                 <div class="photo-slot" onclick="document.getElementById('photoInput').click()">
                     <i class="fas fa-plus"></i><span>Dodaj</span>
                 </div>
@@ -863,6 +867,21 @@
             document.getElementById('pOpis_kk').value = p.Opis?.kk || '';
             document.getElementById('pOpis_ne').value = p.Opis?.ne || '';
 
+            // Restore existing photos into the upload buffer so they are preserved on save
+            uploadedPhotos = [];
+            if (p.Zdjecia) {
+                const photoNames = p.Zdjecia.split(',').map(s => s.trim()).filter(Boolean);
+                photoNames.forEach(name => {
+                    uploadedPhotos.push({
+                        file: null,
+                        thumbBase64: '',
+                        fullBase64: '',
+                        filename: name
+                    });
+                });
+            }
+            renderPhotoGrid();
+
             // Remove from list so it can be re-added
             products.splice(index, 1);
             showView('viewAdd');
@@ -910,9 +929,10 @@
                     }
                 });
 
-                // 1. Upload photos
-                for(let i=0; i<allPhotosToUpload.length; i++) {
-                    const p = allPhotosToUpload[i];
+                // 1. Upload photos (skip existing photos that have no base64 — they are already on GitHub)
+                const newPhotos = allPhotosToUpload.filter(p => p.fullBase64 && p.fullBase64.includes(','));
+                for(let i=0; i<newPhotos.length; i++) {
+                    const p = newPhotos[i];
                     const base64 = p.fullBase64.split(',')[1];
 
                     // Check if file exists
@@ -942,7 +962,7 @@
                     });
 
                     if(!res.ok && res.status !== 422) throw new Error('Photo upload failed');
-                    document.getElementById('progressText').textContent = `Zdjęcie ${i+1}/${allPhotosToUpload.length}...`;
+                    document.getElementById('progressText').textContent = `Zdjęcie ${i+1}/${newPhotos.length}...`;
                 }
 
                 // 2. Get current csvjson.json from GitHub and merge with local products
