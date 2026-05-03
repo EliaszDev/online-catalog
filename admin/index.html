@@ -366,9 +366,9 @@
             </div>
 
             <div class="form-group">
-                <label>Cena (PLN)</label>
-                <input type="number" id="pCena" min="0" step="0.01" placeholder="np. 199.99" oninput="updateEuroPrice()">
-                <div class="last-sku" id="euroPrice" style="margin-top:6px;"></div>
+                <label>Cena (EUR)</label>
+                <input type="number" id="pCena" min="0" step="0.01" placeholder="np. 46.50">
+                <div class="last-sku" id="plnPrice" style="margin-top:6px;"></div>
             </div>
         </div>
 
@@ -913,12 +913,12 @@
             showToast('Produkt usunięty', 'success');
         }
 
-        function updateEuroPrice() {
-            const pln = parseFloat(document.getElementById('pCena').value);
-            const el = document.getElementById('euroPrice');
-            if (!pln || pln <= 0) { el.textContent = ''; return; }
-            const euro = (pln / 4.3).toFixed(2);
-            el.textContent = '≈ ' + euro + ' EUR';
+        function updatePlnPrice() {
+            const euro = parseFloat(document.getElementById('pCena').value);
+            const el = document.getElementById('plnPrice');
+            if (!euro || euro <= 0) { el.textContent = ''; return; }
+            const pln = (euro * 4.3).toFixed(2);
+            el.textContent = '≈ ' + pln + ' PLN';
         }
 
         function editProduct(index) {
@@ -929,7 +929,7 @@
             document.getElementById('pKolor').value = p.Kolor || '';
             document.getElementById('pIlosc').value = p.Ilosc;
             document.getElementById('pCena').value = p.Cena || '';
-            updateEuroPrice();
+            updatePlnPrice();
             document.getElementById('pOpis_pl').value = p.Opis?.pl || '';
             document.getElementById('pOpis_en').value = p.Opis?.en || '';
             document.getElementById('pOpis_ru').value = p.Opis?.ru || '';
