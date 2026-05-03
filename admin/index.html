@@ -375,6 +375,11 @@
 
         <div class="card">
             <div class="card-title"><i class="fas fa-language"></i>Opisy w Językach</div>
+            <div style="margin-bottom:12px;">
+                <button class="btn btn-secondary" onclick="autoTranslate()" type="button" style="font-size:0.85rem;padding:10px;">
+                    <i class="fas fa-globe"></i> Przetłumacz z polskiego
+                </button>
+            </div>
             <div class="lang-tabs">
                 <div class="lang-tab active" onclick="switchLang('pl')">🇵🇱 PL</div>
                 <div class="lang-tab" onclick="switchLang('en')">🇬🇧 EN</div>
@@ -522,10 +527,13 @@
                 updateLastSKU();
                 renderPreview();
             } catch(e) {
-                console.log('No existing products', e);
+                console.error('Failed to load products:', e);
             }
         }
-        loadProducts();
+        // Wait for login before loading products (login overlay blocks UI)
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(loadProducts, 100);
+        });
 
         // === NAVIGATION ===
         function showView(id) {
@@ -638,6 +646,42 @@
         function removePhoto(index) {
             uploadedPhotos.splice(index, 1);
             renderPhotoGrid();
+        }
+
+        // === TRANSLATION ===
+        async function translateText(text, targetLang) {
+            if (!text || !text.trim()) return '';
+            try {
+                const res = await fetch('https://api.mymemory.translated.net/get?q=' + encodeURIComponent(text) + '&langpair=pl|' + targetLang);
+                const data = await res.json();
+                if (data.responseData && data.responseData.translatedText) {
+                    return data.responseData.translatedText;
+                }
+            } catch(e) {
+                console.warn('Translation failed for', targetLang, e);
+            }
+            return '';
+        }
+
+        async function autoTranslate() {
+            const plText = document.getElementById('pOpis_pl').value.trim();
+            if (!plText) {
+                showToast('Wpisz opis po polsku najpierw', 'error');
+                return;
+            }
+            showProgress('Tłumaczenie...');
+            const [en, ru, kk, ne] = await Promise.all([
+                translateText(plText, 'en'),
+                translateText(plText, 'ru'),
+                translateText(plText, 'kk'),
+                translateText(plText, 'ne')
+            ]);
+            document.getElementById('pOpis_en').value = en;
+            document.getElementById('pOpis_ru').value = ru;
+            document.getElementById('pOpis_kk').value = kk;
+            document.getElementById('pOpis_ne').value = ne;
+            hideProgress();
+            showToast('Przetłumaczono!', 'success');
         }
 
         // === LANGUAGE TABS ===
