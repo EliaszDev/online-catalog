@@ -175,6 +175,22 @@
         "uz": "Professional health tracker with a minimalist design. Monitors ECG, stress, and energy levels throughout the day."
       },
       "Cena": null
+    },
+    {
+      "SKU": "ZS-15",
+      "Model": "Testowy",
+      "Kategoria": "powerbanki",
+      "Kolor": "Black",
+      "Ilosc": 2,
+      "Cena": 10,
+      "Zdjecia": "IMG_0707.jpg",
+      "Opis": {
+        "pl": "Testowy produkt",
+        "en": "Test product",
+        "ru": "Испытуемый продукт",
+        "kk": "Сынақ өнімі",
+        "uz": "Sinov mahsuloti"
+      }
     }
   ]
 }
