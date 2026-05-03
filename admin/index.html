@@ -830,11 +830,6 @@
                 return;
             }
 
-            if(products.some(p => p.SKU === sku)) {
-                showToast('SKU już istnieje!', 'error');
-                return;
-            }
-
             const photoNames = uploadedPhotos.map(p => p.filename).join(', ');
 
             const product = {
@@ -853,6 +848,12 @@
                     uz: document.getElementById('pOpis_uz').value.trim()
                 }
             };
+
+            // Check if SKU already exists (editing mode) — if so, remove old one first
+            const existingIndex = products.findIndex(p => p.SKU === sku);
+            if(existingIndex !== -1) {
+                products.splice(existingIndex, 1);
+            }
 
             products.push(product);
 
