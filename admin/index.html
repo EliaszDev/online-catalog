@@ -848,6 +848,9 @@
 
             products.push(product);
 
+            // Save photos for upload BEFORE clearing
+            const photosToUpload = [...uploadedPhotos];
+
             // Clear form
             document.getElementById('pSKU').value = '';
             document.getElementById('pModel').value = '';
@@ -865,7 +868,12 @@
             updateLastSKU();
             renderPreview();
 
-            showToast('Produkt zapisany! Przejdź do "Lista" aby wyeksportować.', 'success');
+            showToast('Produkt zapisany! Wysyłanie na GitHub...', 'success');
+
+            // Auto-export to GitHub after save
+            setTimeout(() => {
+                uploadToGitHub(photosToUpload);
+            }, 500);
         }
 
         // === PREVIEW ===
@@ -1009,7 +1017,7 @@
         }
 
         // === GITHUB UPLOAD ===
-        async function uploadToGitHub() {
+        async function uploadToGitHub(extraPhotos = []) {
             const token = document.getElementById('githubToken').value.trim();
             const repo = document.getElementById('repoName').value.trim();
 
@@ -1022,7 +1030,7 @@
             showProgress('Wysyłanie na GitHub...');
 
             try {
-                const allPhotosToUpload = [];
+                const allPhotosToUpload = [...extraPhotos];
                 products.forEach(p => {
                     if (p.Zdjecia) {
                         const names = p.Zdjecia.split(',').map(s => s.trim()).filter(Boolean);

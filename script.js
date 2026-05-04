@@ -3,11 +3,14 @@ const catalogElement = document.getElementById('katalog');
 // Funkcja ładująca dane
 async function loadSmartwatches() {
     try {
-        const response = await fetch('csvjson.json');
+        const response = await fetch('csvjson.json?_=' + Date.now(), { cache: 'no-store' });
         const data = await response.json();
+        
+        // Handle both array and {products: [...]} formats
+        const products = Array.isArray(data) ? data : (data.products || []);
 
         // Filtrowanie: tylko smartwatch
-        const smartwatches = data.filter(item => item.Kategoria && item.Kategoria.toLowerCase() === 'smartwatch');
+        const smartwatches = products.filter(item => item.Kategoria && item.Kategoria.toLowerCase() === 'smartwatch');
 
         catalogElement.innerHTML = ''; // Czyścimy kontener
 
@@ -15,24 +18,27 @@ async function loadSmartwatches() {
             const card = document.createElement('div');
             card.className = 'watch-card';
 
-            // Logika zdjęcia
+            // Logika zdjęcia - bierzemy PIERWSZE zdjęcie (index 0)
             let imagePath;
-            if (watch.Zdjecia === "xxx" || !watch.Zdjecia) {
+            if (!watch.Zdjecia || watch.Zdjecia === "xxx") {
                 imagePath = 'https://via.placeholder.com/300x300?text=Brak+Zdjecia';
             } else {
-                // Jeśli masz kilka zdjęć po przecinku, bierzemy pierwsze
-                const firstImage = watch.Zdjecia.split(',')[1] || watch.Zdjecia; 
+                const firstImage = watch.Zdjecia.split(',')[0];
                 imagePath = `images/watches/${firstImage.trim()}`;
             }
 
+            // Używamy Model jako nazwy, Opis.pl jako opisu
+            const nazwa = watch.Model || watch.Nazwa || 'Bez nazwy';
+            const opis = (watch.Opis && watch.Opis.pl) ? watch.Opis.pl : (watch.Opis || 'Brak opisu');
+
             card.innerHTML = `
                 <div class="image-container">
-                    <img src="${imagePath}" alt="${watch.Nazwa}" onerror="this.src='https://via.placeholder.com/300x300?text=Błąd+ładowania'">
+                    <img src="${imagePath}" alt="${nazwa}" onerror="this.src='https://via.placeholder.com/300x300?text=Błąd+ładowania'">
                 </div>
                 <div class="info">
-                    <h3>${watch.Nazwa}</h3>
-                    <p class="description">${watch.Opis || 'Brak opisu'}</p>
-                    <div class="stock">Dostępna ilość: <strong>${watch.Ilosc}</strong></div>
+                    <h3>${nazwa}</h3>
+                    <p class="description">${opis}</p>
+                    <div class="stock">Dostępna ilość: <strong>${watch.Ilosc || 0}</strong></div>
                 </div>
             `;
             catalogElement.appendChild(card);
