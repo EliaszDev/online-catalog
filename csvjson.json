@@ -17,20 +17,20 @@
       }
     },
     {
-      "SKU": "ZS-02",
-      "Model": "V-65",
+      "SKU": "ZS-04",
+      "Model": "V-75",
       "Kategoria": "zegarki-smartwatch",
-      "Kolor": "BLACK",
-      "Ilosc": 7,
-      "Cena": 60,
-      "Zdjecia": "v65-black.jpg, v65-silver-metal.jpg, v65-black-metal.jpg, v65-orange.jpg, v65-measures.jpg",
+      "Kolor": "BLACK/KAMO",
+      "Ilosc": 1,
+      "Zdjecia": "v75-black.jpg, v75-kamo.jpg, v75-measures.jpg",
       "Opis": {
-        "pl": "Stylowy smartwatch z funkcją rozmów Bluetooth i ekranem AMOLED. Łączy elegancję z nowoczesną technologią monitoringu zdrowia i powiadomień.",
-        "en": "Stylish smartwatch with Bluetooth call function and AMOLED screen. It combines elegance with modern health monitoring and notification technology.",
-        "ru": "Стильные умные часы с функцией вызова Bluetooth и AMOLED-экраном. Он сочетает в себе элегантность с современными технологиями мониторинга и уведомления о состоянии здоровья.",
-        "kk": "Bluetooth қоңырау функциясы және AMOLED экраны бар стильді ақылды сағаттар. Ол талғампаздықты заманауи денсаулықты бақылау және хабарландыру технологиясымен біріктіреді.",
-        "uz": "Bluetooth qo&#39;ng&#39;iroqlari va AMOLED ekranli zamonaviy aqlli soat. U nafislikni zamonaviy sog&#39;liqni saqlash monitoringi va bildirishnoma texnologiyalari bilan birlashtiradi."
-      }
+        "pl": "Wytrzymały zegarek typu 'Rugged' o militarnym wyglądzie. Odporny na wstrząsy i wodę, z kompasem i trybami przetrwania w terenie.",
+        "en": "Rugged watch with a military look. Shock and water-resistant, featuring a compass and outdoor survival modes.",
+        "ru": "Прочные часы в военном стиле. Ударопрочные и водонепроницаемые, с компасом и режимами выживания на открытом воздухе.",
+        "kk": "Әскери үлгідегі төзімді сағат. Соққыға және суға төзімді, компас және ашық ауада тірі қалу режимдері бар.",
+        "uz": "Mustahkam, harbiy uslubdagi soat. Zarbaga va suvga chidamli, kompas va ochiq havoda omon qolish rejimlariga ega."
+      },
+      "Cena": null
     },
     {
       "SKU": "ZS-05",
@@ -180,20 +180,20 @@
       }
     },
     {
-      "SKU": "ZS-04",
-      "Model": "V-75",
+      "SKU": "ZS-02",
+      "Model": "V-65",
       "Kategoria": "zegarki-smartwatch",
-      "Kolor": "BLACK/KAMO",
-      "Ilosc": 1,
-      "Cena": null,
-      "Zdjecia": "v75-black.jpg, v75-kamo.jpg, v75-measures.jpg",
+      "Kolor": "BLACK",
+      "Ilosc": 7,
+      "Cena": 60,
+      "Zdjecia": "v65-black.jpg, v65-silver-metal.jpg, v65-black-metal.jpg, v65-orange.jpg, v65-measures.jpg",
       "PhotoThumbs": [],
       "Opis": {
-        "pl": "Wytrzymały zegarek typu 'Rugged' o militarnym wyglądzie. Odporny na wstrząsy i wodę, z kompasem i trybami przetrwania w terenie.",
-        "en": "Rugged watch with a military look. Shock and water-resistant, featuring a compass and outdoor survival modes.",
-        "ru": "Прочные часы в военном стиле. Ударопрочные и водонепроницаемые, с компасом и режимами выживания на открытом воздухе.",
-        "kk": "Әскери үлгідегі төзімді сағат. Соққыға және суға төзімді, компас және ашық ауада тірі қалу режимдері бар.",
-        "uz": "Mustahkam, harbiy uslubdagi soat. Zarbaga va suvga chidamli, kompas va ochiq havoda omon qolish rejimlariga ega."
+        "pl": "Stylowy smartwatch z funkcją rozmów Bluetooth i ekranem AMOLED. Łączy elegancję z nowoczesną technologią monitoringu zdrowia i powiadomień.",
+        "en": "Stylish smartwatch with Bluetooth call function and AMOLED screen. It combines elegance with modern health monitoring and notification technology.",
+        "ru": "Стильные умные часы с функцией вызова Bluetooth и AMOLED-экраном. Он сочетает в себе элегантность с современными технологиями мониторинга и уведомления о состоянии здоровья.",
+        "kk": "Bluetooth қоңырау функциясы және AMOLED экраны бар стильді ақылды сағаттар. Ол талғампаздықты заманауи денсаулықты бақылау және хабарландыру технологиясымен біріктіреді.",
+        "uz": "Bluetooth qo&#39;ng&#39;iroqlari va AMOLED ekranli zamonaviy aqlli soat. U nafislikni zamonaviy sog&#39;liqni saqlash monitoringi va bildirishnoma texnologiyalari bilan birlashtiradi."
       }
     }
   ]
