@@ -33,22 +33,6 @@
       }
     },
     {
-      "SKU": "ZS-04",
-      "Model": "V-75",
-      "Kategoria": "zegarki-smartwatch",
-      "Kolor": "BLACK/KAMO",
-      "Ilosc": 1,
-      "Zdjecia": "v75-black.jpg, v75-kamo.jpg, v75-measures.jpg",
-      "Opis": {
-        "pl": "Wytrzymały zegarek typu 'Rugged' o militarnym wyglądzie. Odporny na wstrząsy i wodę, z kompasem i trybami przetrwania w terenie.",
-        "en": "Rugged watch with a military look. Shock and water-resistant, featuring a compass and outdoor survival modes.",
-        "ru": "Прочные часы в военном стиле. Ударопрочные и водонепроницаемые, с компасом и режимами выживания на открытом воздухе.",
-        "kk": "Әскери үлгідегі төзімді сағат. Соққыға және суға төзімді, компас және ашық ауада тірі қалу режимдері бар.",
-        "uz": "Mustahkam, harbiy uslubdagi soat. Zarbaga va suvga chidamli, kompas va ochiq havoda omon qolish rejimlariga ega."
-      },
-      "Cena": null
-    },
-    {
       "SKU": "ZS-05",
       "Model": "AK-93",
       "Kategoria": "zegarki-smartwatch",
@@ -193,6 +177,23 @@
         "ru": "Классические кварцевые часы с чёрным циферблатом, двухцветным металлическим браслетом (чёрно-серебристым) и серебристыми стрелками и индексами. Снабжены указателем дня недели и даты.",
         "kk": "Қара циферблатты, екі түсті металдан жасалған білезігі бар (қара және күміс) және күміс түсті тілшелері мен индекстері бар классикалық кварц сағаты. Аптаның күні мен күнін көрсететін функциясы бар.",
         "uz": "Qora kadrli, ikki rangli metall bilaguzukli (qora va kumush) va kumrang ko&#39;rsatkich va indekslarga ega klassik kvarz soat. Hafta kuni va sanani ko&#39;rsatish funksiyasi mavjud."
+      }
+    },
+    {
+      "SKU": "ZS-04",
+      "Model": "V-75",
+      "Kategoria": "zegarki-smartwatch",
+      "Kolor": "BLACK/KAMO",
+      "Ilosc": 1,
+      "Cena": null,
+      "Zdjecia": "v75-black.jpg, v75-kamo.jpg, v75-measures.jpg",
+      "PhotoThumbs": [],
+      "Opis": {
+        "pl": "Wytrzymały zegarek typu 'Rugged' o militarnym wyglądzie. Odporny na wstrząsy i wodę, z kompasem i trybami przetrwania w terenie.",
+        "en": "Rugged watch with a military look. Shock and water-resistant, featuring a compass and outdoor survival modes.",
+        "ru": "Прочные часы в военном стиле. Ударопрочные и водонепроницаемые, с компасом и режимами выживания на открытом воздухе.",
+        "kk": "Әскери үлгідегі төзімді сағат. Соққыға және суға төзімді, компас және ашық ауада тірі қалу режимдері бар.",
+        "uz": "Mustahkam, harbiy uslubdagi soat. Zarbaga va suvga chidamli, kompas va ochiq havoda omon qolish rejimlariga ega."
       }
     }
   ]
