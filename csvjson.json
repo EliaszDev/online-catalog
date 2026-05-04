@@ -259,10 +259,10 @@
       ],
       "Opis": {
         "pl": "Testowy opis produktu z kaktusem",
-        "en": "",
-        "ru": "",
-        "kk": "",
-        "uz": ""
+        "en": "Test product description with cactus",
+        "ru": "Описание тестового продукта с кактусом",
+        "kk": "Кактуспен өнімнің сипаттамасын тексеріңіз",
+        "uz": "Kaktus bilan mahsulot tavsifini sinab ko&#39;ring"
       }
     }
   ]
