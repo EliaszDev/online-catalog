@@ -823,6 +823,7 @@
             }
 
             const photoNames = uploadedPhotos.map(p => p.filename).join(', ');
+            const photoThumbs = uploadedPhotos.map(p => p.thumbBase64 || '').filter(Boolean);
 
             const product = {
                 SKU: sku,
@@ -832,6 +833,7 @@
                 Ilosc: ilosc,
                 Cena: cena ? parseFloat(cena) : null,
                 Zdjecia: photoNames,
+                PhotoThumbs: photoThumbs,
                 Opis: {
                     pl: document.getElementById('pOpis_pl').value.trim(),
                     en: document.getElementById('pOpis_en').value.trim(),
@@ -988,10 +990,11 @@
             uploadedPhotos = [];
             if (p.Zdjecia) {
                 const photoNames = p.Zdjecia.split(',').map(s => s.trim()).filter(Boolean);
-                photoNames.forEach(name => {
+                const thumbs = p.PhotoThumbs || [];
+                photoNames.forEach((name, idx) => {
                     uploadedPhotos.push({
                         file: null,
-                        thumbBase64: '',
+                        thumbBase64: thumbs[idx] || '',
                         fullBase64: '',
                         filename: name
                     });
