@@ -191,6 +191,70 @@
         "kk": "Өнімнің сипаттамасы сынағы",
         "uz": "Mahsulot tavsifi sinovi"
       }
+    },
+    {
+      "SKU": "ZS-15",
+      "Model": "IRLANDY-GREEN",
+      "Kategoria": "zegarki-kwarcowe",
+      "Kolor": "Zielony / Czarny metaliczny",
+      "Ilosc": 1,
+      "Cena": 30,
+      "Zdjecia": "IMG_0708.jpg",
+      "Opis": {
+        "pl": "Elegancki zegarek kwarcowy z zieloną tarczą, metalową bransoletą w czarnym wykończeniu oraz wskazówkami i indeksami w srebrnym kolorze. Wyposażony w datownik z dniem tygodnia i datą.",
+        "en": "Elegant quartz watch with a green dial, black-finished metal bracelet, and silver-tone hands and indices. Features a day-date display.",
+        "ru": "Элегантные кварцевые часы с зелёным циферблатом, металлическим браслетом с чёрным покрытием и серебристыми стрелками и индексами. Снабжены указателем дня недели и даты.",
+        "kk": "Жасыл циферблатты, қара түсті металдан жасалған білезігі бар және күміс түсті тілшелері мен индекстері бар элегантты кварц сағаты. Аптаның күні мен күнін көрсететін функциясы бар.",
+        "uz": "Yashil kadrli, qora metall bilaguzukli va kumrang ko&#39;rsatkich va indekslarga ega nafis kvarz soat. Hafta kuni va sanani ko&#39;rsatish funksiyasi mavjud."
+      }
+    },
+    {
+      "SKU": "ZS-16",
+      "Model": "IRLANDY-BLUE",
+      "Kategoria": "zegarki-kwarcowe",
+      "Kolor": "Niebieski / Czarny metaliczny",
+      "Ilosc": 1,
+      "Cena": 30,
+      "Zdjecia": "IMG_0709.jpg",
+      "Opis": {
+        "pl": "Elegancki zegarek kwarcowy z niebieską tarczą, metalową bransoletą w czarnym wykończeniu oraz wskazówkami i indeksami w srebrnym kolorze. Wyposażony w datownik z dniem tygodnia i datą.",
+        "en": "Elegant quartz watch with a blue dial, black-finished metal bracelet, and silver-tone hands and indices. Features a day-date display.",
+        "ru": "Элегантные кварцевые часы с синим циферблатом, металлическим браслетом с чёрным покрытием и серебристыми стрелками и индексами. Снабжены указателем дня недели и даты.",
+        "kk": "Көк циферблатты, қара түсті металдан жасалған білезігі бар және күміс түсті тілшелері мен индекстері бар элегантты кварц сағаты. Аптаның күні мен күнін көрсететін функциясы бар.",
+        "uz": "Moviy kadrli, qora metall bilaguzukli va kumrang ko&#39;rsatkich va indekslarga ega nafis kvarz soat. Hafta kuni va sanani ko&#39;rsatish funksiyasi mavjud."
+      }
+    },
+    {
+      "SKU": "ZS-17",
+      "Model": "POEDAGAR-BLACK-DARK",
+      "Kategoria": "zegarki-kwarcowe",
+      "Kolor": "Czarny / Czarny metaliczny",
+      "Ilosc": 1,
+      "Cena": 30,
+      "Zdjecia": "IMG_0710.jpg",
+      "Opis": {
+        "pl": "Klasyczny zegarek kwarcowy z czarną tarczą, czarną metalową bransoletą oraz srebrnymi wskazówkami i indeksami. Wyposażony w datownik z dniem tygodnia i datą.",
+        "en": "Classic quartz watch with a black dial, black metal bracelet, and silver-tone hands and indices. Features a day-date display.",
+        "ru": "Классические кварцевые часы с чёрным циферблатом, чёрным металлическим браслетом и серебристыми стрелками и индексами. Снабжены указателем дня недели и даты.",
+        "kk": "Қара циферблатты, қара металдан жасалған білезігі бар және күміс түсті тілшелері мен индекстері бар классикалық кварц сағаты. Аптаның күні мен күнін көрсететін функциясы бар.",
+        "uz": "Qora kadrli, qora metall bilaguzukli va kumrang ko&#39;rsatkich va indekslarga ega klassik kvarz soat. Hafta kuni va sanani ko&#39;rsatish funksiyasi mavjud."
+      }
+    },
+    {
+      "SKU": "ZS-18",
+      "Model": "POEDAGAR-BLACK-TWOTONE",
+      "Kategoria": "zegarki-kwarcowe",
+      "Kolor": "Czarny / Srebrno-czarny metaliczny",
+      "Ilosc": 1,
+      "Cena": 30,
+      "Zdjecia": "IMG_0711.jpg",
+      "Opis": {
+        "pl": "Klasyczny zegarek kwarcowy z czarną tarczą, dwukolorową metalową bransoletą (czarno-srebrną) oraz srebrnymi wskazówkami i indeksami. Wyposażony w datownik z dniem tygodnia i datą.",
+        "en": "Classic quartz watch with a black dial, two-tone metal bracelet (black and silver), and silver-tone hands and indices. Features a day-date display.",
+        "ru": "Классические кварцевые часы с чёрным циферблатом, двухцветным металлическим браслетом (чёрно-серебристым) и серебристыми стрелками и индексами. Снабжены указателем дня недели и даты.",
+        "kk": "Қара циферблатты, екі түсті металдан жасалған білезігі бар (қара және күміс) және күміс түсті тілшелері мен индекстері бар классикалық кварц сағаты. Аптаның күні мен күнін көрсететін функциясы бар.",
+        "uz": "Qora kadrli, ikki rangli metall bilaguzukli (qora va kumush) va kumrang ko&#39;rsatkich va indekslarga ega klassik kvarz soat. Hafta kuni va sanani ko&#39;rsatish funksiyasi mavjud."
+      }
     }
   ]
 }
