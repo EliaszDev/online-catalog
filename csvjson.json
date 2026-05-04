@@ -129,22 +129,6 @@
       "Cena": null
     },
     {
-      "SKU": "ZS-12",
-      "Model": "ERUN-P15",
-      "Kategoria": "zegarki-smartwatch",
-      "Kolor": "BLACK",
-      "Ilosc": 1,
-      "Opis": {
-        "pl": "Smartwatch P15 Pro to nowoczesny zegarek męski, który łączy elegancką metalową obudowę z wygodnym, silikonowym paskiem. Urządzenie oferuje szeroką funkcjonalność, w tym możliwość wykonywania połączeń bezprzewodowych, śledzenie kroków oraz monitorowanie wielu trybów sportowych. Użytkownicy mają do dyspozycji setki wymiennych tarcz, a wygodę codziennego użytkowania zapewniają powiadomienia SMS, sterowanie muzyką oraz proste ładowanie magnetyczne USB.",
-        "en": "The P15 Pro Smartwatch is a modern men's timepiece that combines an elegant metal casing with a comfortable silicone strap. The device offers extensive functionality, including wireless calling, step tracking, and multiple sports modes. Users can choose from hundreds of watch faces, while daily convenience is ensured by SMS alerts, music control, and easy magnetic USB charging.",
-        "ru": "Смарт-часы P15 Pro — это современные мужские часы, сочетающие в себе элегантный металлический корпус и удобный силиконовый ремешок. Устройство предлагает широкие функциональные возможности, включая беспроводные вызовы, отслеживание шагов и мониторинг различных спортивных режимов. Пользователям доступны сотни сменных циферблатов, а удобство ежедневного использования обеспечивают SMS-уведомления, управление музыкой и простая магнитная USB-зарядка.",
-        "kk": "P15 Pro смарт-сағаты — талғампаз металл корпусы мен ыңғайлы силикон бауы біріктірілген заманауи ерлер сағаты. Құрылғы сымсыз қоңырау шалу, қадамдарды бақылау және көптеген спорттық режимдерді қоса алғанда, кең функционалдылықты ұсынады. Пайдаланушылар жүздеген ауыстырылатын цифрблаттарды пайдалана алады, ал күнделікті қолдану ыңғайлылығын SMS хабарландырулары, музыканы басқару және қарапайым магнитті USB зарядтау қамтамасыз етеді.",
-        "uz": "P15 Pro aqlli soati - bu zamonaviy erkaklar soati bo&#39;lib, u nafis metall korpusni qulay silikon tasma bilan birlashtiradi. Qurilma simsiz qo&#39;ng&#39;iroqlarni amalga oshirish, qadamlarni kuzatish va bir nechta sport rejimlarini kuzatish kabi keng funksiyalarni taklif etadi. Foydalanuvchilar tanlash uchun yuzlab almashtiriladigan soat yuzlariga ega va kundalik qulaylik SMS xabarnomalari, boshqaruv elementlari va boshqa turli xil funksiyalar bilan ta&#39;minlanadi."
-      },
-      "Zdjecia": "erunp15-black.jpg, erunp15-black-measures.jpg",
-      "Cena": null
-    },
-    {
       "SKU": "ZS-13",
       "Model": "DT5-PRO",
       "Kategoria": "zegarki-smartwatch",
@@ -215,6 +199,23 @@
         "ru": "",
         "kk": "",
         "uz": ""
+      }
+    },
+    {
+      "SKU": "ZS-12",
+      "Model": "ERUN-P15",
+      "Kategoria": "zegarki-smartwatch",
+      "Kolor": "BLACK",
+      "Ilosc": 1,
+      "Cena": null,
+      "Zdjecia": "erunp15-black.jpg, erunp15-black-measures.jpg",
+      "PhotoThumbs": [],
+      "Opis": {
+        "pl": "Smartwatch P15 Pro to nowoczesny zegarek męski, który łączy elegancką metalową obudowę z wygodnym, silikonowym paskiem. Urządzenie oferuje szeroką funkcjonalność, w tym możliwość wykonywania połączeń bezprzewodowych, śledzenie kroków oraz monitorowanie wielu trybów sportowych. Użytkownicy mają do dyspozycji setki wymiennych tarcz, a wygodę codziennego użytkowania zapewniają powiadomienia SMS, sterowanie muzyką oraz proste ładowanie magnetyczne USB.",
+        "en": "The P15 Pro Smartwatch is a modern men's timepiece that combines an elegant metal casing with a comfortable silicone strap. The device offers extensive functionality, including wireless calling, step tracking, and multiple sports modes. Users can choose from hundreds of watch faces, while daily convenience is ensured by SMS alerts, music control, and easy magnetic USB charging.",
+        "ru": "Смарт-часы P15 Pro — это современные мужские часы, сочетающие в себе элегантный металлический корпус и удобный силиконовый ремешок. Устройство предлагает широкие функциональные возможности, включая беспроводные вызовы, отслеживание шагов и мониторинг различных спортивных режимов. Пользователям доступны сотни сменных циферблатов, а удобство ежедневного использования обеспечивают SMS-уведомления, управление музыкой и простая магнитная USB-зарядка.",
+        "kk": "P15 Pro смарт-сағаты — талғампаз металл корпусы мен ыңғайлы силикон бауы біріктірілген заманауи ерлер сағаты. Құрылғы сымсыз қоңырау шалу, қадамдарды бақылау және көптеген спорттық режимдерді қоса алғанда, кең функционалдылықты ұсынады. Пайдаланушылар жүздеген ауыстырылатын цифрблаттарды пайдалана алады, ал күнделікті қолдану ыңғайлылығын SMS хабарландырулары, музыканы басқару және қарапайым магнитті USB зарядтау қамтамасыз етеді.",
+        "uz": "P15 Pro aqlli soati - bu zamonaviy erkaklar soati bo&#39;lib, u nafis metall korpusni qulay silikon tasma bilan birlashtiradi. Qurilma simsiz qo&#39;ng&#39;iroqlarni amalga oshirish, qadamlarni kuzatish va bir nechta sport rejimlarini kuzatish kabi keng funksiyalarni taklif etadi. Foydalanuvchilar tanlash uchun yuzlab almashtiriladigan soat yuzlariga ega va kundalik qulaylik SMS xabarnomalari, boshqaruv elementlari va boshqa turli xil funksiyalar bilan ta&#39;minlanadi."
       }
     }
   ]
