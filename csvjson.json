@@ -177,38 +177,6 @@
       "Cena": null
     },
     {
-      "SKU": "ZS-14",
-      "Model": "Testowy",
-      "Kategoria": "zegarki-kwarcowe",
-      "Kolor": "Metaliczny",
-      "Ilosc": 1,
-      "Cena": 30,
-      "Zdjecia": "IMG_0707.jpg",
-      "Opis": {
-        "pl": "Test opisu produktu",
-        "en": "Product description test",
-        "ru": "Тест описания продукта",
-        "kk": "Өнімнің сипаттамасы сынағы",
-        "uz": "Mahsulot tavsifi sinovi"
-      }
-    },
-    {
-      "SKU": "ZS-15",
-      "Model": "IRLANDY-GREEN",
-      "Kategoria": "zegarki-kwarcowe",
-      "Kolor": "Zielony / Czarny metaliczny",
-      "Ilosc": 1,
-      "Cena": 30,
-      "Zdjecia": "IMG_0185_white.jpg",
-      "Opis": {
-        "pl": "Elegancki zegarek kwarcowy z zieloną tarczą, metalową bransoletą w czarnym wykończeniu oraz wskazówkami i indeksami w srebrnym kolorze. Wyposażony w datownik z dniem tygodnia i datą.",
-        "en": "Elegant quartz watch with a green dial, black-finished metal bracelet, and silver-tone hands and indices. Features a day-date display.",
-        "ru": "Элегантные кварцевые часы с зелёным циферблатом, металлическим браслетом с чёрным покрытием и серебристыми стрелками и индексами. Снабжены указателем дня недели и даты.",
-        "kk": "Жасыл циферблатты, қара түсті металдан жасалған білезігі бар және күміс түсті тілшелері мен индекстері бар элегантты кварц сағаты. Аптаның күні мен күнін көрсететін функциясы бар.",
-        "uz": "Yashil kadrli, qora metall bilaguzukli va kumrang ko&#39;rsatkich va indekslarga ega nafis kvarz soat. Hafta kuni va sanani ko&#39;rsatish funksiyasi mavjud."
-      }
-    },
-    {
       "SKU": "ZS-16",
       "Model": "IRLANDY-BLUE",
       "Kategoria": "zegarki-kwarcowe",
@@ -244,6 +212,23 @@
         "ru": "Классические кварцевые часы с чёрным циферблатом, двухцветным металлическим браслетом (чёрно-серебристым) и серебристыми стрелками и индексами. Снабжены указателем дня недели и даты.",
         "kk": "Қара циферблатты, екі түсті металдан жасалған білезігі бар (қара және күміс) және күміс түсті тілшелері мен индекстері бар классикалық кварц сағаты. Аптаның күні мен күнін көрсететін функциясы бар.",
         "uz": "Qora kadrli, ikki rangli metall bilaguzukli (qora va kumush) va kumrang ko&#39;rsatkich va indekslarga ega klassik kvarz soat. Hafta kuni va sanani ko&#39;rsatish funksiyasi mavjud."
+      }
+    },
+    {
+      "SKU": "ZK-1",
+      "Model": "IRLANDY-GREEN",
+      "Kategoria": "zegarki-kwarcowe",
+      "Kolor": "Zielony / Czarny metaliczny",
+      "Ilosc": 1,
+      "Cena": 30,
+      "Zdjecia": "IMG_0185_white.jpg",
+      "PhotoThumbs": [],
+      "Opis": {
+        "pl": "Elegancki zegarek kwarcowy z zieloną tarczą, metalową bransoletą w czarnym wykończeniu oraz wskazówkami i indeksami w srebrnym kolorze. Wyposażony w datownik z dniem tygodnia i datą.",
+        "en": "Elegant quartz watch with a green dial, black-finished metal bracelet, and silver-tone hands and indices. Features a day-date display.",
+        "ru": "Элегантные кварцевые часы с зелёным циферблатом, металлическим браслетом с чёрным покрытием и серебристыми стрелками и индексами. Снабжены указателем дня недели и даты.",
+        "kk": "Жасыл циферблатты, қара түсті металдан жасалған білезігі бар және күміс түсті тілшелері мен индекстері бар элегантты кварц сағаты. Аптаның күні мен күнін көрсететін функциясы бар.",
+        "uz": "Yashil kadrli, qora metall bilaguzukli va kumrang ko&#39;rsatkich va indekslarga ega nafis kvarz soat. Hafta kuni va sanani ko&#39;rsatish funksiyasi mavjud."
       }
     }
   ]
