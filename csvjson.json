@@ -177,22 +177,6 @@
       "Cena": null
     },
     {
-      "SKU": "ZK-02",
-      "Model": "ZK-02",
-      "Kategoria": "zegarki kwarcowe",
-      "Kolor": null,
-      "Ilosc": 1,
-      "Cena": null,
-      "Zdjecia": "2.jpg, 2_1.jpg, 2_2.jpg",
-      "Opis": {
-        "pl": "",
-        "en": "",
-        "ru": "",
-        "kk": "",
-        "uz": ""
-      }
-    },
-    {
       "SKU": "ZK-03",
       "Model": "ZK-03",
       "Kategoria": "zegarki kwarcowe",
@@ -744,6 +728,23 @@
       "Ilosc": 1,
       "Cena": null,
       "Zdjecia": "37.jpg, 37_1.jpg",
+      "Opis": {
+        "pl": "",
+        "en": "",
+        "ru": "",
+        "kk": "",
+        "uz": ""
+      }
+    },
+    {
+      "SKU": "ZK-02",
+      "Model": "ZK-02",
+      "Kategoria": "zegarki kwarcowe",
+      "Kolor": "",
+      "Ilosc": 1,
+      "Cena": null,
+      "Zdjecia": "2_1.jpg, 2.jpg, 2_2.jpg",
+      "PhotoThumbs": [],
       "Opis": {
         "pl": "",
         "en": "",
