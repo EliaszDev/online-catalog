@@ -562,22 +562,6 @@
       }
     },
     {
-      "SKU": "HY-27",
-      "Model": "HY-27",
-      "Kategoria": "hygiene",
-      "Kolor": null,
-      "Ilosc": 1,
-      "Cena": null,
-      "Zdjecia": "27.jpg, 27_1.jpg",
-      "Opis": {
-        "pl": "",
-        "en": "",
-        "ru": "",
-        "kk": "",
-        "uz": ""
-      }
-    },
-    {
       "SKU": "HY-28",
       "Model": "HY-28",
       "Kategoria": "hygiene",
@@ -745,6 +729,23 @@
       "Ilosc": 1,
       "Cena": null,
       "Zdjecia": "26_1.jpg, 26.jpg",
+      "PhotoThumbs": [],
+      "Opis": {
+        "pl": "",
+        "en": "",
+        "ru": "",
+        "kk": "",
+        "uz": ""
+      }
+    },
+    {
+      "SKU": "HY-27",
+      "Model": "HY-27",
+      "Kategoria": "hygiene",
+      "Kolor": "",
+      "Ilosc": 1,
+      "Cena": null,
+      "Zdjecia": "27_1.jpg, 27.jpg",
       "PhotoThumbs": [],
       "Opis": {
         "pl": "",
