@@ -183,14 +183,26 @@
             touch-action: none; user-select: none; -webkit-user-select: none;
         }
         .photo-slot .drag-handle:active { cursor: grabbing; }
+        .photo-slot {
+            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+        }
         .photo-slot.dragging {
-            opacity: 0.5;
+            opacity: 0.6;
             border-color: var(--accent-blue) !important;
-            transform: scale(0.95);
+            transform: scale(1.06) rotate(2deg);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.25);
+            z-index: 10;
         }
         .photo-slot.drag-over {
             border-color: var(--success-green) !important;
             background: var(--success-green-light);
+            transform: scale(1.04);
+            box-shadow: 0 8px 16px rgba(16,185,129,0.15);
+            animation: dragPulse 0.6s ease-in-out infinite alternate;
+        }
+        @keyframes dragPulse {
+            from { box-shadow: 0 8px 16px rgba(16,185,129,0.15); }
+            to   { box-shadow: 0 8px 24px rgba(16,185,129,0.35); }
         }
         .photo-order-hint {
             font-size: 0.75rem; color: var(--text-tertiary); margin-top: 8px; text-align: center;
