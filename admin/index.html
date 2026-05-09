@@ -173,6 +173,16 @@
             font-size: 0.7rem; cursor: pointer; z-index: 2;
             display: flex; align-items: center; justify-content: center;
         }
+        .photo-slot .drag-handle {
+            position: absolute; top: 6px; left: 6px;
+            width: 26px; height: 26px; background: rgba(0,0,0,0.5);
+            color: white; border-radius: 6px;
+            font-size: 0.7rem; cursor: grab; z-index: 2;
+            display: flex; align-items: center; justify-content: center;
+            backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+            touch-action: none; user-select: none; -webkit-user-select: none;
+        }
+        .photo-slot .drag-handle:active { cursor: grabbing; }
         .photo-slot.dragging {
             opacity: 0.5;
             border-color: var(--accent-blue) !important;
@@ -538,7 +548,7 @@
 
     <!-- Bottom Nav -->
     <div class="bottom-nav">
-        <button class="nav-item" onclick="showView('viewAdd')">
+        <button class="nav-item" onclick="clearForm(); editingIndex=null; showView('viewAdd')">
             <i class="fas fa-plus-circle"></i>Dodaj
         </button>
         <button class="nav-item active" onclick="showView('viewList')">
@@ -551,6 +561,7 @@
         let products = [];
         let uploadedPhotos = [];
         let currentLang = 'pl';
+        let editingIndex = null;
 
         // === LOGIN ===
         const ADMIN_PASSWORD_HASH = 'cbb123bcacc6d8d49417dd3f7627a64fda9ac542f63bd0970e981957e1fbd9a3';
@@ -628,6 +639,23 @@
             const backBtn = document.getElementById('backToListBtn');
             if(backBtn) backBtn.style.display = (id === 'viewAdd') ? 'block' : 'none';
             if(id === 'viewList') renderPreview();
+        }
+
+        function clearForm() {
+            document.getElementById('pSKU').value = '';
+            document.getElementById('pModel').value = '';
+            document.getElementById('pKategoria').value = '';
+            document.getElementById('pKolor').value = '';
+            document.getElementById('pIlosc').value = '0';
+            document.getElementById('pCena').value = '';
+            document.getElementById('pOpis_pl').value = '';
+            document.getElementById('pOpis_en').value = '';
+            document.getElementById('pOpis_ru').value = '';
+            document.getElementById('pOpis_kk').value = '';
+            document.getElementById('pOpis_uz').value = '';
+            uploadedPhotos = [];
+            renderPhotoGrid();
+            updateLastSKU();
         }
 
         // === SKU SUGGESTION ===
@@ -711,6 +739,7 @@
                 const isExisting = !p.thumbBase64;
                 return `
                 <div class="photo-slot" draggable="true" data-index="${i}" ${isExisting ? 'style="border-style:solid;border-color:rgba(59,130,246,0.3);"' : ''}>
+                    <div class="drag-handle"><i class="fas fa-grip-vertical"></i></div>
                     <img src="${imgSrc}" onerror="this.style.display='none';this.parentElement.innerHTML='<span style=font-size:0.65rem;color:var(--text-secondary);padding:4px;>${p.filename}</span>'">
                     <button class="remove-btn" onclick="event.stopPropagation();removePhoto(${i})" type="button">×</button>
                 </div>
@@ -726,6 +755,11 @@
                 slot.addEventListener('dragenter', handleDragEnter);
                 slot.addEventListener('dragleave', handleDragLeave);
                 slot.addEventListener('drop', handleDrop);
+            });
+            grid.querySelectorAll('.drag-handle').forEach(handle => {
+                handle.addEventListener('touchstart', handleTouchStart, { passive: false });
+                handle.addEventListener('touchmove', handleTouchMove, { passive: false });
+                handle.addEventListener('touchend', handleTouchEnd);
             });
         }
 
@@ -757,6 +791,42 @@
             uploadedPhotos.splice(dropTargetIndex, 0, item);
             dragSrcIndex = null;
             renderPhotoGrid();
+        }
+
+        function handleTouchStart(e) {
+            const slot = this.closest('.photo-slot');
+            if (!slot) return;
+            dragSrcIndex = parseInt(slot.dataset.index);
+            slot.classList.add('dragging');
+        }
+        function handleTouchMove(e) {
+            e.preventDefault();
+            const touch = e.touches[0];
+            const target = document.elementFromPoint(touch.clientX, touch.clientY);
+            const slot = target && target.closest('.photo-slot[data-index]');
+            document.querySelectorAll('.photo-slot').forEach(s => s.classList.remove('drag-over'));
+            if (slot && parseInt(slot.dataset.index) !== dragSrcIndex) {
+                slot.classList.add('drag-over');
+            }
+        }
+        function handleTouchEnd(e) {
+            const touch = e.changedTouches[0];
+            const target = document.elementFromPoint(touch.clientX, touch.clientY);
+            const slot = target && target.closest('.photo-slot[data-index]');
+            document.querySelectorAll('.photo-slot').forEach(s => {
+                s.classList.remove('dragging');
+                s.classList.remove('drag-over');
+            });
+            if (slot) {
+                const dropTargetIndex = parseInt(slot.dataset.index);
+                if (!isNaN(dropTargetIndex) && dragSrcIndex !== null && dragSrcIndex !== dropTargetIndex) {
+                    const item = uploadedPhotos.splice(dragSrcIndex, 1)[0];
+                    uploadedPhotos.splice(dropTargetIndex, 0, item);
+                    renderPhotoGrid();
+                    showToast('Kolejność zmieniona', 'success');
+                }
+            }
+            dragSrcIndex = null;
         }
 
         function removePhoto(index) {
@@ -843,31 +913,17 @@
                 }
             };
 
-            const existingIndex = products.findIndex(p => p.SKU === sku);
-            if(existingIndex !== -1) {
-                products.splice(existingIndex, 1);
+            if (editingIndex !== null) {
+                products[editingIndex] = product;
+                editingIndex = null;
+            } else {
+                products.push(product);
             }
-
-            products.push(product);
 
             // Save photos for upload BEFORE clearing
             const photosToUpload = [...uploadedPhotos];
 
-            // Clear form
-            document.getElementById('pSKU').value = '';
-            document.getElementById('pModel').value = '';
-            document.getElementById('pKategoria').value = '';
-            document.getElementById('pKolor').value = '';
-            document.getElementById('pIlosc').value = '0';
-            document.getElementById('pCena').value = '';
-            document.getElementById('pOpis_pl').value = '';
-            document.getElementById('pOpis_en').value = '';
-            document.getElementById('pOpis_ru').value = '';
-            document.getElementById('pOpis_kk').value = '';
-            document.getElementById('pOpis_uz').value = '';
-            uploadedPhotos = [];
-            renderPhotoGrid();
-            updateLastSKU();
+            clearForm();
             renderPreview();
 
             showToast('Produkt zapisany! Wysyłanie na GitHub...', 'success');
@@ -1002,7 +1058,7 @@
             }
             renderPhotoGrid();
 
-            products.splice(index, 1);
+            editingIndex = index;
             showView('viewAdd');
             showToast('Edytuj dane i kliknij Zapisz', 'success');
         }
@@ -1181,12 +1237,17 @@
         function hideProgress() {
             document.getElementById('progressOverlay').classList.remove('active');
         }
+        let toastTimeout = null;
         function showToast(msg, type='') {
             const t = document.getElementById('toast');
+            if (toastTimeout) clearTimeout(toastTimeout);
             t.textContent = msg;
             t.className = 'toast ' + type;
             t.classList.add('show');
-            setTimeout(() => t.classList.remove('show'), 3000);
+            toastTimeout = setTimeout(() => {
+                t.classList.remove('show');
+                toastTimeout = null;
+            }, 3000);
         }
         function toggleSettings() {
             document.getElementById('settingsPanel').classList.toggle('open');
