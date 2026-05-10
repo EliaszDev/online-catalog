@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>Panel Admin — Dodaj Produkt</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -1102,6 +1105,11 @@
                 return;
             }
 
+            if(!products || products.length === 0) {
+                showToast('Brak produktów do wysłania. Dodaj produkt przed wysyłką.', 'error');
+                return;
+            }
+
             showProgress('Wysyłanie na GitHub...');
 
             try {
@@ -1197,14 +1205,16 @@
             showProgress('Pobieranie z GitHub...');
             try {
                 const res = await fetch(`https://api.github.com/repos/${repo}/contents/csvjson.json`, {
-                    headers: { 'Authorization': `token ${token}` }
+                    headers: {
+                        'Authorization': `token ${token}`,
+                        'Accept': 'application/vnd.github.v3.raw'
+                    }
                 });
                 if(!res.ok) throw new Error('HTTP ' + res.status);
-                const jsonData = await res.json();
+                const remoteContent = await res.text();
 
                 let remoteProducts = [];
                 try {
-                    const remoteContent = decodeURIComponent(escape(atob(jsonData.content)));
                     const remoteData = JSON.parse(remoteContent);
                     remoteProducts = Array.isArray(remoteData) ? remoteData : (remoteData.products || []);
                 } catch(e) {
