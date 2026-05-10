@@ -1204,11 +1204,12 @@
 
             showProgress('Pobieranie z GitHub...');
             try {
-                const res = await fetch(`https://api.github.com/repos/${repo}/contents/csvjson.json`, {
+                const res = await fetch(`https://api.github.com/repos/${repo}/contents/csvjson.json?t=${Date.now()}`, {
                     headers: {
                         'Authorization': `token ${token}`,
                         'Accept': 'application/vnd.github.v3.raw'
-                    }
+                    },
+                    cache: 'no-store'
                 });
                 if(!res.ok) throw new Error('HTTP ' + res.status);
                 const remoteContent = await res.text();
